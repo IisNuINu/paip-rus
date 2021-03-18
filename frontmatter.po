@@ -1,0 +1,111 @@
+#. extracted from in/frontmatter.md
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 2.2.5\n"
+
+#: in/frontmatter.md:5
+msgid ""
+"# Frontmatter\n"
+"Paradigms of \n"
+"Artificial Intelligence \n"
+"Programming: "
+msgstr ""
+
+#: in/frontmatter.md:7
+msgid "CASE STUDIES IN COMMON LISP "
+msgstr ""
+
+#: in/frontmatter.md:9
+msgid "Peter Norvig "
+msgstr ""
+
+#: in/frontmatter.md:11
+msgid "MORGAN KAUFMANN PUBLISHERS ^ SAN FRANCISCO, CALIFORNIA "
+msgstr ""
+
+#: in/frontmatter.md:19
+msgid ""
+"Sponsoring Editor Michael B. Morgan \n"
+"Production Manager Yonie Overton \n"
+"Cover Designer Sandra Popovich \n"
+"Text Design/Composition SuperScnpt Typography \n"
+"Copyeditor Barbara Beidler Kendnck \n"
+"Proofreaders Lynn Meinhardt, Shanlyn Hovind, Gary Morus \n"
+"Printer Malloy Lithographing "
+msgstr ""
+
+#: in/frontmatter.md:21
+msgid "Morgan Kaufmann Publishers, Inc. "
+msgstr ""
+
+#: in/frontmatter.md:23
+msgid "Editorial and Sales Office: "
+msgstr ""
+
+#: in/frontmatter.md:31
+msgid ""
+"340 Pine Street, Sbcth Floor \n"
+"San Francisco, CA 94104-3205 \n"
+"USA \n"
+"Telephone 415/392-2665 \n"
+"Facsimile 415/982-2665 \n"
+"Internet mkp@mkp.com \n"
+"Web site http://mkp.com "
+msgstr ""
+
+#: in/frontmatter.md:34
+msgid ""
+"Â© 1992 Morgan Kaufmann Publishers, Inc. \n"
+"All rights reserved "
+msgstr ""
+
+#: in/frontmatter.md:36
+msgid "Printed in the United States of America "
+msgstr ""
+
+#: in/frontmatter.md:41
+msgid ""
+"03 02 Ol 8 7 6 \n"
+"No part of this publication may be reproduced, stored in a retrieval system, "
+"or \n"
+"transmitted in any form or by any means-electronic, photocopying, recording, "
+"or \n"
+"otherwiseâwithout the prior written permission of the publisher. "
+msgstr ""
+
+#: in/frontmatter.md:43
+msgid "Library of Congress Cataloging-in-Publication Data "
+msgstr ""
+
+#: in/frontmatter.md:47
+msgid ""
+"Norvig, Peter. \n"
+"Paradigms of artificial inteUigence programming: case studies in \n"
+"common Lisp / Peter Norvig. "
+msgstr ""
+
+#: in/frontmatter.md:56
+msgid ""
+"p. cm. \n"
+"Includes bibliographical references and index. \n"
+"ISBN 1-55860-191-0: \n"
+"1. Electronic digital computers-Programming. 2. COMMON LISP \n"
+"(Computer program language) 3. Artificial intelligence. I. Title. \n"
+"QA76.6.N6871991 \n"
+"006.3-dc20 91-39187 \n"
+"CIP "
+msgstr ""
+
+#: in/frontmatter.md:58
+msgid "To my family,.. "
+msgstr ""

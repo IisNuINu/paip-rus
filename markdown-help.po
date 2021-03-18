@@ -1,0 +1,128 @@
+#. extracted from in/markdown-help.md
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 2.2.5\n"
+
+#: in/markdown-help.md:3
+msgid "## Markdown help"
+msgstr ""
+
+#: in/markdown-help.md:7
+msgid ""
+"## Style guide\n"
+"Try to use Markdown instead of HTML. \n"
+"Try to do minimal changes from the text - don't put a paragraph in one line, "
+"or remove trailing space separately, as they make diffs hard to follow. "
+msgstr ""
+
+#: in/markdown-help.md:9
+msgid "Example sections in chapters: "
+msgstr ""
+
+#: in/markdown-help.md:16
+msgid ""
+"```\n"
+"# Chapter 1\n"
+"## Introduction to Lisp\n"
+"## 3.1 A Guide to Lisp Style \n"
+"### Answer 1.2\n"
+"```"
+msgstr ""
+
+#: in/markdown-help.md:18
+msgid "To mark a block of code, use: "
+msgstr ""
+
+#: in/markdown-help.md:23
+msgid ""
+"```\n"
+"  ```lisp\n"
+"```\n"
+"That will give syntax highlighting. Leave out `lisp` if it's something else, "
+"like assembly. "
+msgstr ""
+
+#: in/markdown-help.md:25
+msgid ""
+"`>` to blockquote - to indent. You only need one at the start of a "
+"paragraph. "
+msgstr ""
+
+#: in/markdown-help.md:27
+msgid "Use `*italics*` for *italics*, and `**bold**` for **bold**."
+msgstr ""
+
+#: in/markdown-help.md:31
+msgid ""
+"## Line breaks\n"
+"Non-paragraph line breaks can be tricky, like in the quotes at the start of "
+"chapters. \n"
+"It looks like two trailing spaces do the trick in both Github Flavored "
+"Markdown and Docsify: "
+msgstr ""
+
+#: in/markdown-help.md:38
+msgid ""
+"> *Cerium quod factum.*  \n"
+"> (One is certain of only what one builds.) \n"
+"> \n"
+"> -Giovanni Battista Vico (1668-1744)  \n"
+"> Italian royal historiographer "
+msgstr ""
+
+#: in/markdown-help.md:42
+msgid ""
+"## Special symbols\n"
+"There are a lot of special symbols, with special ways of calling them; "
+"there's [a Wikipedia page with a list.](https://en.wikipedia.org/wiki/List_of"
+"_XML_and_HTML_character_entity_references) Here are some of the common ones: "
+msgstr ""
+
+#: in/markdown-help.md:57
+msgid ""
+"| symbol   | entity     |\n"
+"|----------|------------|\n"
+"| &times;  | `&times;`  |\n"
+"| &pi;     | `&pi;`     |\n"
+"| &int;    | `&int;`    |\n"
+"| &phi;    | `&phi;`    |\n"
+"| &asymp;  | `&asymp;`  |\n"
+"| &ouml;   | `&ouml;`   |\n"
+"| &plusmn; | `&plusmn;` |\n"
+"| &eacute; | `&eacute;` |\n"
+"| &rArr;   | `&rArr;`   |\n"
+"| &lambda; | `&lambda;` |\n"
+"| 0&#x0338;| `0&#x0338;`|"
+msgstr ""
+
+#: in/markdown-help.md:59
+msgid "Note that these will not work in code blocks. "
+msgstr ""
+
+#: in/markdown-help.md:62
+msgid "## Markdown variants"
+msgstr ""
+
+#: in/markdown-help.md:64
+msgid ""
+"We're largely targeting [Github Flavored "
+"Markdown,](https://github.github.com/gfm/) but the online version uses "
+"[docsify,](https://docsify.js.org/) which uses "
+"[marked.](https://github.com/markedjs/marked) "
+msgstr ""
+
+#: in/markdown-help.md:65
+msgid ""
+"If you'd like to test the docsify parsing, you can run a local server; look "
+"at `scripts/httpd` - there are Ruby and Python variants. "
+msgstr ""

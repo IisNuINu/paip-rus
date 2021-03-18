@@ -1,0 +1,36 @@
+#. extracted from in/_coverpage.md
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 2.2.5\n"
+
+#: in/_coverpage.md:2
+msgid "![logo](_media/paip-cover.gif)"
+msgstr ""
+
+#: in/_coverpage.md:4
+msgid "# Paradigms of Artificial Intelligence Programming"
+msgstr ""
+
+#: in/_coverpage.md:6
+msgid "> Case Studies in Common Lisp"
+msgstr ""
+
+#: in/_coverpage.md:8
+msgid "* Peter Norvig"
+msgstr ""
+
+#: in/_coverpage.md:10
+msgid ""
+"[GitHub](https://github.com/norvig/paip-lisp)\n"
+"[Get Started](#paradigms-of-artificial-intelligence-programming)"
+msgstr ""

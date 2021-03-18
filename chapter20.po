@@ -1,0 +1,3818 @@
+#
+# NuINu <don't@send.my>, 2021.
+#
+#. extracted from in/chapter20.md
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: 2021-03-10 15:37+0300\n"
+"Last-Translator: NuINu <don't@send.my>\n"
+"Language-Team: Russian <don't@send.my>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 2.91.7\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : "
+"4;\n"
+
+#: in/chapter20.md:3
+msgid ""
+"# Chapter 20\n"
+"## Unification Grammars"
+msgstr ""
+"# Глава 20\n"
+"## Унифицированные(Объединенные) Грамматики"
+
+#: in/chapter20.md:7
+msgid ""
+"Prolog was invented because Alain Colmerauer wanted a formalism to describe "
+"the grammar of French.\n"
+"His intuition was that the combination of Horn clauses and unification "
+"resulted in a language that was just powerful enough to express the kinds of "
+"constraints that show up in natural languages, while not as powerful as, for "
+"example, full predicate calculus.\n"
+"This lack of power is important, because it enables efficient implementation "
+"of Prolog, and hence of the language-analysis programs built on top of it."
+msgstr ""
+"Пролог был изобретен, потому что Ален Колмерауэр хотел формализм для "
+"описания грамматики французского языка.\n"
+"Его интуиция заключалась в том, что комбинация предложений Хорна и "
+"унификации привела к созданию языка, который был достаточно мощным, чтобы "
+"выразить виды ограничений, которые проявляются в естественных языках, но не "
+"столь мощным, как, например, полное исчисление предикатов.\n"
+"Этот недостаток мощности важен, потому что он обеспечивает эффективную "
+"реализацию Prolog и, следовательно, программ анализа языка, построенных на "
+"нем."
+
+#: in/chapter20.md:13
+msgid ""
+"Of course, Prolog has evolved and is now used for many applications besides "
+"natural language, but Colmerauer's underlying intuition remains a good one.\n"
+"This chapter shows how to view a grammar as a set of logic programming "
+"clauses.\n"
+"The clauses define what is a legal sentence and what isn't, without any "
+"explicit reference to the process of parsing or generation.\n"
+"The amazing thing is that the clauses can be defined in a way that leads to "
+"a very efficient parser.\n"
+"Furthermore, the same grammar can be used for both parsing and generation "
+"(at least in some cases)."
+msgstr ""
+"Конечно, Prolog эволюционировал и теперь используется во многих приложениях, "
+"помимо естественного языка, но основная интуиция Колмерауэра остается "
+"хорошей.\n"
+"В этой главе показано, как рассматривать грамматику как набор предложений "
+"логического программирования.\n"
+"Предложения(clauses) определяют, что является законным "
+"утверждением(заключением), а что нет, без какой-либо явной ссылки на процесс "
+"синтаксического анализа или генерации.\n"
+"Удивительно то, что предложения могут быть определены таким образом, чтобы "
+"получить очень эффективный синтаксический анализатор.\n"
+"Более того, одна и та же грамматика может использоваться как для "
+"синтаксического анализа, так и для генерации (по крайней мере, в некоторых "
+"случаях)."
+
+#: in/chapter20.md:15
+msgid "## 20.1 Parsing as Deduction"
+msgstr "## 20.1 Синтаксический анализ(parsing) как умозаключение(дедукция)."
+
+#: in/chapter20.md:17
+msgid ""
+"Here's how we could express the grammar rule \"A sentence can be composed of "
+"a noun phrase followed by a verb phrase\" in Prolog:"
+msgstr ""
+"Вот как мы могли бы выразить грамматическое правило \"Утверждение(sentence) "
+"может состоять из фразы существительного(noun phrase), за которой следует "
+"глагольная фраза(verb phrase)\" на Прологе:"
+
+#: in/chapter20.md:21
+msgctxt "in/chapter20.md:21"
+msgid ""
+"```lisp\n"
+"(<- (S ?s)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:23
+msgctxt "in/chapter20.md:23"
+msgid "      `(NP ?np)`"
+msgstr ""
+
+#: in/chapter20.md:25
+msgid "      `(VP ?vp)`"
+msgstr ""
+
+#: in/chapter20.md:27
+msgid "      `(concat ?np ?vp ?s))`"
+msgstr ""
+
+#: in/chapter20.md:36
+msgid ""
+"The variables represent strings of words.\n"
+"As usual, they will be implemented as lists of symbols.\n"
+"The rule says that a given string of words `?s` is a sentence if there is a "
+"string that is noun phrase and one that is a verb phrase, and if they can be "
+"concatenated to form `?s`.\n"
+"Logically, this is fine, and it would work as a program to generate random "
+"sentences.\n"
+"However, it is a very inefficient program for parsing sentences.\n"
+"It will consider all possible noun phrases and verb phrases, without regard "
+"to the input words.\n"
+"Only when it gets to the concat goal (defined on [page 411]"
+"(B9780080571157500121.xhtml#p411)) will it test to see if the two "
+"constituents can be concatenated together to make up the input string.\n"
+"Thus, a better order of evaluation for parsing is:"
+msgstr ""
+"Переменные представляют собой строки слов.\n"
+"Как обычно, они будут реализованы в виде списков символов.\n"
+"Правило гласит, что данная строка слов `?s` является утверждением(sentence), "
+"если есть строка, которая представляет собой фразу существительного и другая "
+"явлюящаяся глагольной фразой, и если они могут быть объединены в форму `?"
+"s`.\n"
+"С логической точки зрения это нормально, и он будет работать как программа "
+"для генерации случайных утверждений.\n"
+"Однако это очень неэффективная программа для разбора утверждений.\n"
+"Она рассмотрит все возможные фразы существительных и глагольные фразы, "
+"независимо от введенных слов.\n"
+"Только когда она достигнет цели concat (определенной на [стр. 411]"
+"(B9780080571157500121.xhtml#p411)), она проверит, можно ли объединить две "
+"составляющие вместе, чтобы составить входную строку.\n"
+"Таким образом, лучший порядок вычисления для синтаксического анализа:"
+
+#: in/chapter20.md:40
+msgctxt "in/chapter20.md:40"
+msgid ""
+"```lisp\n"
+"(<- (S ?s)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:42
+msgid "      `(concat ?np ?vp ?s)`"
+msgstr ""
+
+#: in/chapter20.md:44
+msgctxt "in/chapter20.md:44"
+msgid "      `(NP ?np)`"
+msgstr ""
+
+#: in/chapter20.md:46
+msgid "      `(VP ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:52
+msgid ""
+"The first version had `NP` and `VP` guessing strings to be verified by "
+"`concat`.\n"
+"In most grammars, there will be a very large or infinite number of `NPs` and "
+"`VPs`.\n"
+"This second version has `concat` guessing strings to be verified by `NP` and "
+"`VP`.\n"
+"If there are *n* words in the sentence, then concat can only make *n* + 1 "
+"guesses, quite an improvement.\n"
+"However, it would be better still if we could in effect have `concat` and "
+"`NP` work together to make a more constrained guess, which would then be "
+"verified by `VP`."
+msgstr ""
+"В первой версии были угадываемые строки `NP` и `VP`, которые проверялись с "
+"помощью `concat`.\n"
+"В большинстве грамматик будет очень большое или бесконечное количество `NP` "
+"и `VP`.\n"
+"В этой второй версии есть угадываемые строки `concat`, которые должны "
+"проверяться `NP` и `VP`.\n"
+"Если в утверждении *n* слов, то `concat` может сделать только *n* + 1 "
+"предположений, что является значительным улучшением.\n"
+"Однако было бы еще лучше, если бы мы могли фактически заставить `concat` и "
+"`NP` работать вместе, чтобы сделать более ограниченное предположение, "
+"которое затем будет проверено `VP`."
+
+#: in/chapter20.md:61
+msgid ""
+"We have seen this type of problem before.\n"
+"In Lisp, the answer is to return multiple values.\n"
+"`NP` would be a function that takes a string as input and returns two "
+"values: an indication of success or failure, and a remainder string of words "
+"that have not yet been parsed.\n"
+"When the first value indicates success, then `VP` would be called with the "
+"remaining string as input.\n"
+"In Prolog, return values are just extra arguments.\n"
+"So each predicate will have two parameters: an input string and a remainder "
+"string.\n"
+"Following the usual Prolog convention, the output parameter comes after the "
+"input.\n"
+"In this approach, no calls to concat are necessary, no wild guesses are "
+"made, and Prolog's backtracking takes care of the necessary guessing:"
+msgstr ""
+"Мы уже сталкивались с подобными проблемами.\n"
+"В Лиспе ответ - возвращает несколько значений.\n"
+"`NP` - это функция, которая принимает строку в качестве входных данных и "
+"возвращает два значения: индикатор успеха или неудачи и оставшуюся строку "
+"слов, которые еще не были проанализированы.\n"
+"Когда первое значение указывает на успех, тогда будет вызываться `VP` с "
+"оставшейся строкой в качестве ввода.\n"
+"В Прологе возвращаемые значения - это просто дополнительные аргументы.\n"
+"Таким образом, у каждого предиката будет два параметра: входная строка и "
+"остаточная строка.\n"
+"Следуя обычному соглашению Пролога, выходной параметр идет после входного.\n"
+"В этом подходе не требуются вызовы concat, не делаются дикие предположения, "
+"а функция обратного отслеживания Prolog заботится о необходимых "
+"предположениях:"
+
+#: in/chapter20.md:65
+msgctxt "in/chapter20.md:65"
+msgid ""
+"```lisp\n"
+"(<- (S ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:67
+msgctxt "in/chapter20.md:67"
+msgid "              `(NP ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:69
+msgctxt "in/chapter20.md:69"
+msgid "              `(VP ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:71
+msgid ""
+"This rule can be read as \"The string from `*s*0` to `*s*2` is a sentence if "
+"there is an `*s*1` such that the string from `s0` to `*s*1` is a noun phrase "
+"and the string from `*s*1` to `*s*2` is a verb phrase.\""
+msgstr ""
+"Это правило можно прочитать как \"Строка от `*s*0` до `*s*2` является "
+"предложением, если существует `*s*1`, такое, что строка от `s0` до `*s*1`- "
+"это существительное, а строка от `*s*1` до `*s*2` - глагольная фраза.\""
+
+#: in/chapter20.md:73
+msgid ""
+"A sample query would be `(?- (S (The boy ate the apple) ())).` With suitable "
+"definitions of `NP` and `VP`, this would succeed, with the following "
+"bindings holding within `S`:"
+msgstr ""
+"Примером запроса будет `(?- (S (The boy ate the apple) ())).` С подходящими "
+"определениями `NP` и `VP` это будет успешным, со следующими привязками, "
+"удерживаемыми внутри `S`:"
+
+#: in/chapter20.md:79
+msgid ""
+"```lisp\n"
+"?s0 = (The boy ate the apple)\n"
+"?sl =                 (ate the apple)\n"
+"?s2 =                                           ()\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:83
+msgid ""
+"Another way of reading the goal `(NP ?s0 ?sl)`, for example, is as \"`IS` "
+"the list `?s0` minus the list `?sl` a noun phrase?\" In this case, `?s0` "
+"minus `?sl` is the list `(The boy)`.\n"
+"The combination of two arguments, an input list and an output list, is often "
+"called a *difference list*, to emphasize this interpretation.\n"
+"More generally, the combination of an input parameter and output parameter "
+"is called an *accumulator.* Accumulators, particularly difference lists, are "
+"an important technique throughout logic programming and are also used in "
+"functional programming, as we saw on [page 63](B9780080571157500030."
+"xhtml#p63)."
+msgstr ""
+"Другой способ чтения цели `(NP ?s0 ?sl)`, например, выглядит следующим "
+"образом: \"`IS` the list `?s0` minus the list `?sl` a noun phrase?\" В этом "
+"случае `?s0` минус `?sl` - это список `(The boy)`.\n"
+"Комбинация двух аргументов, списка ввода и списка вывода, часто называется "
+"*списком различий*, чтобы подчеркнуть эту интерпретацию.\n"
+"В более общем смысле комбинация входного параметра и выходного параметра "
+"называется *accumulator*(накопитель). Аккумуляторы, особенно списки "
+"различий, являются важным методом на протяжении всего логического "
+"программирования, а также используются в функциональном программировании, "
+"как мы видели на [стр. 63](B9780080571157500030.xhtml#p63)."
+
+#: in/chapter20.md:86
+msgid ""
+"In our rule for `S`, the concatenation of difference lists was implicit.\n"
+"If we prefer, we could define a version of `concat` for difference lists and "
+"call it explicitly:"
+msgstr ""
+"В нашем правиле для `S` конкатенация списков различий была неявной.\n"
+"При желании мы могли бы определить версию concat для списков различий и "
+"вызвать ее явно:"
+
+#: in/chapter20.md:90
+msgid ""
+"```lisp\n"
+"(<- (S ?s-in ?s-rem)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:92
+msgid "              `(NP ?np-in ?np-rem)`"
+msgstr ""
+
+#: in/chapter20.md:94
+msgid "              `(VP ?vp-in ?vp-rem)`"
+msgstr ""
+
+#: in/chapter20.md:96
+msgid "              `(concat ?np-in ?np-rem ?vp-in ?vp-rem ?s-in ?s-rem))`"
+msgstr ""
+
+#: in/chapter20.md:100
+msgid ""
+"```lisp\n"
+"(<- (concat ?a ?b ?b ?c ?a ?c))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:103
+msgid ""
+"Because this version of `concat` has a different arity than the old version, "
+"they can safely coexist.\n"
+"It states the difference list equation *(a - b) + (b - c) = (a - c)*."
+msgstr ""
+"Поскольку эта версия concat имеет другую арность, чем старая версия, они "
+"могут безопасно сосуществовать.\n"
+"В нем указано уравнение списка различий *(a - b) + (b - c) = (a - c)*."
+
+#: in/chapter20.md:108
+msgid ""
+"In the last chapter we stated that context-free phrase-structure grammar is "
+"inconvenient for expressing things like agreement between the subject and "
+"predicate of a sentence.\n"
+"With the Horn-clause-based grammar formalism we are developing here, we can "
+"add an argument to the predicates NP and VP to represent agreement.\n"
+"In English, the agreement rule does not have a big impact.\n"
+"For all verbs except *be,* the difference only shows up in the third-person "
+"singular of the present tense:"
+msgstr ""
+"В предыдущей главе мы заявили, что контекстно-свободная грамматика с "
+"фразовой структурой неудобна для выражения таких вещей, как согласие между "
+"подлежащим и сказуемым в утверждении.\n"
+"С помощью формализма грамматики, основанного на предложениях Хорна, которую "
+"мы здесь развиваем, мы можем добавить аргумент к предикатам NP и VP, чтобы "
+"представить согласие.\n"
+"На английском правило соглашения не имеет большого значения.\n"
+"Для всех глаголов, кроме *be,*, разница проявляется только в третьем лице "
+"единственного числа настоящего времени:"
+
+#: in/chapter20.md:114
+msgid ""
+"|               | Singular |        | Plural |       |\n"
+"|---------------|----------|--------|--------|-------|\n"
+"| first person  | I        | sleep  | we     | sleep |\n"
+"| second person | you      | sleep  | you    | sleep |\n"
+"| third person  | he/she   | sleeps | they   | sleep |"
+msgstr ""
+
+#: in/chapter20.md:117
+msgid ""
+"Thus, the agreement argument will take on one of the two values `3sg` or `"
+"\"3sg` to indicate third-person-singular or not-third-person-singular.\n"
+"We could write:"
+msgstr ""
+"Таким образом, аргумент согласия будет принимать одно из двух значений `3sg` "
+"или `\"3sg` для обозначения единственного числа от третьего лица или не от "
+"третьего лица единственного числа.\n"
+"Мы могли бы написать:"
+
+#: in/chapter20.md:121
+msgctxt "in/chapter20.md:121"
+msgid ""
+"```lisp\n"
+"(<- (S ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:123
+msgid "              `(NP ?agr ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:125
+msgid "              `(VP ?agr ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:129
+msgid ""
+"```lisp\n"
+"(<- (NP 3sg (he . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:131
+msgid "`(<- (NP`\"`3sg (they . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:135
+msgid ""
+"```lisp\n"
+"(<- (VP 3sg (sleeps . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:137
+msgid "`(<- (VP`\"`3sg (sleep . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:139
+msgid "This grammar parses just the right sentences:"
+msgstr "Эта грамматика разбирает только правильные предложения:"
+
+#: in/chapter20.md:146
+msgid ""
+"```lisp\n"
+"> (?- (S (He sleeps) ()))\n"
+"Yes.\n"
+"> (?- (S (He sleep) ()))\n"
+"No.\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:148
+msgid "Let's extend the grammar to allow common nouns as well as pronouns:"
+msgstr ""
+"Давайте расширим грамматику, чтобы разрешить как общие "
+"существительные(common nouns), так и местоимения(pronouns):"
+
+#: in/chapter20.md:152
+msgid ""
+"```lisp\n"
+"(<- (NP ?agr ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:154
+msgid "              `(Det ?agr ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:156
+msgid "              `(N ?agr ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:162
+msgid ""
+"```lisp\n"
+"(<- (Det ?any (the . ?s) ?s))\n"
+"(<- (N 3sg (boy . ?s) ?s))\n"
+"(<- (N 3sg (girl . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:165
+msgid ""
+"The same grammar rules can be used to generate sentences as well as parse.\n"
+"Here are all possible sentences in this trivial grammar:"
+msgstr ""
+"Те же правила грамматики можно использовать как для создания предложений, "
+"так и для синтаксического анализа.\n"
+"Вот все возможные предложения в этой тривиальной грамматике:"
+
+#: in/chapter20.md:174
+msgid ""
+"```lisp\n"
+"> (?- (S ?words ()))\n"
+"?WORDS = (HE SLEEPS);\n"
+"?WORDS = (THEY SLEEP);\n"
+"?WORDS = (THE BOY SLEEPS);\n"
+"?WORDS = (THE GIRL SLEEPS);\n"
+"No.\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:178
+msgid ""
+"So far all we have is a recognizer: a predicate that can separate sentences "
+"from nonsentences.\n"
+"But we can add another argument to each predicate to build up the "
+"semantics.\n"
+"The result is not just a recognizer but a true parser:"
+msgstr ""
+"Пока все, что у нас есть, - это распознаватель: предикат, который может "
+"отделять sentences(утверждения) от неутверждений.\n"
+"Но мы можем добавить к каждому предикату еще один аргумент, чтобы создать "
+"семантику.\n"
+"В результате получается не просто распознаватель, а настоящий парсер:"
+
+#: in/chapter20.md:182
+msgid ""
+"```lisp\n"
+"(<- (S (?pred ?subj) ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:184
+msgid "              `(NP ?agr ?subj ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:186
+msgid "                `(VP ?agr ?pred ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:190
+msgid ""
+"```lisp\n"
+"(<- (NP 3sg (the male) (he . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:192
+msgid "`(<- (NP`\"`3sg (some objects) (they . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:196
+msgid ""
+"```lisp\n"
+"(<- (NP ?agr (?det ?n) ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:198
+msgid "                `(Det ?agr ?det ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:200
+msgid "                `(N ?agr ?n ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:204
+msgid ""
+"```lisp\n"
+"(<- (VP 3sg sleep (sleeps . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:206
+msgid "`(<- (VP`\"`3sg sleep (sleep . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:212
+msgid ""
+"```lisp\n"
+"(<- (Det ?any the (the . ?s) ?s))\n"
+"(<- (N 3sg (young male human) (boy . ?s) ?s))\n"
+"(<- (N 3sg (young female human) (girl . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:221
+msgid ""
+"The semantic translations of individual words is a bit capricious.\n"
+"In fact, it is not too important at this point if the translation of `boy` "
+"is `(young male human)` or just `boy`.\n"
+"There are two properties of a semantic representation that are important.\n"
+"First, it should be unambiguous.\n"
+"The representation of *orange* the fruit should be different from *orange* "
+"the color (although the representation of the fruit might well refer to the "
+"color, or vice versa).\n"
+"Second, it should express generalities, or allow them to be expressed "
+"elsewhere.\n"
+"So either *sleep* and *sleeps* should have the same or similar "
+"representation, or there should be an inference rule relating them.\n"
+"Similarly, if the representation of *boy* does not say so explicitly, there "
+"should be some other rule saying that a boy is a male and a human."
+msgstr ""
+"Семантические переводы(преобразования) отдельных слов немного капризны.\n"
+"На самом деле, здесь не слишком важно, переводится ли `boy`(мальчик) как "
+"`(young male human)`(молодой человек-мужчина) или просто `boy`(мальчик).\n"
+"Есть два важных свойства семантического представления.\n"
+"Во-первых, оно должно быть однозначным.\n"
+"Представление *оранжевого* плода должно отличаться от *оранжевого* цвета "
+"(хотя представление плода вполне может ссылаться(устанавливать отношение) на "
+"цвет или наоборот).\n"
+"Во-вторых, оно должно выражать общие положения или позволять выразить их в "
+"другом месте.\n"
+"Таким образом, либо *sleep* и *sleeps* должны иметь одинаковое или похожее "
+"представление, либо должно существовать правило вывода, связывающее их.\n"
+"Точно так же, если представление *boy*(мальчика) не говорит об этом явно, но "
+"должно быть какое-то другое правило, согласно которому мальчик - это мужчина "
+"и человек."
+
+#: in/chapter20.md:225
+msgid ""
+"Once the semantics of individual words is decided, the semantics of higher-"
+"level categories (sentences and noun phrases) is easy.\n"
+"In this grammar, the semantics of a sentence is the application of the "
+"predicate (the verb phrase) to the subject (the noun phrase).\n"
+"The semantics of a compound noun phrase is the application of the determiner "
+"to the noun."
+msgstr ""
+"Как только семантика отдельных слов определена, семантика категорий более "
+"высокого уровня (утверждений и фраз существительных) упрощается.\n"
+"В этой грамматике семантика утверждения - это применение сказуемого "
+"(глагольной фразы) к подлежащему (фразе существительного).\n"
+"Семантика составной фразы существительного - это применение "
+"определителя(determiner) к существительному."
+
+#: in/chapter20.md:229
+msgid ""
+"This grammar returns the semantic interpretation but does not build a "
+"syntactic tree.\n"
+"The syntactic structure is implicit in the sequence of goals: `S` calls `NP` "
+"and `VP`, and `NP` can call `Det` and `N`.\n"
+"If we want to make this explicit, we can provide yet another argument to "
+"each nonterminal:"
+msgstr ""
+"Эта грамматика возвращает семантическую интерпретацию, но не строит "
+"синтаксическое дерево.\n"
+"Синтаксическая структура подразумевается в последовательности целей: `S` "
+"вызывает `NP` и `VP`, а `NP` может вызывать `Det` и `N`.\n"
+"Если мы хотим сделать это явным, мы можем предоставить еще один аргумент для "
+"каждого нетерминала:"
+
+#: in/chapter20.md:233
+msgid ""
+"```lisp\n"
+"(<- (S (?pred ?subj) (s ?np ?vp) ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:235
+msgid "              `(NP ?agr ?subj ?np ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:237
+msgid "                `(VP ?agr ?pred ?vp ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:241
+msgid ""
+"```lisp\n"
+"(<- (NP 3sg (the male) (np he) (he . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:243
+msgid "`(<- (NP`\"`3sg (some objects) (np they) (they . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:247
+msgid ""
+"```lisp\n"
+"(<- (NP ?agr (?det ?n) (np ?det-syn ?n-syn)?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:249
+msgid "                `(Det ?agr ?det ?det-syn ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:251
+msgid "                `(N ?agr ?n ?n-syn ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:255
+msgid ""
+"```lisp\n"
+"(<- (VP 3sg sleep (vp sleeps)(sleeps . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:257
+msgid "`(<- (VP`\"`3sg sleep (vp sleep) (sleep . ?s) ?s))`"
+msgstr ""
+
+#: in/chapter20.md:263
+msgid ""
+"```lisp\n"
+"(<- (Det ?any the (det the) (the . ?s) ?s))\n"
+"(<- (N 3sg (young male human) (n boy) (boy . ?s) ?s))\n"
+"(<- (N 3sg (young female human) (n girl) (girl . ?s) ?s))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:265
+msgid ""
+"This grammar can still be used to parse or generate sentences, or even to "
+"enumerate all syntax/semantics/sentence triplets:"
+msgstr ""
+"Эту грамматику все еще можно использовать для синтаксического анализа или "
+"генерации предложений или даже для перечисления всех триплетов синтаксиса / "
+"семантики / утверждений:"
+
+#: in/chapter20.md:290
+msgid ""
+"```lisp\n"
+";; Parsing:\n"
+"> (?- (S ?sem ?syn (He sleeps) ()))\n"
+"?SEM = (SLEEP (THE MALE))\n"
+"?SYN = (S (NP HE) (VP SLEEPS)).\n"
+";; Generating:\n"
+"> (?- (S (sleep (the male)) ? ?words ()))\n"
+"?WORDS = (HE SLEEPS)\n"
+";; Enumerating:\n"
+"> (?- (S ?sem ?syn ?words ()))\n"
+"?SEM = (SLEEP (THE MALE))\n"
+"?SYN = (S (NP HE) (VP SLEEPS))\n"
+"?WORDS = (HE SLEEPS);\n"
+"?SEM = (SLEEP (SOME OBJECTS))\n"
+"?SYN = (S (NP THEY) (VP SLEEP))\n"
+"?WORDS = (THEY SLEEP);\n"
+"?SEM = (SLEEP (THE (YOUNG MALE HUMAN)))\n"
+"?SYN = (S (NP (DET THE) (N BOY)) (VP SLEEPS))\n"
+"?WORDS = (THE BOY SLEEPS);\n"
+"?SEM = (SLEEP (THE (YOUNG FEMALE HUMAN)))\n"
+"?SYN = (S (NP (DET THE) (N GIRL)) (VP SLEEPS))\n"
+"?WORDS = (THE GIRL SLEEPS);\n"
+"No.\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:292
+msgid "## 20.2 Definite Clause Grammars"
+msgstr "## 20.2 Грамматика с определенными предложениями"
+
+#: in/chapter20.md:296
+msgid ""
+"We now have a powerful and efficient tool for parsing sentences.\n"
+"However, it is getting to be a very messy tool-there are too many arguments "
+"to each goal, and it is hard to tell which arguments represent syntax, which "
+"represent semantics, which represent in/out strings, and which represent "
+"other features, like agreement.\n"
+"So, we will take the usual step when our bare programming language becomes "
+"messy: define a new language."
+msgstr ""
+"Теперь у нас есть мощный и эффективный инструмент для разбора утверждений.\n"
+"Однако он становится очень запутанным инструментом - для каждой цели слишком "
+"много аргументов, и трудно сказать, какие аргументы представляют синтаксис, "
+"какие представляют семантику, какие представляют строки ввода/вывода и какие "
+"представляют другие функции, например согласование(agreement).\n"
+"Итак, мы сделаем обычный шаг, когда наш голый язык программирования "
+"становиться беспорядочным: определяем новый язык."
+
+#: in/chapter20.md:299
+msgid ""
+"Edinburgh Prolog recognizes assertions called *definite clause grammar* "
+"(DCG) rules.\n"
+"The term *definite clause* is just another name for a Prolog clause, so DCGs "
+"are also called \"logic grammars.\" They could have been called \"Horn "
+"clause grammars\" or \"Prolog grammars\" as well."
+msgstr ""
+"Edinburgh Prolog распознает утверждения(assertions), называемые правилами "
+"*грамматики с определенными предложениями* (DCG).\n"
+"Термин *определенное предложение* - это просто еще одно название предложений "
+"Пролога, поэтому DCG также называют \"логическими грамматиками\". Их также "
+"можно было назвать \"грамматиками предложений Хорна\" или \"грамматиками "
+"Пролога\"."
+
+#: in/chapter20.md:304
+msgid ""
+"DCG rules are clauses whose main functor is an arrow, usually written -->.\n"
+"They compile into regular Prolog clauses with extra arguments.\n"
+"In normal DCG rules, only the string arguments are automatically added.\n"
+"But we will see later how this can be extended to add other arguments "
+"automatically as well."
+msgstr ""
+"Правила DCG - это предложения, основным функтором которых является стрелка, "
+"обычно записываемая -->.\n"
+"Они компилируются в обычные предложения Пролога с дополнительными "
+"аргументами.\n"
+"В обычных правилах DCG автоматически добавляются только строковые "
+"аргументы.\n"
+"Но позже мы увидим, как это можно расширить для автоматического добавления "
+"других аргументов."
+
+#: in/chapter20.md:307
+msgid ""
+"We will implement DCG rules with the macro `rule` and an infix arrow.\n"
+"Thus, we want the expression:"
+msgstr ""
+"Мы реализуем правила DCG с помощью макроса `rule` и инфиксной стрелки.\n"
+"Таким образом, нам нужно выражение:"
+
+#: in/chapter20.md:311
+msgid ""
+"```lisp\n"
+"(rule (S) --> (NP) (VP))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:313
+msgid "to expand into the clause:"
+msgstr "развернуть в предложение:"
+
+#: in/chapter20.md:317
+msgctxt "in/chapter20.md:317"
+msgid ""
+"```lisp\n"
+"(<- (S ?s0 ?s2)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:319
+msgctxt "in/chapter20.md:319"
+msgid "              `(NP ?s0 ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:321
+msgctxt "in/chapter20.md:321"
+msgid "              `(VP ?sl ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:324
+msgid ""
+"While we're at it, we may as well give `rule` the ability to deal with "
+"different types of rules, each one represented by a different type of "
+"arrow.\n"
+"Here's the `rule` macro:"
+msgstr ""
+"Пока мы находимся в этом, мы также можем дать `rule` возможность работать с "
+"разными типами правил, каждое из которых представлено стрелкой разного "
+"типа.\n"
+"Вот макрос `rule`:"
+
+#: in/chapter20.md:331
+msgid ""
+"```lisp\n"
+"(defmacro rule (head &optional (arrow ':-) &body body)\n"
+"  \"Expand one of several types of logic rules into pure Prolog.\"\n"
+"  ;; This is data-driven, dispatching on the arrow\n"
+"  (funcall (get arrow 'rule-function) head body))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:334
+msgid ""
+"As an example of a rule function, the arrow : - will be used to represent "
+"normal Prolog clauses.\n"
+"That is, the form (`rule`*head : - body*) will be equivalent to (<- *head "
+"body).*"
+msgstr ""
+"В качестве примера функции правила стрелка: - будет использоваться для "
+"представления обычных предложений Пролога.\n"
+"То есть форма (`rule`*head : - body*) будет эквивалентна (<- *head body).*"
+
+#: in/chapter20.md:339
+msgid ""
+"```lisp\n"
+"(setf (get ':- 'rule-function)\n"
+"      #'(lambda (head body) `(<- ,head .,body)))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:344
+msgid ""
+"Before writing the rule function for DCG rules, there are two further "
+"features of the DCG formalism to consider.\n"
+"First, some goals in the body of a rule may be normal Prolog goals, and thus "
+"do not require the extra pair of arguments.\n"
+"In Edinburgh Prolog, such goals are surrounded in braces.\n"
+"One would write:"
+msgstr ""
+"Прежде чем писать функцию правила для правил DCG, необходимо рассмотреть еще "
+"две особенности формализма DCG.\n"
+"Во-первых, некоторые цели в теле правила могут быть обычными целями Пролога "
+"и, следовательно, не требуют дополнительной пары аргументов.\n"
+"В Edinburgh Prolog(Эдинбургском Прологе) такие цели заключены в фигурные "
+"скобки.\n"
+"Можно было бы написать:"
+
+#: in/chapter20.md:348
+msgid ""
+"```lisp\n"
+"s(Sem) --> np(Subj), vp(Pred),\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:350
+msgid "                                    `{combi ne(Subj,Pred,Sem)}.`"
+msgstr ""
+
+#: in/chapter20.md:353
+msgid ""
+"where the idea is that `combine` is not a grammatical constituent, but "
+"rather a Prolog predicate that could do some calculations on `Subj` and "
+"`Pred` to arrive at the proper semantics, `Sem`.\n"
+"We will mark such a test predicate not by brackets but by a list headed by "
+"the keyword `:test`, as in:"
+msgstr ""
+"где идея состоит в том, что `combine` не является грамматической "
+"составляющей, а скорее предикатом Пролога, который может производить "
+"некоторые вычисления с `Subj` и `Pred`, чтобы прийти к правильной семантике "
+"`Sem`.\n"
+"Мы будем отмечать такой тестовый предикат не скобками, а списком, "
+"возглавляемым ключевым словом `:test`, например:"
+
+#: in/chapter20.md:357
+msgid ""
+"```lisp\n"
+"(rule (S ?sem) --> (NP ?subj) (VP ?pred)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:359
+msgid "      `(:test (combine ?subj ?pred ?sem)))`"
+msgstr ""
+
+#: in/chapter20.md:362
+msgid ""
+"Second, we need some way of introducing individual words on the right-hand "
+"side, as opposed to categories of words.\n"
+"In Prolog, brackets are used to represent a word or list of words on the "
+"right-hand side:"
+msgstr ""
+"Во-вторых, нам нужен способ введения отдельных слов в правой части, в "
+"отличие от категорий слов.\n"
+"В Прологе скобки используются для представления слова или списка слов с "
+"правой стороны:"
+
+#: in/chapter20.md:366
+msgid ""
+"```lisp\n"
+"verb --> [sleeps].\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:368
+msgid "We will use a list headed by the keyword `:word:`"
+msgstr "Мы будем использовать список с ключевым словом `:word:`"
+
+#: in/chapter20.md:373
+msgid ""
+"```lisp\n"
+"(rule (NP (the male) 3sg) --> (:word he))\n"
+"(rule (VP sleeps 3sg) --> (:word sleeps))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:376
+msgid ""
+"The following predicates test for these two special cases.\n"
+"Note that the cut is also allowed as a normal goal."
+msgstr ""
+"Следующие предикаты проверяют эти два особых случая.\n"
+"Обратите внимание, что  cut(обрезка) также допускается как обычная цель."
+
+#: in/chapter20.md:379
+msgid ""
+"```lisp\n"
+"(defun dcg-normal-goal-p (x) (or (starts-with x :test) (eq x '!)))"
+msgstr ""
+
+#: in/chapter20.md:382
+msgid ""
+"(defun dcg-word-list-p (x) (starts-with x ':word))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:385
+msgid ""
+"At last we are in a position to present the rule function for DCG rules.\n"
+"The function `make-dcg` inserts variables to keep track of the strings that "
+"are being parsed."
+msgstr ""
+"Наконец-то мы можем представить функцию правила для правил DCG.\n"
+"Функция `make-dcg` вставляет переменные для отслеживания строк, которые "
+"анализируются."
+
+#: in/chapter20.md:388
+msgid ""
+"```lisp\n"
+"(setf (get '--> 'rule-function) 'make-dcg)"
+msgstr ""
+
+#: in/chapter20.md:393
+msgid ""
+"(defun make-dcg (head body)\n"
+"  (let ((n (count-if (complement #'dcg-normal-goal-p) body)))\n"
+"    `(<- (,@head ?s0 ,(symbol '?s n))\n"
+"         .,(make-dcg-body body 0))))"
+msgstr ""
+
+#: in/chapter20.md:418
+msgid ""
+"(defun make-dcg-body (body n)\n"
+"  \"Make the body of a Definite Clause Grammar (DCG) clause.\n"
+"  Add ?string-in and -out variables to each constituent.\n"
+"  Goals like (:test goal) are ordinary Prolog goals,\n"
+"  and goals like (:word hello) are literal words to be parsed.\"\n"
+"  (if (null body)\n"
+"      nil\n"
+"      (let ((goal (first body)))\n"
+"        (cond\n"
+"          ((eq goal '!) (cons '! (make-dcg-body (rest body) n)))\n"
+"          ((dcg-normal-goal-p goal)\n"
+"           (append (rest goal)\n"
+"                   (make-dcg-body (rest body) n)))\n"
+"          ((dcg-word-list-p goal)\n"
+"           (cons\n"
+"             `(= ,(symbol '?s n)\n"
+"                 (,@(rest goal) .,(symbol '?s (+ n 1))))\n"
+"             (make-dcg-body (rest body) (+ n 1))))\n"
+"          (t (cons\n"
+"               (append goal\n"
+"                       (list (symbol '?s n)\n"
+"                             (symbol '?s (+ n 1))))\n"
+"               (make-dcg-body (rest body) (+ n 1))))))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:422
+msgid ""
+"**Exercise  20.1 [m]**`make-dcg` violates one of the cardinal rules of "
+"macros.\n"
+"What does it do wrong?\n"
+"How would you fix it?"
+msgstr ""
+"**Упражнение 20.1 [m]** `make-dcg` нарушает одно из основных правил "
+"макросов.\n"
+"Что он делает не так?\n"
+"Как бы вы это исправить?"
+
+#: in/chapter20.md:424
+msgid "## 20.3 A Simple Grammar in DCG Format"
+msgstr "## 20.3 Простая грамматика в формате DCG"
+
+#: in/chapter20.md:426
+msgid ""
+"Here is the trivial grammar from [page 688](chapter20.xhtml#p688) in DCG "
+"format."
+msgstr ""
+"Вот тривиальная грамматика из [страница 688](chapter20.xhtml#p688) в формате "
+"DCG."
+
+#: in/chapter20.md:430
+msgid ""
+"```lisp\n"
+"(rule (S (?pred ?subj)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:432
+msgctxt "in/chapter20.md:432"
+msgid "      `(NP ?agr ?subj)`"
+msgstr ""
+
+#: in/chapter20.md:434
+msgid "      `(VP ?agr ?pred))`"
+msgstr ""
+
+#: in/chapter20.md:438
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr (?det ?n)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:440
+msgid "      `(Det ?agr ?det)`"
+msgstr ""
+
+#: in/chapter20.md:442
+msgid "      `(N ?agr ?n))`"
+msgstr ""
+
+#: in/chapter20.md:446
+msgid ""
+"```lisp\n"
+"(rule (NP 3sg (the male))                   --> (:word he))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:448
+msgid "`(rule (NP`\"`3sg (some objects))           --> (:word they))`"
+msgstr ""
+
+#: in/chapter20.md:452
+msgid ""
+"```lisp\n"
+"(rule (VP 3sg sleep)                             --> (:word sleeps))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:454
+msgid ""
+"`(rule (VP`\"`3sg sleep)                             --> (:word sleep))`"
+msgstr ""
+
+#: in/chapter20.md:460
+msgid ""
+"```lisp\n"
+"(rule (Det ?any the)                             --> (:word the))\n"
+"(rule (N 3sg (young male human))     --> (:word boy))\n"
+"(rule (N 3sg (young female human)) --> (:word girl))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:463
+msgid ""
+"This grammar is quite limited, generating only four sentences.\n"
+"The first way we will extend it is to allow verbs with objects: in addition "
+"to \"The boy sleeps,\" we will allow \"The boy meets the girl.\" To avoid "
+"generating ungrammatical sentences like \"* The boy meets,\"[1](#fn0015) we "
+"will separate the category of verb into two *subcategories*: transitive "
+"verbs, which take an object, and intransitive verbs, which don't."
+msgstr ""
+"Эта грамматика довольно ограничена, генерирует всего четыре предложения.\n"
+"Первый способ её расширения - разрешить глаголы с объектами: в дополнение к "
+"\"The boy sleeps\"(Мальчик спит) мы разрешим \"The boy meets the girl"
+"\"(Мальчик встречает девушку). Чтобы избежать создания некрасивых "
+"предложений, таких как \"* The boy meets\"(Мальчик встречает)[1](#fn0015), "
+"мы разделим категорию глаголов на две *подкатегории*: переходные глаголы, "
+"которые принимают объект, и непереходные глаголы, которые его не имеют."
+
+#: in/chapter20.md:469
+msgid ""
+"Transitive verbs complicate the semantic interpretation of sentences.\n"
+"We would like the interpretation of \"Terry kisses Jean\" to be `(kiss Terry "
+"Jean)`.\n"
+"The interpretation of the noun phrase \"Terry\" is just `Terry`, but then "
+"what should the interpretation of the verb phrase \"kisses Jean\" be?\n"
+"To fit our predicate application model, it must be something equivalent to "
+"`(lambda (x) (kiss x Jean))`.\n"
+"When applied to the subject, we want to get the simplification:"
+msgstr ""
+"Переходные глаголы усложняют смысловую трактовку утверждений.\n"
+"Мы хотели бы, чтобы интерпретация \"Terry kisses Jean\"(Терри целует Джин) "
+"была `(kiss Terry Jean)`.\n"
+"Интерпретация фразы существительного \"Terry\"(Терри) - это просто `Terry`, "
+"но тогда какой должна быть интерпретация глагольной фразы \"kisses Jean"
+"\"(целует Джин)?\n"
+"Чтобы соответствовать нашей модели применения предиката, она должна быть чем-"
+"то эквивалентной `(lambda (x) (kiss x Jean))`.\n"
+"Применительно к субъекту мы хотим получить упрощение:"
+
+#: in/chapter20.md:471
+msgid "`((lambda (x) (kiss x Jean)) Terry)`=> `(kiss Terry Jean)`"
+msgstr ""
+
+#: in/chapter20.md:475
+msgid ""
+"Such simplification is not done automatically by Prolog, but we can write a "
+"predicate to do it.\n"
+"We will call it `funcall`, because it is similar to the Lisp function of "
+"that name, although it only handles replacement of the argument, not full "
+"evaluation of the body.\n"
+"(Technically, this is the lambda-calculus operation known as *beta-"
+"reduction.)* The predicate `funcall` is normally used with two input "
+"arguments, a function and its argument, and one output argument, the "
+"resulting reduction:"
+msgstr ""
+"Такое упрощение не выполняется Prolog(ом) автоматически, но мы можем "
+"написать для этого предикат.\n"
+"Мы назовем его `funcall`, потому что он похож на функцию Lisp с таким "
+"именем, хотя он обрабатывает только замену аргумента, а не полное вычисление "
+"тела.\n"
+"(Технически это операция лямбда-исчисления, известная как *бета-редукция.)* "
+"Предикат `funcall` обычно используется с двумя входными аргументами, "
+"функцией и ее аргументом и одним выходным аргументом, в результате чего "
+"происходит упрощение(сокращение):"
+
+#: in/chapter20.md:479
+msgid ""
+"```lisp\n"
+"(<- (funcall (lambda (?x) ?body) ?x ?body))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:481
+msgid "With this we could write our rule for sentences as:"
+msgstr "С этим мы могли бы написать наше правило для утверждений как:"
+
+#: in/chapter20.md:485
+msgctxt "in/chapter20.md:485"
+msgid ""
+"```lisp\n"
+"(rule (S ?sem) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:487
+msgctxt "in/chapter20.md:487"
+msgid "      `(NP ?agr ?subj)`"
+msgstr ""
+
+#: in/chapter20.md:489
+msgid "      `(VP ?agr ?pred)`"
+msgstr ""
+
+#: in/chapter20.md:491
+msgid "      `(:test (funcall ?pred ?subj ?sem)))`"
+msgstr ""
+
+#: in/chapter20.md:496
+msgid ""
+"An alternative is to, in effect, compile away the call to `funcall`.\n"
+"Instead of having the semantic representation of `VP` be a single lambda "
+"expression, we can represent it as two arguments: an input argument, `?"
+"subj`, which acts as a parameter to the output argument, `?pred`, which "
+"takes the place of the body of the lambda expression.\n"
+"By explicitly manipulating the parameter and body, we can eliminate the call "
+"to `funcall`.\n"
+"The trick is to make the parameter and the subject one and the same:"
+msgstr ""
+"Фактически, альтернативой является компиляция вызова функции `funcall`.\n"
+"Вместо того чтобы семантическое представление `VP` было одним лямбда-"
+"выражением, мы можем представить его как два аргумента: входной аргумент, `?"
+"subj`, который действует как параметр для выходного аргумента,`?pred`, "
+"который принимает место тела лямбда-выражения.\n"
+"Явно манипулируя параметром и телом, мы можем исключить вызов `funcall`.\n"
+"Хитрость заключается в том, чтобы сделать параметр и субъект одним и тем же:"
+
+#: in/chapter20.md:500
+msgid ""
+"```lisp\n"
+"(rule (S ?pred) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:502
+msgctxt "in/chapter20.md:502"
+msgid "      `(NP ?agr ?subj)`"
+msgstr ""
+
+#: in/chapter20.md:504
+msgid "      `(VP ?agr ?subj ?pred))`"
+msgstr ""
+
+#: in/chapter20.md:507
+msgid ""
+"One way of reading this rule is \"To parse a sentence, parse a noun phrase "
+"followed by a verb phrase.\n"
+"If they have different agreement features then fail, but otherwise insert "
+"the interpretation of the noun phrase, `?subj`, into the proper spot in the "
+"interpretation of the verb phrase, `?pred`, and return `?pred` as the final "
+"interpretation of the sentence.\""
+msgstr ""
+"Один из способов прочтения этого правила: \"Чтобы разобрать предложение, "
+"разобрать фразу существительного, за которой следует глагольная фраза.\n"
+"Если у них есть разные признаки согласования, то они не работают, но в "
+"противном случае вставьте интерпретацию фразы существительного `?subj` в "
+"правильное место в интерпретации глагольной фразы `?pred` и верните `?pred` "
+"в качестве финального толкования утверждения\"."
+
+#: in/chapter20.md:511
+msgid ""
+"The next step is to write rules for verb phrases and verbs.\n"
+"Transitive verbs are listed under the predicate `Verb/tr`, and intransitive "
+"verbs are listed as `Verb/intr`.\n"
+"The semantics of tenses (past and present) has been ignored."
+msgstr ""
+"Следующим шагом будет написание правил для глагольных фраз и глаголов.\n"
+"Переходные глаголы перечислены под предикатом `Verb/tr`, а непереходные "
+"глаголы перечислены как `Verb/intr`.\n"
+"Семантика времен (прошедшего(past) и настоящего(present)) игнорируется."
+
+#: in/chapter20.md:515
+msgctxt "in/chapter20.md:515"
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?subj ?pred) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:517
+msgid "      `(Verb/tr ?agr ?subj ?pred ?obj)`"
+msgstr ""
+
+#: in/chapter20.md:519
+msgid "      `(NP ?any-agr ?obj))`"
+msgstr ""
+
+#: in/chapter20.md:523
+msgctxt "in/chapter20.md:523"
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?subj ?pred) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:525
+msgid "      `(Verb/intr ?agr ?subj ?pred))`"
+msgstr ""
+
+#: in/chapter20.md:527
+msgid "`(rule (Verb/tr`\"`3sg ?x (kiss ?x ?y) ?y) --> (:word kiss))`"
+msgstr ""
+
+#: in/chapter20.md:532
+msgid ""
+"```lisp\n"
+"(rule (Verb/tr 3sg ?x (kiss ?x ?y) ?y) --> (:word kisses))\n"
+"(rule (Verb/tr ?any ?x (kiss ?x ?y) ?y) --> (:word kissed))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:534
+msgctxt "in/chapter20.md:534"
+msgid "`(rule (Verb/intr`\"`3sg ?x (sleep ?x)) --> (:word sleep))`"
+msgstr ""
+
+#: in/chapter20.md:539
+msgid ""
+"```lisp\n"
+"(rule (Verb/intr 3sg ?x (sleep ?x)) --> (:word sleeps))\n"
+"(rule (Verb/intr ?any ?x (sleep ?x)) --> (:word slept))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:541
+msgid "Here are the rules for noun phrases and nouns:"
+msgstr ""
+"Вот правила для фраз существительных(noun phrases) и существительных(nouns):"
+
+#: in/chapter20.md:545
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr ?sem) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:547
+msgid "      `(Name ?agr ?sem))`"
+msgstr ""
+
+#: in/chapter20.md:551
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr (?det-sem ?noun-sem)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:553
+msgid "      `(Det ?agr ?det-sem)`"
+msgstr ""
+
+#: in/chapter20.md:555
+msgid "      `(Noun ?agr ?noun-sem))`"
+msgstr ""
+
+#: in/chapter20.md:562
+msgid ""
+"```lisp\n"
+"(rule (Name 3sg Terry) --> (:word Terry))\n"
+"(rule (Name 3sg Jean) --> (:word Jean))\n"
+"(rule (Noun 3sg (young male human)) --> (:word boy))\n"
+"(rule (Noun 3sg (young female human)) --> (:word girl))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:564
+msgid "`(rule (Noun`\"`3sg (group (young male human))) --> (:word boys))`"
+msgstr ""
+
+#: in/chapter20.md:566
+msgid "`(rule (Noun`\"`3sg (group (young female human))) --> (:word girls))`"
+msgstr ""
+
+#: in/chapter20.md:571
+msgid ""
+"```lisp\n"
+"(rule (Det ?any the) --> (:word the))\n"
+"(rule (Det 3sg a) --> (:word a))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:574
+msgid ""
+"This grammar and lexicon generates more sentences, although it is still "
+"rather limited.\n"
+"Here are some examples:"
+msgstr ""
+"Эта грамматика и лексика генерируют больше утверждений, хотя они все еще "
+"довольно ограничены.\n"
+"Вот некоторые примеры:"
+
+#: in/chapter20.md:579
+msgid ""
+"```lisp\n"
+"> (?- (S ?sem (The boys kiss a girl) ()))\n"
+"?SEM = (KISS (THE (GROUP (YOUNG MALE HUMAN)))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:581
+msgid ""
+"                                              `(A (YOUNG FEMALE HUMAN))).`"
+msgstr ""
+
+#: in/chapter20.md:586
+msgid ""
+"```lisp\n"
+"> (?- (S ?sem (The girls kissed the girls) ()))\n"
+"?SEM = (KISS (THE (GROUP (YOUNG FEMALE HUMAN)))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:588
+msgid ""
+"                                              `(THE (GROUP (YOUNG FEMALE "
+"HUMAN)))).`"
+msgstr ""
+
+#: in/chapter20.md:599
+msgid ""
+"```lisp\n"
+"> (?- (S ?sem (Terry kissed the girl) ()))\n"
+"?SEM = (KISS TERRY (THE (YOUNG FEMALE HUMAN))).\n"
+"> (?- (S ?sem (The girls kisses the boys) ()))\n"
+"No.\n"
+"> (?- (S ?sem (Terry kissed a girls) ()))\n"
+"No.\n"
+"> (?- (S ?sem (Terry sleeps Jean) ()))\n"
+"No.\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:606
+msgid ""
+"The first three examples are parsed correctly, while the final three are "
+"correctly rejected.\n"
+"The inquisitive reader may wonder just what is going on in the "
+"interpretation of a sentence like \"The girls kissed the girls.\" Do the "
+"subject and object represent the same group of girls, or different groups?\n"
+"Does everyone kiss everyone, or are there fewer kissings going on?\n"
+"Until we define our representation more carefully, there is no way to tell.\n"
+"Indeed, it seems that there is a potential problem in the representation, in "
+"that the predicate `kiss` sometimes has individuals as its arguments, and "
+"sometimes groups.\n"
+"More careful representations of \"The girls kissed the girls\" include the "
+"following candidates, using predicate calculus:"
+msgstr ""
+"Первые три примера анализируются правильно, а последние три правильно "
+"отклоняются.\n"
+"Пытливый читатель может задаться вопросом, что же происходит в интерпретации "
+"утверждения вроде \"The girls kissed the girls\"(Девушки поцеловали "
+"девушек). Представляют ли субъект и объект одну и ту же группу девушек или "
+"разные группы?\n"
+"Все целуются со всеми, или поцелуев становится меньше?\n"
+"Пока мы не определим наше представление более тщательно, определенно сказать "
+"невозможно.\n"
+"В самом деле, кажется, что существует потенциальная проблема в "
+"представлении, поскольку предикат `kiss`(целовать) иногда имеет в качестве "
+"аргументов индивидов, а иногда и группы.\n"
+"Более тщательные представления \"The girls kissed the girls\" включают "
+"следующих кандидатов, использующих исчисление предикатов:"
+
+#: in/chapter20.md:608
+msgid ""
+"> &forall;`x`&forall;`y x` &isin; `girls` &and; `y` &isin; `girls => kiss(x,"
+"y)`"
+msgstr ""
+
+#: in/chapter20.md:610
+msgid ""
+"> &forall;`x` &forall;`y x` &isin; `girls` &and; `y`&epsilon;`girls` &and; "
+"`x`&ne;`y => kiss(x,y)`"
+msgstr ""
+
+#: in/chapter20.md:612
+msgid ""
+"> &forall;`x`&exist;`y,z x`&isin; `girls` &and; `y`&isin; `girls` &and; "
+"`z`&isin; `girls => kiss(x,y)` &and; `kiss(z,x)`"
+msgstr ""
+
+#: in/chapter20.md:614
+msgid ""
+"> &forall;`x`&exist;`y x`&isin; `girls` &and; `y`&isin; `girls => kiss(x,"
+"y)`&or; `kiss(y,x)`"
+msgstr ""
+
+#: in/chapter20.md:619
+msgid ""
+"The first of these says that every girl kisses every other girl.\n"
+"The second says the same thing, except that a girl need not kiss herself.\n"
+"The third says that every girl kisses and is kissed by at least one other "
+"girl, but not necessarily all of them, and the fourth says that everbody is "
+"in on at least one kissing.\n"
+"None of these interpretations says anything about who \"the girls\" are."
+msgstr ""
+"Первая из них гласит, что каждая девушка целует каждую другую девушку.\n"
+"Второй говорит то же самое, за исключением того, что девушке не нужно "
+"целоваться.\n"
+"Третий говорит, что каждую девушку целует и целует хотя бы одна другая "
+"девушка, но не обязательно все они, а четвертый говорит, что каждый "
+"участвует хотя бы в одном поцелуе.\n"
+"Ни одна из этих интерпретаций ничего не говорит о том, кто такие \"the girls"
+"\"(девушки)."
+
+#: in/chapter20.md:623
+msgid ""
+"Clearly, the predicate calculus representations are less ambiguous than the "
+"representation produced by the current system.\n"
+"On the other hand, it would be wrong to choose one of the representations "
+"arbitrarily, since in different contexts, \"The girls kissed the girls\" can "
+"mean different things.\n"
+"Maintaining ambiguity in a concise form is useful, as long as there is some "
+"way eventually to recover the proper meaning."
+msgstr ""
+"Ясно, что представления исчисления предикатов менее неоднозначны, чем "
+"представления, производимые текущей системой.\n"
+"С другой стороны, было бы неправильно выбирать одно из представлений "
+"произвольно, поскольку в разных контекстах \"The girls kissed the girls"
+"\"(девушки поцеловали девушек) могут означать разные вещи.\n"
+"Сохранение двусмысленности в сжатой форме полезно, если есть какой-то способ "
+"в конечном итоге восстановить правильное значение."
+
+#: in/chapter20.md:625
+msgid "## 20.4 A DCG Grammar with Quantifiers"
+msgstr "## 20.4 Грамматика DCG с квантификаторами"
+
+#: in/chapter20.md:627
+msgid ""
+"The problem in the representation we have been using becomes more acute when "
+"we consider other determiners, such as \"every.\" Consider the sentence "
+"\"Every picture paints a story.\" The preceding DCG, if given the right "
+"vocabulary, would produce the interpretation:"
+msgstr ""
+"Проблема в представлении, которое мы использовали, становится более острой, "
+"когда мы рассматриваем другие детерминанты, такие как \"every\"(каждый). "
+"Рассмотрим утверждение \"Every picture paints a story\"(Каждая картина "
+"изображает историю). Предыдущий DCG, если дать правильный словарь, даст "
+"интерпретацию:"
+
+#: in/chapter20.md:631
+msgid ""
+"```lisp\n"
+"(paints (every picture) (a story))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:633
+msgid ""
+"This can be considered ambiguous between the following two meanings, in "
+"predicate calculus form:"
+msgstr ""
+"Это можно считать двусмысленным между следующими двумя значениями в форме "
+"исчисления предикатов:"
+
+#: in/chapter20.md:635
+msgid "`&forall; x picture(x)`=> `&exist; y story(y) &and; paint(x,y)`"
+msgstr ""
+
+#: in/chapter20.md:637
+msgid "`&exist; y story (y) &and; &forall; x picture(x)`=> `paint(x,y)`"
+msgstr ""
+
+#: in/chapter20.md:645
+msgid ""
+"The first says that for each picture, there is a story that it paints.\n"
+"The second says that there is a certain special story that every picture "
+"paints.\n"
+"The second is an unusual interpretation for this sentence, but for \"Every U."
+"S.\n"
+"citizen has a president,\" the second interpretation is perhaps the "
+"preferred one.\n"
+"In the next section, we will see how to produce representations that can be "
+"transformed into either interpretation.\n"
+"For now, it is a useful exercise to see how we could produce just the first "
+"representation above, the interpretation that is usually correct.\n"
+"First, we need to transcribe it into Lisp:"
+msgstr ""
+"Первый говорит, что для каждой картины есть история, которую она "
+"изображает.\n"
+"Второй говорит о том, что каждая картина изображает особую историю.\n"
+"Второе - необычное толкование этого предложения, но для \"Every U.S.\n"
+"citizen has a president\"(У каждого U.S. гражданина есть президент\", \n"
+"вторая интерпретация, пожалуй, предпочтительнее.\n"
+"В следующем разделе мы увидим, как создавать представления, которые можно "
+"преобразовать в любую интерпретацию.\n"
+"На данный момент это полезное упражнение, чтобы увидеть, как мы можем "
+"создать только первое представление выше, интерпретацию, которая обычно "
+"является правильной.\n"
+"Во-первых, нам нужно преобразовать его в Лисп:"
+
+#: in/chapter20.md:649
+msgid ""
+"```lisp\n"
+"(all ?x (-> (picture ?x) (exists ?y (and (story ?y) (paint ?x ?y)))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:653
+msgid ""
+"The first question is how the `all` and `exists` forms get in there.\n"
+"They must come from the determiners, \"every\" and \"a.\" Also, it seems "
+"that `all` is followed by an implication arrow, `->`, while `exists` is "
+"followed by a conjunction, `and`.\n"
+"So the determiners will have translations looking like this:"
+msgstr ""
+"Первый вопрос - как туда попадают формы `all` и `exists`.\n"
+"Они должны исходить от определителей \"every\"(каждый) и \"a\"(а). Кроме "
+"того, кажется, что за словом `all` следует стрелка импликации, `->`, а за "
+"словом `exists` следует конъюнкция `and`.\n"
+"Таким образом, у определителей будут преобразования, которые выглядят так: "
+
+#: in/chapter20.md:659
+msgid ""
+"```lisp\n"
+"(rule (Det ?any ?x ?p ?q (the ?x (and ?p ?q)))     --> (:word the))\n"
+"(rule (Det 3sg ?x ?p ?q (exists ?x (and ?p ?q))) --> (:word a))\n"
+"(rule (Det 3sg ?x ?p ?q (all ?x (-> ?p ?q)))         --> (:word every))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:667
+msgid ""
+"Once we have accepted these translations of the determiners, everything else "
+"follows.\n"
+"The formulas representing the determiners have two holes in them, `?p` and `?"
+"q`.\n"
+"The first will be filled by a predicate representing the noun, and the "
+"latter will be filled by the predicate that is being applied to the noun "
+"phrase as a whole.\n"
+"Notice that a curious thing is happening.\n"
+"Previously, translation to logical form was guided by the sentence's verb.\n"
+"Linguisticly, the verb expresses the main predicate, so it makes sense that "
+"the verb's logical translation should be the main part of the sentence's "
+"translation.\n"
+"In linguistic terms, we say that the verb is the *head* of the sentence."
+msgstr ""
+"После того, как мы приняли эти преобразования определителей, следует все "
+"остальное.\n"
+"В формулах, представляющих определители, есть две позиции, `?p` и `?q`.\n"
+"Первая будет заполнена предикатом, представляющим существительное, а "
+"последняя - предикатом, который применяется к фразе существительного в "
+"целом.\n"
+"Обратите внимание, что происходит любопытная вещь.\n"
+"Раньше при переводе в логическую форму руководствовались глаголом "
+"утверждения.\n"
+"С лингвистической точки зрения глагол выражает основное сказуемое, поэтому "
+"логический перевод глагола должен быть основной частью преобразования "
+"предложения.\n"
+"В лингвистических терминах мы говорим, что глагол является *главой* "
+"предложения."
+
+#: in/chapter20.md:672
+msgid ""
+"With the new translations for determiners, we are in effect turning the "
+"whole process upside down.\n"
+"Now the subject's determiner carries the weight of the whole sentence.\n"
+"The determiner's interpretation is a function of two arguments; it is "
+"applied to the noun first, yielding a function of one argument, which is in "
+"turn applied to the verb phrase's interpretation.\n"
+"This primacy of the determiner goes against intuition, but it leads directly "
+"to the right interpretation."
+msgstr ""
+"С новыми преобразованиями для определителей мы фактически переворачиваем "
+"весь процесс с ног на голову.\n"
+"Теперь определитель субъекта(подлежащего) имеет вес всего утверждения.\n"
+"Интерпретация определителя является функцией двух аргументов; сначала она "
+"применяется к существительному, давая функцию одного аргумента, которая, в "
+"свою очередь, применяется к интерпретации глагольной фразы.\n"
+"Это первенство определителя противоречит интуиции, но прямо ведет к "
+"правильной интерпретации."
+
+#: in/chapter20.md:678
+msgid ""
+"The variables `?p` and `?q` can be considered holes to be filled in the "
+"final interpretation, but the variable `?x` fills a quite different role.\n"
+"At the end of the parse, `?x` will not be filled by anything; it will still "
+"be a variable.\n"
+"But it will be referred to by the expressions filling `?p` and `?q`.\n"
+"We say that `?x` is a *metavariable,* because it is a variable in the "
+"representation, not a variable in the Prolog implementation.\n"
+"It just happens that Prolog variables can be used to implement these "
+"metavariables."
+msgstr ""
+"Переменные `?p` и `?q` можно рассматривать как слоты(позиции), которые "
+"необходимо заполнить в окончательной интерпретации, но переменная `?x` "
+"выполняет совершенно иную роль.\n"
+"В конце синтаксического разбора `?x` ничем не будет заполнен; он по-прежнему "
+"будет переменной.\n"
+"Но на него будут ссылаться выражения, заполняющие `?p` и `?q`.\n"
+"Мы говорим, что `?x` - это *метапеременная*, потому что это переменная в "
+"представлении, а не в реализации Пролога.\n"
+"Просто так случилось, что переменные Пролога можно использовать для "
+"реализации этих метапеременных."
+
+#: in/chapter20.md:680
+msgid ""
+"Here are the interpretations for each word in our target sentence and for "
+"each intermediate constituent:"
+msgstr ""
+"Вот интерпретация каждого слова в нашем целевом предложении и для каждой "
+"промежуточной составляющей:"
+
+#: in/chapter20.md:691
+msgid ""
+"```lisp\n"
+"Every                   = (all ?x (-> ?pl ?ql))\n"
+"picture               = (picture ?x)\n"
+"paints                 = (paint ?x ?y)\n"
+"a                           = (exists ?y (and ?p2 ?q2))\n"
+"story                   = (story ?y)\n"
+"Every picture   = (all ?x (-> (picture ?x) ?ql))\n"
+"a story               = (exists ?y (and (story ?y) ?q2))\n"
+"paints a story = (exists ?y (and (story ?y) (paint ?x ?y)))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:694
+msgid ""
+"The semantics of a noun has to fill the `?p` hole of a determiner, possibly "
+"using the metavariable `?x`.\n"
+"The three arguments to the Noun predicate are the agreement, the "
+"metavariable `?x`, and the assertion that the noun phrase makes about `?x`:"
+msgstr ""
+"Семантика существительного должна заполнить позицию в определителе `?p`, "
+"возможно, используя метапеременную `?x`.\n"
+"Три аргумента к предикату Noun(существительное) - это "
+"agreement(согласование), метапеременная `?x` и оператор контроля(assertion), "
+"который выполняет утверждение о фразе существительного `?x`:"
+
+#: in/chapter20.md:700
+msgid ""
+"```lisp\n"
+"(rule (Noun 3sg ?x (picture ?x)) --> (:word picture))\n"
+"(rule (Noun 3sg ?x (story ?x)) --> (:word story))\n"
+"(rule (Noun 3sg ?x (and (young ?x) (male ?x) (human ?x))) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:702
+msgid "      `(:word boy))`"
+msgstr ""
+
+#: in/chapter20.md:708
+msgid ""
+"The NP predicate is changed to take four arguments.\n"
+"First is the agreement, then the metavariable `?x`.\n"
+"Third is a predicate that will be supplied externally, by the verb phrase.\n"
+"The final argument returns the interpretation of the NP as a whole.\n"
+"As we have stated, this comes from the determiner:"
+msgstr ""
+"Предикат NP изменен на четыре аргумента.\n"
+"Сначала согласование, затем метапеременная `?x`.\n"
+"Третий - это сказуемое(предикат), которое будет предоставляться извне с "
+"помощью глагольной фразы.\n"
+"Последний аргумент возвращает интерпретацию NP в целом.\n"
+"Как мы заявляли, это исходит от определителя:"
+
+#: in/chapter20.md:712
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr ?x ?pred ?pred) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:714
+msgctxt "in/chapter20.md:714"
+msgid "      `(Name ?agr ?name))`"
+msgstr ""
+
+#: in/chapter20.md:720
+msgid ""
+"```lisp\n"
+";(rule (NP ?agr ?x ?pred ?np) -->\n"
+"; (Det ?agr ?x ?noun ?pred ?np)\n"
+"; (Noun ?agr ?x ?noun))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:723
+msgid ""
+"The rule for an NP with determiner is commented out because it is convenient "
+"to introduce an extended rule to replace it at this point.\n"
+"The new rule accounts for certain relative clauses, such as \"the boy that "
+"paints a picture\":"
+msgstr ""
+"Правило для NP с определителем закомментировано, потому что на этом этапе "
+"удобно ввести расширенное правило, чтобы заменить его.\n"
+"Новое правило учитывает некоторые предложения отношений, такие как \"the boy "
+"that paints a picture\"(мальчик, который рисует картину):"
+
+#: in/chapter20.md:727
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr ?x ?pred ?np) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:729
+msgid "      `(Det ?agr ?x ?noun&rel ?pred ?np)`"
+msgstr ""
+
+#: in/chapter20.md:731
+msgctxt "in/chapter20.md:731"
+msgid "      `(Noun ?agr ?x ?noun)`"
+msgstr ""
+
+#: in/chapter20.md:733
+msgid "      `(rel-clause ?agr ?x ?noun ?noun&rel))`"
+msgstr ""
+
+#: in/chapter20.md:738
+msgid ""
+"```lisp\n"
+"(rule (rel-clause ?agr ?x ?np ?np) --> )\n"
+"(rule (rel-clause ?agr ?x ?np (and ?np ?rel)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:740
+msgctxt "in/chapter20.md:740"
+msgid "      `(:word that)`"
+msgstr ""
+
+#: in/chapter20.md:742
+msgctxt "in/chapter20.md:742"
+msgid "      `(VP ?agr ?x ?rel))`"
+msgstr ""
+
+#: in/chapter20.md:744
+msgid ""
+"The new rule does not account for relative clauses where the object is "
+"missing, such as \"the picture that the boy paints.\" Nevertheless, the "
+"addition of relative clauses means we can now generate an infinite language, "
+"since we can always introduce a relative clause, which introduces a new noun "
+"phrase, which in turn can introduce yet another relative clause."
+msgstr ""
+"Новое правило не учитывает предложения отношений, в которых отсутствует "
+"объект, например \"the picture that the boy paints\"(рисунок, который рисует "
+"мальчик). Тем не менее, добавление предложений отношений означает, что "
+"теперь мы можем создать бесконечный язык, поскольку мы всегда можем ввести "
+"предложение отношений, которое введет новую фразу существительного, которая, "
+"в свою очередь, может вводить еще одно предложение отношения."
+
+#: in/chapter20.md:750
+msgid ""
+"The rules for relative clauses are not complicated, but they can be "
+"difficult to understand.\n"
+"Of the four arguments to `rel-clause,` the first two hold the agreement "
+"features of the head noun and the metavariable representing the head noun.\n"
+"The last two arguments are used together as an accumulator for predications "
+"about the metavariable: the third argument holds the predications made so "
+"far, and the fourth will hold the predications including the relative "
+"clause.\n"
+"So, the first rule for `rel-clause` says that if there is no relative "
+"clause, then what goes in to the accumulator is the same as what goes out.\n"
+"The second rule says that what goes out is the conjunction of what comes in "
+"and what is predicated in the relative clause itself."
+msgstr ""
+"Правила для придаточных предложений(предложений отношений) несложны, но их "
+"трудно понять.\n"
+"Из четырех аргументов `rel-clause` первые два содержат согласованные "
+"признаки заглавного существительного и метапеременной, представляющей "
+"заглавное существительное(head noun).\n"
+"Последние два аргумента используются вместе как аккумулятор для предсказаний "
+"о метапеременной: третий аргумент содержит сделанные на данный момент "
+"предсказания, а четвертый будет содержать предсказания, включая предложение "
+"отношения.\n"
+"Итак, первое правило для `rel-clause` гласит, что если нет предложения с "
+"отношением, то то, что поступает в аккумулятор, совпадает с тем, что "
+"выходит.\n"
+"Второе правило гласит, что выходящее - это соединение того, что входит, и "
+"того, что указано в самом предложении отношения."
+
+#: in/chapter20.md:754
+msgid ""
+"Verbs apply to either one or two metavariables, just as they did before.\n"
+"So we can use the definitions of `Verb/tr` and `Verb/intr` unchanged.\n"
+"For variety, I've added a few more verbs:"
+msgstr ""
+"Глаголы применяются как к одной, так и к двум метапеременным, как и раньше.\n"
+"Таким образом, мы можем использовать определения `Verb/tr` и `Verb/intr` без "
+"изменений.\n"
+"Для разнообразия я добавил еще несколько глаголов:"
+
+#: in/chapter20.md:756
+msgid "`(rule (Verb/tr`\"`3sg ?x ?y (paint ?x ?y)) --> (:word paint))`"
+msgstr ""
+
+#: in/chapter20.md:761
+msgid ""
+"```lisp\n"
+"(rule (Verb/tr 3sg ?x ?y (paint ?x ?y)) --> (:word paints))\n"
+"(rule (Verb/tr ?any ?x ?y (paint ?x ?y)) --> (:word painted))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:763
+msgctxt "in/chapter20.md:763"
+msgid "`(rule (Verb/intr`\"`3sg ?x (sleep ?x)) --> (:word sleep))`"
+msgstr ""
+
+#: in/chapter20.md:770
+msgid ""
+"```lisp\n"
+"(rule (Verb/intr 3sg ?x (sleep ?x)) --> (:word sleeps))\n"
+"(rule (Verb/intr ?any ?x (sleep ?x)) --> (:word slept))\n"
+"(rule (Verb/intr 3sg ?x (sells ?x)) --> (:word sells))\n"
+"(rule (Verb/intr 3sg ?x (stinks ?x)) --> (:word stinks))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:773
+msgid ""
+"Verb phrases and sentences are almost as before.\n"
+"The only difference is in the call to `NP`, which now has extra arguments:"
+msgstr ""
+"Глагольные фразы и утверждения почти те же, что и раньше.\n"
+"Единственное отличие состоит в вызове `NP`, у которого теперь есть "
+"дополнительные аргументы:"
+
+#: in/chapter20.md:777
+msgctxt "in/chapter20.md:777"
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?x ?vp) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:779
+msgid "      `(Verb/tr ?agr ?x ?obj ?verb)`"
+msgstr ""
+
+#: in/chapter20.md:781
+msgid "      `(NP ?any-agr ?obj ?verb ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:785
+msgctxt "in/chapter20.md:785"
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?x ?vp) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:787
+msgid "      `(Verb/intr ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:791
+msgid ""
+"```lisp\n"
+"(rule (S ?np) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:793
+msgid "      `(NP ?agr ?x ?vp ?np)`"
+msgstr ""
+
+#: in/chapter20.md:795
+msgctxt "in/chapter20.md:795"
+msgid "      `(VP ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:797
+msgid ""
+"With this grammar, we get the following correspondence between sentences and "
+"logical forms:"
+msgstr ""
+"С помощью этой грамматики мы получаем следующее соответствие между "
+"утверждениями и логическими формами:"
+
+#: in/chapter20.md:802
+msgid ""
+"```lisp\n"
+"Every picture paints a story.\n"
+"(ALL ?3 (-> (PICTURE ?3)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:804
+msgid ""
+"                                          `(EXISTS ?14 (AND (STORY ?14) "
+"(PAINT ?3 ?14)))))`"
+msgstr ""
+
+#: in/chapter20.md:809
+msgid ""
+"```lisp\n"
+"Every boy that paints a picture sleeps.\n"
+"(ALL ?3 (-> (AND (AND (YOUNG ?3) (MALE ?3) (HUMAN ?3))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:811
+msgid ""
+"                                                            `(EXISTS ?19 "
+"(AND (PICTURE ?19)`"
+msgstr ""
+
+#: in/chapter20.md:813
+msgid ""
+"                                                                                                                        `(PAINT ?"
+"3 ?19))))`"
+msgstr ""
+
+#: in/chapter20.md:815
+msgid "                                    `(SLEEP ?3)))`"
+msgstr ""
+
+#: in/chapter20.md:820
+msgid ""
+"```lisp\n"
+"Every boy that sleeps paints a picture.\n"
+"(ALL ?3 (-> (AND (AND (YOUNG ?3) (MALE ?3) (HUMAN ?3))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:822
+msgid ""
+"                                                                `(SLEEP ?3))`"
+msgstr ""
+
+#: in/chapter20.md:824
+msgid ""
+"                                        `(EXISTS ?22 (AND (PICTURE ?22) "
+"(PAINT ?3 ?22)))))`"
+msgstr ""
+
+#: in/chapter20.md:830
+msgid ""
+"```lisp\n"
+"Every boy that paints a picture that sells\n"
+"paints a picture that stinks.\n"
+"(ALL ?3 (-> (AND (AND (YOUNG ?3) (MALE ?3) (HUMAN ?3))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:832
+msgid ""
+"                                                            `(EXISTS ?19 "
+"(AND (AND (PICTURE ?19) (SELLS ?19))`"
+msgstr ""
+
+#: in/chapter20.md:834
+msgid ""
+"                                                                                                        `(PAINT ?"
+"3 ?19))))`"
+msgstr ""
+
+#: in/chapter20.md:836
+msgid ""
+"                                        `(EXISTS ?39 (AND (AND (PICTURE ?39) "
+"(STINKS ?39))`"
+msgstr ""
+
+#: in/chapter20.md:838
+msgid ""
+"                                                                                                    `(PAINT ?"
+"3 ?39)))))`"
+msgstr ""
+
+#: in/chapter20.md:840
+msgid "## 20.5 Preserving Quantifier Scope Ambiguity"
+msgstr "## 20.5 Сохранение неоднозначности области квантификатора"
+
+#: in/chapter20.md:842
+msgid ""
+"Consider the simple sentence \"Every man loves a woman.\" This sentence is "
+"ambiguous between the following two interpretations:"
+msgstr ""
+"Рассмотрим простое предложение \"Every man loves a woman\"(Каждый мужчина "
+"любит женщину). Это предложение является двусмысленным между следующими "
+"двумя интерпретациями:"
+
+#: in/chapter20.md:847
+msgid ""
+"```lisp\n"
+"&forall;m&exist;w man(m) &and; woman(w) &and; loves(m,w)\n"
+"&exist;w&forall;m man(m) &and; woman(w) &and; loves(m,w)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:851
+msgid ""
+"The first interpretation is that every man loves some woman-his wife, "
+"perhaps.\n"
+"The second interpretation is that there is a certain woman whom every man "
+"loves-Natassja Kinski, perhaps.\n"
+"The meaning of the sentence is ambiguous, but the structure is not; there is "
+"only one syntactic parse."
+msgstr ""
+"Первая интерпретация состоит в том, что каждый мужчина любит какую-то "
+"женщину, возможно, свою жену.\n"
+"Вторая интерпретация заключается в том, что есть некая женщина, которую "
+"любит каждый мужчина - возможно, Натасья Кински.\n"
+"Значение предложения неоднозначно, но структура - нет; есть только один "
+"синтаксический анализ."
+
+#: in/chapter20.md:856
+msgid ""
+"In the last section, we presented a parser that would construct one of the "
+"two interpretations.\n"
+"In this section, we show how to construct a single interpretation that "
+"preserves the ambiguity, but can be disambiguated by a postsyntactic "
+"process.\n"
+"The basic idea is to construct an intermediate logical form that leaves the "
+"scope of quantifiers unspecified.\n"
+"This intermediate form can then be rearranged to recover the final "
+"interpretation."
+msgstr ""
+"В последнем разделе мы представили синтаксический анализатор, который "
+"построит одну из двух интерпретаций.\n"
+"В этом разделе мы покажем, как построить единую интерпретацию, которая "
+"сохраняет неоднозначность, но может быть устранена постсинтаксическим "
+"процессом.\n"
+"Основная идея состоит в том, чтобы построить промежуточную логическую форму, "
+"которая оставляет область действия кванторов неопределенной.\n"
+"Затем эту промежуточную форму можно изменить, чтобы получить окончательную "
+"интерпретацию."
+
+#: in/chapter20.md:858
+msgid ""
+"To recap, here is the interpretation we would get for \"Every man loves a "
+"woman,\" given the grammar in the previous section:"
+msgstr ""
+"Напомним, вот интерпретация, которую мы получили бы для фразы \"Every man "
+"loves a woman\"(Каждый мужчина любит женщину), учитывая грамматику в "
+"предыдущем разделе:"
+
+#: in/chapter20.md:862
+msgid ""
+"```lisp\n"
+"(all ?m (-> (man ?m) (exists ?w) (and (woman ?w) (loves ?m ?w))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:864
+msgid "We will change the grammar to produce instead the intermediate form:"
+msgstr "Мы изменим грамматику, чтобы получить промежуточную форму:"
+
+#: in/chapter20.md:868
+msgctxt "in/chapter20.md:868"
+msgid ""
+"```lisp\n"
+"(and (all ?m (man ?m))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:870
+msgid "                  `(exists ?w (wowan ?w))`"
+msgstr ""
+
+#: in/chapter20.md:872
+msgid "                  `(loves ?m ?w))`"
+msgstr ""
+
+#: in/chapter20.md:876
+msgid ""
+"The difference is that logical components are produced in smaller chunks, "
+"with unscoped quantifiers.\n"
+"The typical grammar rule will build up an interpretation by conjoining "
+"constituents with `and`, rather than by fitting pieces into holes in other "
+"pieces.\n"
+"Here is the complete grammar and a just-large-enough lexicon in the new "
+"format:"
+msgstr ""
+"Разница в том, что логические компоненты производятся небольшими порциями с "
+"квантификаторами без области действия.\n"
+"Типичное правило грамматики будет строить интерпретацию, соединяя "
+"составляющие с помощью `and`, а не вставляя части в слоты в других частях.\n"
+"Вот полная грамматика и достаточно большой лексикон в новом формате:"
+
+#: in/chapter20.md:880
+msgctxt "in/chapter20.md:880"
+msgid ""
+"```lisp\n"
+"(rule (S (and ?np ?vp)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:882
+msgctxt "in/chapter20.md:882"
+msgid "      `(NP ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:884
+msgctxt "in/chapter20.md:884"
+msgid "      `(VP ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:888
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?x (and ?verb ?obj)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:890
+msgctxt "in/chapter20.md:890"
+msgid "      `(Verb/tr ?agr ?x ?o ?verb)`"
+msgstr ""
+
+#: in/chapter20.md:892
+msgid "      `(NP ?any-agr ?o ?obj))`"
+msgstr ""
+
+#: in/chapter20.md:896
+msgid ""
+"```lisp\n"
+"(rule (VP ?agr ?x ?verb) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:898
+msgctxt "in/chapter20.md:898"
+msgid "      `(Verb/intr ?agr ?x ?verb))`"
+msgstr ""
+
+#: in/chapter20.md:902
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr ?name t) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:904
+msgctxt "in/chapter20.md:904"
+msgid "      `(Name ?agr ?name))`"
+msgstr ""
+
+#: in/chapter20.md:908
+msgid ""
+"```lisp\n"
+"(rule (NP ?agr ?x ?det) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:910
+msgctxt "in/chapter20.md:910"
+msgid "      `(Det ?agr ?x (and ?noun ?rel) ?det)`"
+msgstr ""
+
+#: in/chapter20.md:912
+msgctxt "in/chapter20.md:912"
+msgid "      `(Noun ?agr ?x ?noun)`"
+msgstr ""
+
+#: in/chapter20.md:914
+msgctxt "in/chapter20.md:914"
+msgid "      `(rel-clause ?agr ?x ?rel))`"
+msgstr ""
+
+#: in/chapter20.md:919
+msgid ""
+"```lisp\n"
+"(rule (rel-clause ?agr ?x t) --> )\n"
+"(rule (rel-clause ?agr ?x ?rel) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:921
+msgctxt "in/chapter20.md:921"
+msgid "      `(:word that)`"
+msgstr ""
+
+#: in/chapter20.md:923
+msgctxt "in/chapter20.md:923"
+msgid "      `(VP ?agr ?x ?rel))`"
+msgstr ""
+
+#: in/chapter20.md:934
+msgid ""
+"```lisp\n"
+"(rule (Name 3sg Terry)                                       --> (:word "
+"Terry))\n"
+"(rule (Name 3sg Jean)                                         --> (:word "
+"Jean))\n"
+"(rule (Det 3sg ?x ?restr (all ?x ?restr)) --> (:word every))\n"
+"(rule (Noun 3sg ?x (man ?x))                           --> (:word man))\n"
+"(rule (Verb/tr 3sg ?x ?y (love ?x ?y))       --> (:word loves))\n"
+"(rule (Verb/intr 3sg ?x (lives ?x))             --> (:word lives))\n"
+"(rule (Det 3sg ?x ?res (exists ?x ?res))   --> (:word a))\n"
+"(rule (Noun 3sg ?x (woman ?x))                       --> (:word woman))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:936
+msgid "This gives us the following parse for \"Every man loves a woman\":"
+msgstr ""
+"Это дает нам следующий синтаксический анализ фразы \"Every man loves a woman"
+"\"(Каждый мужчина любит женщину):"
+
+#: in/chapter20.md:940
+msgid ""
+"```lisp\n"
+"(and (all ?4 (and (man ?4) t))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:942
+msgid "                `(and (love ?4 ?12) (exists ?12 (and (woman ?12) t))))`"
+msgstr ""
+
+#: in/chapter20.md:944
+msgid ""
+"If we simplified this, eliminating the ts and joining ands, we would get the "
+"desired representation:"
+msgstr ""
+"Если бы мы упростили это, исключив ts и joining ands, мы получили бы "
+"желаемое представление:"
+
+#: in/chapter20.md:948
+msgctxt "in/chapter20.md:948"
+msgid ""
+"```lisp\n"
+"(and (all ?m (man ?m))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:950
+msgid "                `(exists ?w (wowan ?w))`"
+msgstr ""
+
+#: in/chapter20.md:952
+msgid "                `(loves ?m ?w))`"
+msgstr ""
+
+#: in/chapter20.md:955
+msgid ""
+"From there, we could use what we know about syntax, in addition to what we "
+"know about men, woman, and loving, to determine the most likely final "
+"interpretation.\n"
+"This will be covered in the next chapter."
+msgstr ""
+"Оттуда мы могли бы использовать то, что мы знаем о синтаксисе, в дополнение "
+"к тому, что мы знаем о мужчинах, женщинах и любви, чтобы определить наиболее "
+"вероятную окончательную интерпретацию.\n"
+"Об этом мы поговорим в следующей главе."
+
+#: in/chapter20.md:957
+msgid "## 20.6 Long-Distance Dependencies"
+msgstr "## 20.6 Зависимости на большом расстоянии"
+
+#: in/chapter20.md:962
+msgid ""
+"So far, every syntactic phenomena we have considered has been expressible in "
+"a rule that imposes constraints only at a single level.\n"
+"For example, we had to impose the constraint that a subject agree with its "
+"verb, but this constraint involved two immediate constituents of a sentence, "
+"the noun phrase and verb phrase.\n"
+"We didn't need to express a constraint between, say, the subject and a "
+"modifier of the verb's object.\n"
+"However, there are linguistic phenomena that require just these kinds of "
+"constraints."
+msgstr ""
+"До сих пор каждый синтаксический феномен, который мы рассматривали, был "
+"выражен в правиле, которое накладывает ограничения только на одном уровне.\n"
+"Например, нам пришлось наложить ограничение, согласно которому субъект "
+"согласован со своим глаголом, но это ограничение включало две "
+"непосредственные составляющие предложения, фразу существительного и "
+"глагольную фразу.\n"
+"Нам не нужно было выражать ограничение между, скажем, подлежащим(субьектом) "
+"и модификатором объекта глагола.\n"
+"Однако существуют лингвистические явления, требующие именно таких "
+"ограничений."
+
+#: in/chapter20.md:970
+msgid ""
+"Our rule for relative clauses was a very simple one: a relative clause "
+"consists of the word \"that\" followed by a sentence that is missing its "
+"subject, as in \"every man that loves a woman.\"\n"
+"Not all relative clauses follow this pattern.\n"
+"It is also possible to form a relative clause by omitting the object of the "
+"embedded sentence: \"every man that a woman loves &blank;.\"\n"
+"In this sentence, the symbol &blank; indicates a gap, which is understood as "
+"being filled by the head of the complete noun phrase, the man.\n"
+"This has been called a *filler-gap dependency.*\n"
+"It is also known as a *long-distance dependency,* because the gap can occur "
+"arbitrarily far from the filler.\n"
+"For example, all of the following are valid noun phrases:"
+msgstr ""
+"Наше правило для предложений выражающих отношения было очень простым: "
+"предлжение отношения(придаточное) состоит из слова \"that\", за которым "
+"следует утверждение без подлежащего(субъекта), как в \"every man that loves "
+"a woman\"(каждый мужчина, который любит женщину).\n"
+"Не все предложения отношений следуют этому шаблону.\n"
+"Также возможно сформировать предложение отношений, опуская объект "
+"встроенного утверждения: \"every man that a woman loves &blank;\"(каждый "
+"мужчина, которого любит женщина &blank;).\n"
+"В этом утверждении символ &blank; указывает на разрыв/зазор/пробел, который "
+"понимается как заполнение заголовком полной фразы существительного,  the "
+"man(мужчина).\n"
+"Это было названо *зависимостью  заполнитель-разрыв*.\n"
+"Это также известно как *зависимость на большом расстоянии*, потому что "
+"разрыв может возникать произвольно далеко от заполнителя.\n"
+"Например, все следующие действительные фразы существительного:"
+
+#: in/chapter20.md:972
+msgid "The person that Lee likes &blank;"
+msgstr ""
+
+#: in/chapter20.md:974
+msgid "The person that Kim thinks Lee likes &blank;"
+msgstr ""
+
+#: in/chapter20.md:976
+msgid "The person that Jan says Kim thinks Lee likes &blank;"
+msgstr ""
+
+#: in/chapter20.md:979
+msgid ""
+"In each case, the gap is filled by the head noun, the person.\n"
+"But any number of relative clauses can intervene between the head noun and "
+"the gap."
+msgstr ""
+"В каждом случае разрыв заполняется заглавным существительным - the "
+"person(человеком).\n"
+"Но между заглавным существительным и разрывом может стоять любое количество "
+"предложений выражающих отношения."
+
+#: in/chapter20.md:982
+msgid ""
+"The same kind of filler-gap dependency takes place in questions that begin "
+"with \"who,\" \"what,\" \"where,\" and other interrogative pronouns.\n"
+"For example, we can ask a question about the subject of a sentence, as in "
+"\"Who likes Lee?\", or about the object, as in \"Who does Kim like &blank;?\""
+msgstr ""
+"Такая же зависимость между заполнителем и разрывом имеет место в вопросах, "
+"которые начинаются со слов \"who\"(кто), \"what\"(что), \"where\"(где) и "
+"других вопросительных местоимений.\n"
+"Например, мы можем задать вопрос о теме(субъекте) утверждения, как в \"Who "
+"likes Lee?\"(Кому нравится Ли?), или о объекте, как в \"Who does Kim like "
+"&blank;?\"(Кому нравится Ким &blank;?)."
+
+#: in/chapter20.md:991
+msgid ""
+"Here is a grammar that covers relative clauses with gapped subjects or "
+"objects.\n"
+"The rules for `S, VP,` and `NP` are augmented with a pair of arguments "
+"representing an accumulator for gaps.\n"
+"Like a difference list, the first argument minus the second represents the "
+"presence or absence of a gap.\n"
+"For example, in the first two rules for noun phrases, the two arguments are "
+"the same, `?g0` and `?g0`.\n"
+"This means that the rule as a whole has no gap, since there can be no "
+"difference between the two arguments.\n"
+"In the third rule for NP, the first argument is of the form `(gap ...),` and "
+"the second is `nogap.` This means that the right-hand side of the rule, an "
+"empty constituent, can be parsed as a gap.\n"
+"(Note that if we had been using true difference lists, the two arguments "
+"would be `((gap ...) ?g0)` and `?g0`.\n"
+"But since we are only dealing with one gap per rule, we don't need true "
+"difference lists.)"
+msgstr ""
+"Вот грамматика, которая охватывает предложения отношений с разрывами в "
+"субъектах или объектах.\n"
+"Правила для `S, VP,` и `NP` дополняются парой аргументов, представляющих "
+"аккумулятор для разрывов.\n"
+"Как и в списке различий, первый аргумент минус второй представляет наличие "
+"или отсутствие разрыва.\n"
+"Например, в первых двух правилах для фраз существительного два аргумента "
+"одинаковы: `?g0` и `?g0`.\n"
+"Это означает, что в правиле в целом нет разрывов, поскольку здесь не может "
+"быть разницы между двумя аргументами.\n"
+"В третьем правиле для NP первый аргумент имеет форму `(gap ...)`, а второй - "
+"`nogap`. Это означает, что правая часть правила, пустая составляющая, может "
+"быть проанализирована. как разрыв.\n"
+"(Обратите внимание, что если бы мы использовали истинностные списки "
+"различий, двумя аргументами были бы `((gap ...) ?g0)` и `?g0`\n"
+"Но поскольку мы имеем дело только с одним разрывом на правило, нам не нужны "
+"истинностные списки различий.)"
+
+#: in/chapter20.md:995
+msgid ""
+"The rule for `S` says that a noun phrase with gap `?g0` minus `?gl` followed "
+"by a verb phrase with gap `?gl` minus `?g2` comprise a sentence with gap `?"
+"g0` minus `?g2`.\n"
+"The rule for relative clauses finds a sentence with a gap anywhere; either "
+"in the subject position or embedded somewhere in the verb phrase.\n"
+"Here's the complete grammar:"
+msgstr ""
+"Правило для `S` гласит, что фраза существительного с разрывом `?g0` минус `?"
+"gl`, за которой следует глагольная фраза с разрывом `?gl` минус `?g2`, "
+"составляет утверждение с разрывом `?g0` минус `?g2`.\n"
+"Правило для предложений с отношением находит предложение с разрывом где "
+"угодно; либо в субъекте, либо в глагольной фразе.\n"
+"Вот полная грамматика:"
+
+#: in/chapter20.md:999
+msgid ""
+"```lisp\n"
+"(rule (S ?g0 ?g2 (and ?np ?vp)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1001
+msgid "      `(NP ?g0 ?gl ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1003
+msgid "      `(VP ?gl ?g2 ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:1007
+msgid ""
+"```lisp\n"
+"(rule (VP ?g0 ?gl ?agr ?x (and ?obj ?verb)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1009
+msgctxt "in/chapter20.md:1009"
+msgid "      `(Verb/tr ?agr ?x ?o ?verb)`"
+msgstr ""
+
+#: in/chapter20.md:1011
+msgid "      `(NP ?g0 ?gl ?any-agr ?o ?obj))`"
+msgstr ""
+
+#: in/chapter20.md:1015
+msgid ""
+"```lisp\n"
+"(rule (VP ?g0 ?g0 ?agr ?x ?verb) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1017
+msgctxt "in/chapter20.md:1017"
+msgid "      `(Verb/intr ?agr ?x ?verb))`"
+msgstr ""
+
+#: in/chapter20.md:1021
+msgid ""
+"```lisp\n"
+"(rule (NP ?g0 ?g0 ?agr ?name t) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1023
+msgctxt "in/chapter20.md:1023"
+msgid "      `(Name ?agr ?name))`"
+msgstr ""
+
+#: in/chapter20.md:1027
+msgid ""
+"```lisp\n"
+"(rule (NP ?g0 ?g0 ?agr ?x ?det) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1029
+msgctxt "in/chapter20.md:1029"
+msgid "      `(Det ?agr ?x (and ?noun ?rel) ?det)`"
+msgstr ""
+
+#: in/chapter20.md:1031
+msgctxt "in/chapter20.md:1031"
+msgid "      `(Noun ?agr ?x ?noun)`"
+msgstr ""
+
+#: in/chapter20.md:1033
+msgctxt "in/chapter20.md:1033"
+msgid "      `(rel-clause ?agr ?x ?rel))`"
+msgstr ""
+
+#: in/chapter20.md:1039
+msgid ""
+"```lisp\n"
+"(rule (NP (gap NP ?agr ?x) nogap ?agr ?x t) --> )\n"
+"(rule (rel-clause ?agr ?x t) --> )\n"
+"(rule (rel-clause ?agr ?x ?rel) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1041
+msgctxt "in/chapter20.md:1041"
+msgid "      `(:word that)`"
+msgstr ""
+
+#: in/chapter20.md:1043
+msgid "      `(S (gap NP ?agr ?x) nogap ?rel))`"
+msgstr ""
+
+#: in/chapter20.md:1045
+msgid "Here are some sentence/parse pairs covered by this grammar:"
+msgstr ""
+"Вот несколько пар утверждение/синтаксический анализ, охватываемых этой "
+"грамматикой:"
+
+#: in/chapter20.md:1047
+msgid "`Every man that` &blank; `loves a woman likes a person.`"
+msgstr ""
+
+#: in/chapter20.md:1051
+msgctxt "in/chapter20.md:1051"
+msgid ""
+"```lisp\n"
+"(AND (ALL ?28 (AND (MAN ?28)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1053
+msgid "            `(AND T (AND (LOVE ?28 ?30)`"
+msgstr ""
+
+#: in/chapter20.md:1055
+msgid "                  `(EXISTS ?30 (AND (WOMAN ?30)`"
+msgstr ""
+
+#: in/chapter20.md:1057
+msgid "                              `T))))))`"
+msgstr ""
+
+#: in/chapter20.md:1059
+msgid "      `(AND (EXISTS ?39 (AND (PERSON ?39) T)) (LIKE ?28 ?39)))`"
+msgstr ""
+
+#: in/chapter20.md:1061
+msgid "`Every man that a woman loves` &blank; `likes a person.`"
+msgstr ""
+
+#: in/chapter20.md:1065
+msgid ""
+"```lisp\n"
+"(AND (ALL ?37 (AND (MAN ?37)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1067
+msgid "            `(AND (EXISTS ?20 (AND (WOMAN ?20) T))`"
+msgstr ""
+
+#: in/chapter20.md:1069
+msgid "                `(AND T (LOVE ?20 ?37)))))`"
+msgstr ""
+
+#: in/chapter20.md:1071
+msgid "      `(AND (EXISTS ?39 (AND (PERSON ?39) T)) (LIKE ?37 ?39)))`"
+msgstr ""
+
+#: in/chapter20.md:1073
+msgid "`Every man that loves a bird that` &blank; `flies likes a person.`"
+msgstr ""
+
+#: in/chapter20.md:1077
+msgctxt "in/chapter20.md:1077"
+msgid ""
+"```lisp\n"
+"(AND (ALL ?28 (AND (MAN ?28)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1079
+msgid "            `(AND T (AND (EXISTS ?54`"
+msgstr ""
+
+#: in/chapter20.md:1081
+msgid "                  `(AND (BIRD ?54)`"
+msgstr ""
+
+#: in/chapter20.md:1083
+msgid "                          `(AND T (FLY ?54))))`"
+msgstr ""
+
+#: in/chapter20.md:1085
+msgid "                `(LOVE ?28 ?54)))))`"
+msgstr ""
+
+#: in/chapter20.md:1087
+msgid "      `(AND (EXISTS ?60 (AND (PERSON ?60) T)) (LIKE ?28 ?60)))`"
+msgstr ""
+
+#: in/chapter20.md:1091
+msgid ""
+"Actually, there are limitations on the situations in which gaps can appear.\n"
+"In particular, it is rare to have a gap in the subject of a sentence, except "
+"in the case of a relative clause.\n"
+"In the next chapter, we will see how to impose additional constraints on "
+"gaps."
+msgstr ""
+"На самом деле есть ограничения на ситуации, в которых могут возникнуть "
+"разрывы.\n"
+"В частности, редко бывает разрыв в субъекте утверждения, за исключением "
+"случая предложения с отношением.\n"
+"В следующей главе мы увидим, как наложить дополнительные ограничения на "
+"разрывы."
+
+#: in/chapter20.md:1093
+msgid "## 20.7 Augmenting DCG Rules"
+msgstr "## 20.7 Дополнение правил DCG"
+
+#: in/chapter20.md:1101
+msgid ""
+"In the previous section, we saw how to build up a semantic representation of "
+"a sentence by conjoining the semantics of the components.\n"
+"One problem with this approach is that the semantic interpretation is often "
+"something of the form `(and (and t *a) b),*` when we would prefer `(and *a "
+"b)*`.\n"
+"There are two ways to correct this problem: either we add a step that takes "
+"the final semantic interpretation and simplifies it, or we complicate each "
+"individual rule, making it generate the simplified form.\n"
+"The second choice would be slightly more efficient, but would be very ugly "
+"and error prone.\n"
+"We should be doing all we can to make the rules simpler, not more "
+"complicated; that is the whole point of the DCG formalism.\n"
+"This suggests a third approach: change the rule interpreter so that it "
+"automatically generates the semantic interpretation as a conjunction of the "
+"constituents, unless the rule explicitly says otherwise.\n"
+"This section shows how to augment the DCG rules to handle common cases like "
+"this automatically."
+msgstr ""
+"В предыдущем разделе мы увидели, как создать семантическое представление "
+"утверждения, объединив семантику компонентов.\n"
+"Одна из проблем с этим подходом состоит в том, что семантическая "
+"интерпретация часто имеет форму `(and (and t *a) b)*`, тогда как мы "
+"предпочитаем `(and *a b)*`.\n"
+"Есть два способа исправить эту проблему: либо мы добавляем шаг, который "
+"берет окончательную семантическую интерпретацию и упрощает ее, либо мы "
+"усложняем каждое отдельное правило, заставляя его генерировать упрощенную "
+"форму.\n"
+"Второй вариант был бы немного более эффективным, но был бы очень уродливым и "
+"подверженным ошибкам.\n"
+"Мы должны делать все возможное, чтобы правила были проще, а не усложнялись; "
+"в этом весь смысл формализма DCG.\n"
+"Это предполагает третий подход: изменить интерпретатор правила так, чтобы он "
+"автоматически генерировал семантическую интерпретацию как соединение "
+"составляющих, если в правиле явно не указано иное.\n"
+"В этом разделе показано, как дополнить правила DCG для автоматической "
+"обработки таких распространенных случаев."
+
+#: in/chapter20.md:1103
+msgid "Consider again a rule from [section 20.4](#s0025):"
+msgstr "Снова рассмотрим правило из [раздела 20.4](#s0025):"
+
+#: in/chapter20.md:1107
+msgctxt "in/chapter20.md:1107"
+msgid ""
+"```lisp\n"
+"(rule (S (and ?np ?vp)) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1109
+msgctxt "in/chapter20.md:1109"
+msgid "      `(NP ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1111
+msgctxt "in/chapter20.md:1111"
+msgid "      `(VP ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:1113
+msgid ""
+"If we were to alter this rule to produce a simplified semantic "
+"interpretation, it would look like the following, where the predicate `and*` "
+"simplifies a list of conjunctions into a single conjunction:"
+msgstr ""
+"Если бы мы изменили это правило, чтобы получить упрощенную семантическую "
+"интерпретацию, это выглядело бы следующим образом, где предикат `and*` "
+"упрощает список союзов до единого союза:"
+
+#: in/chapter20.md:1117
+msgctxt "in/chapter20.md:1117"
+msgid ""
+"```lisp\n"
+"(rule (S ?sem) -->\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1119
+msgid "      `(np ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1121
+msgid "      `(vp ?agr ?x ?vp)`"
+msgstr ""
+
+#: in/chapter20.md:1123
+msgid "      `(:test (and*(?np ?vp) ?sem)))`"
+msgstr ""
+
+#: in/chapter20.md:1126
+msgid ""
+"Many rules will have this form, so we adopt a simple convention: if the last "
+"argument of the constituent on the left-hand side of a rule is the keyword `:"
+"sem`, then we will build the semantics by replacing `:sem` with a "
+"conjunction formed by combining all the last arguments of the constituents "
+"on the right-hand side of the rule.\n"
+"`A==>` arrow will be used for rules that follow this convention, so the "
+"following rule is equivalent to the one above:"
+msgstr ""
+"Многие правила будут иметь такую форму, поэтому мы принимаем простое "
+"соглашение: если последним аргументом составляющей в левой части правила "
+"является ключевое слово `:sem`, то мы построим семантику, заменив `:sem` с "
+"конъюнкцией, образованной путем объединения всех последних аргументов "
+"составляющих правую часть правила.\n"
+"Стрелка `A==>` будет использоваться для правил, следующих этому соглашению, "
+"поэтому следующее правило эквивалентно приведенному выше:"
+
+#: in/chapter20.md:1130
+msgctxt "in/chapter20.md:1130"
+msgid ""
+"```lisp\n"
+"(rule (S :sem) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1132
+msgctxt "in/chapter20.md:1132"
+msgid "      `(NP ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1134
+msgctxt "in/chapter20.md:1134"
+msgid "      `(VP ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:1138
+msgid ""
+"It is sometimes useful to introduce additional semantics that does not come "
+"from one of the constituents.\n"
+"This can be indicated with an element of the right-hand side that is a list "
+"starting with `:sem`.\n"
+"For example, the following rule adds to the semantics the fact that `?x` is "
+"the topic of the sentence:"
+msgstr ""
+"Иногда полезно ввести дополнительную семантику, которая не исходит от одного "
+"из компонентов.\n"
+"Это можно указать с помощью элемента в правой части списка, начинающегося с "
+"`:sem`.\n"
+"Например, следующее правило добавляет к семантике тот факт, что `?x` "
+"является темой предложения:"
+
+#: in/chapter20.md:1142
+msgctxt "in/chapter20.md:1142"
+msgid ""
+"```lisp\n"
+"(rule (S :sem) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1144
+msgctxt "in/chapter20.md:1144"
+msgid "      `(NP ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1146
+msgid "      `(VP ?agr ?x ?vp)`"
+msgstr ""
+
+#: in/chapter20.md:1148
+msgid "      `(:sem (topic ?x)))`"
+msgstr ""
+
+#: in/chapter20.md:1153
+msgid ""
+"Before implementing the rule function for the `==>` arrow, it is worth "
+"considering if there are other ways we could make things easier for the rule "
+"writer.\n"
+"One possibility is to provide a notation for describing examples.\n"
+"Examples make it easier to understand what a rule is designed for.\n"
+"For the `S` rule, we could add examples like this:"
+msgstr ""
+"Перед реализацией функции правила для стрелки `==>` стоит подумать, есть ли "
+"другие способы упростить работу автора правил.\n"
+"Одна из возможностей - предоставить обозначения для описания примеров.\n"
+"Примеры помогают понять, для чего создано правило.\n"
+"Для правила `S` мы могли бы добавить такие примеры:"
+
+#: in/chapter20.md:1157
+msgctxt "in/chapter20.md:1157"
+msgid ""
+"```lisp\n"
+"(rule (S :sem) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1159
+msgid "      `(:ex \"John likes Mary\" \"He sleeps\")`"
+msgstr ""
+
+#: in/chapter20.md:1161
+msgctxt "in/chapter20.md:1161"
+msgid "      `(NP ?agr ?x ?np)`"
+msgstr ""
+
+#: in/chapter20.md:1163
+msgctxt "in/chapter20.md:1163"
+msgid "      `(VP ?agr ?x ?vp))`"
+msgstr ""
+
+#: in/chapter20.md:1165
+msgid ""
+"These examples not only serve as documentation for the rule but also can be "
+"stored under `S` and subsequently run when we want to test if `S` is in fact "
+"implemented properly."
+msgstr ""
+"Эти примеры не только служат в качестве документации для правила, но также "
+"могут быть сохранены в `S` и впоследствии запускаться, когда мы хотим "
+"проверить, действительно ли `S` реализовано правильно."
+
+#: in/chapter20.md:1168
+msgid ""
+"Another area where the rule writer could use help is in handling left-"
+"recursive rules.\n"
+"Consider the rule that says that a sentence can consist of two sentences "
+"joined by a conjunction:"
+msgstr ""
+"Другая область, в которой составитель правил может использовать помощь, - "
+"это обработка леворекурсивных правил.\n"
+"Рассмотрим правило, согласно которому утверждение может состоять из двух "
+"утверждений, соединенных союзом:"
+
+#: in/chapter20.md:1172
+msgctxt "in/chapter20.md:1172"
+msgid ""
+"```lisp\n"
+"(rule (S (?conj ?sl ?s2)) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1174
+msgid "      `(:ex \"John likes Mary and Mary likes John\")`"
+msgstr ""
+
+#: in/chapter20.md:1176
+msgid "      `(S ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:1178
+msgctxt "in/chapter20.md:1178"
+msgid "      `(Conj ?conj)`"
+msgstr ""
+
+#: in/chapter20.md:1180
+msgctxt "in/chapter20.md:1180"
+msgid "      `(S ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:1183
+msgid ""
+"While this rule is correct as a declarative statement, it will run into "
+"difficulty when run by the standard top-down depth-first DCG interpretation "
+"process.\n"
+"The top-level goal of parsing an `S` will lead immediately to the subgoal of "
+"parsing an `S`, and the resuit will be an infinite loop."
+msgstr ""
+"Хотя это правило является верным как декларативное утверждение, оно вызовет "
+"трудности при запуске стандартным процессом интерпретации DCG сверху вниз, "
+"сначала в глубину.\n"
+"Цель верхнего уровня для синтаксического анализа `S` немедленно приведет к "
+"подзадаче синтаксического анализа `S`, и результатом будет бесконечный цикл."
+
+#: in/chapter20.md:1187
+msgid ""
+"Fortunately, we know how to avoid this kind of infinite loop: split the "
+"offending predicate, `S`, into two predicates: one that supports the "
+"recursion, and one that is at a lower level.\n"
+"We will call the lower-level predicate `S-`.\n"
+"Thus, the following rule says that a sentence can consist of two sentences, "
+"where the first one is not conjoined and the second is possibly conjoined:"
+msgstr ""
+"К счастью, мы знаем, как избежать такого бесконечного цикла: разделить "
+"предикат, вызывающий нарушение, `S` на два предиката: один, поддерживающий "
+"рекурсию, и другой, находящийся на более низком уровне.\n"
+"Мы будем называть предикат нижнего уровня `S-`.\n"
+"Таким образом, следующее правило гласит, что утверждение может состоять из "
+"двух утверждений, где первое не соединяется, а второе, возможно, соединено:"
+
+#: in/chapter20.md:1191
+msgctxt "in/chapter20.md:1191"
+msgid ""
+"```lisp\n"
+"(rule (S (?conj ?sl ?s2)) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1193
+msgctxt "in/chapter20.md:1193"
+msgid "      `(S_ ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:1195
+msgctxt "in/chapter20.md:1195"
+msgid "      `(Conj ?conj)`"
+msgstr ""
+
+#: in/chapter20.md:1197
+msgctxt "in/chapter20.md:1197"
+msgid "      `(S ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:1199
+msgid ""
+"We also need a rule that says that a possibly conjoined sentence can consist "
+"of a nonconjoined sentence:"
+msgstr ""
+"Нам также нужно правило, которое гласит, что возможно составное утверждение "
+"может состоять из несоединенного утрверждения:"
+
+#: in/chapter20.md:1203
+msgid ""
+"```lisp\n"
+"(rule (S ?sem) ==> (S- ?sem))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1206
+msgid ""
+"To make this work, we need to replace any mention of `S` in the left-hand "
+"side of a rule with `S-`.\n"
+"References to `S` in the right-hand side of rules remain unchanged."
+msgstr ""
+"Чтобы это сработало, нам нужно заменить любое упоминание `S` в левой части "
+"правила на `S-`.\n"
+"Ссылки на `S` в правой части правил остаются без изменений. "
+
+#: in/chapter20.md:1210
+msgid ""
+"```lisp\n"
+"(rule (S- ?sem) ==>...)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1213
+msgid ""
+"To make this all automatic, we will provide a macro, `conj-rule`, that "
+"declares a category to be one that can be conjoined.\n"
+"Such a declaration will automatically generate the recursive and "
+"nonrecursive rules for the category, and will insure that future references "
+"to the category on the left-hand side of a rule will be replaced with the "
+"corresponding lower-level predicate."
+msgstr ""
+"Чтобы сделать все это автоматическим, мы предоставим макрос, `conj-rule`, "
+"который объявляет категорию как такую, которую можно объединить.\n"
+"Такое объявление автоматически сгенерирует рекурсивные и нерекурсивные "
+"правила для категории и обеспечит замену будущих ссылок на категорию в левой "
+"части правила на соответствующий предикат нижнего уровня."
+
+#: in/chapter20.md:1218
+msgid ""
+"One problem with this approach is that it imposes a right-branching parse on "
+"multiple conjoined phrases.\n"
+"That is, we will get parses like \"spaghetti and (meatballs and salad)\" not "
+"\"(spaghetti and meatballs) and salad.\" Clearly, that is the wrong "
+"interpretation for this sentence.\n"
+"Still, it can be argued that it is best to produce a single canonical parse, "
+"and then let the semantic interpretation functions worry about rearranging "
+"the parse in the right order.\n"
+"We will not attempt to resolve this debate but will provide the automatic "
+"conjunction mechanism as a tool that can be convenient but has no cost for "
+"the user who prefers a different solution."
+msgstr ""
+"Одна из проблем этого подхода заключается в том, что он требует "
+"синтаксического анализа с ветвлением вправо для нескольких соединенных "
+"фраз.\n"
+"То есть мы получим такие синтаксические выражения, как \"spaghetti and "
+"(meatballs and salad)\"(спагетти и (тефтели и салат)) not  \"(spaghetti and "
+"meatballs) and salad\". Ясно, что это неправильное толкование этого "
+"утверждения.\n"
+"Тем не менее, можно утверждать, что лучше всего произвести один канонический "
+"синтаксический анализ, а затем позволить функциям семантической "
+"интерпретации позаботиться о переупорядочении синтаксического анализа в "
+"правильном порядке.\n"
+"Мы не будем пытаться разрешить этот спор, но предоставим механизм "
+"автоматического соединения в качестве инструмента, который может быть "
+"удобным, но не требует затрат для пользователя, который предпочитает другое "
+"решение."
+
+#: in/chapter20.md:1221
+msgid ""
+"We are now ready to implement the extended DCG rule formalism that handles `:"
+"sem, :ex,` and automatie conjunctions.\n"
+"The function `make-augmented-dcg,` stored under the arrow `==>`, will be "
+"used to implement the formalism:"
+msgstr ""
+"Теперь мы готовы реализовать расширенный формализм правил DCG, который "
+"обрабатывает `:sem, :ex,` и автоматические объединения(конъюнкции).\n"
+"Функция `make-augmented-dcg`, сохраненная под стрелкой `==>`, будет "
+"использоваться для реализации формализма:"
+
+#: in/chapter20.md:1224
+msgid ""
+"```lisp\n"
+"(setf (get '==> 'rule-function) 'make-augmented-dcg)"
+msgstr ""
+
+#: in/chapter20.md:1245
+msgid ""
+"(defun make-augmented-dcg (head body)\n"
+"  \"Build an augmented DCG rule that handles :sem, :ex,\n"
+"  and automatic conjunctiontive constituents.\"\n"
+"  (if (eq (last1 head) :sem)\n"
+"      ;; Handle :sem\n"
+"      (let* ((?sem (gensym \"?SEM\")))\n"
+"        (make-augmented-dcg\n"
+"          `(,@(butlast head) ,?sem)\n"
+"          `(,@(remove :sem body :key #'first-or-nil)\n"
+"            (:test ,(collect-sems body ?sem)))))\n"
+"      ;; Separate out examples from body\n"
+"      (multiple-value-bind (exs new-body)\n"
+"          (partition-if #'(lambda (x) (starts-with x :ex)) body)\n"
+"        ;; Handle conjunctions\n"
+"        (let ((rule `(rule ,(handle-conj head) --> ,@new-body)))\n"
+"          (if (null exs)\n"
+"              rule\n"
+"              `(progn (:ex ,head .,(mappend #'rest exs))\n"
+"                      ,rule))))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1249
+msgid ""
+"First we show the code that collects together the semantics of each "
+"constituent and conjoins them when `:sem` is specified.\n"
+"The function `collect-sems` picks out the semantics and handles the trivial "
+"cases where there are zero or one constituents on the right-hand side.\n"
+"If there are more than one, it inserts a call to the predicate `and*`."
+msgstr ""
+"Сначала мы показываем код, который собирает вместе семантику каждой "
+"составляющей и объединяет их, когда указано `:sem`.\n"
+"Функция `collect-sems` выбирает семантику и обрабатывает тривиальные случаи, "
+"когда в правой части есть ноль или одна составляющая.\n"
+"Если их несколько, она вставляет вызов предиката `and*`."
+
+#: in/chapter20.md:1265
+msgid ""
+"```lisp\n"
+"(defun collect-sems (body ?sem)\n"
+"  \"Get the semantics out of each constituent in body,\n"
+"  and combine them together into ?sem.\"\n"
+"  (let ((sems (loop for goal in body\n"
+"                    unless (or (dcg-normal-goal-p goal)\n"
+"                               (dcg-word-list-p goal)\n"
+"                               (starts-with goal :ex)\n"
+"                               (atom goal))\n"
+"                    collect (last1 goal))))\n"
+"    (case (length sems)\n"
+"      (0 `(= ,?sem t))\n"
+"      (1 `(= ,?sem ,(first sems)))\n"
+"      (t `(and* ,sems ,?sem)))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1268
+msgid ""
+"We could have implemented `and*` with Prolog clauses, but it is slightly "
+"more efficient to do it directly in Lisp.\n"
+"A call to `conjuncts` collects all the conjuncts, and we then add an and if "
+"necessary:"
+msgstr ""
+"Мы могли бы реализовать `and*` с предложениями Prolog, но немного "
+"эффективнее делать это непосредственно в Lisp.\n"
+"Вызов `conjuncts` собирает все конъюнкты, а затем мы добавляем and, если "
+"необходимо:"
+
+#: in/chapter20.md:1276
+msgid ""
+"```lisp\n"
+"(defun and*/2 (in out cont)\n"
+"  \"IN is a list of conjuncts that are conjoined into OUT.\"\n"
+"  ;; E.g.: (and* (t (and a b) t (and c d) t) ?x) ==>\n"
+"  ;;        ?x = (and a b c d)\n"
+"  (if (unify! out (maybe-add 'and (conjuncts (cons 'and in)) t))\n"
+"      (funcall cont)))"
+msgstr ""
+
+#: in/chapter20.md:1287
+msgid ""
+"(defun conjuncts (exp)\n"
+"  \"Get all the conjuncts from an expression.\"\n"
+"  (deref exp)\n"
+"  (cond ((eq exp t) nil)\n"
+"        ((atom exp) (list exp))\n"
+"        ((eq (deref (first exp)) 'nil) nil)\n"
+"        ((eq (first exp) 'and)\n"
+"         (mappend #'conjuncts (rest exp)))\n"
+"        (t (list exp))))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1290
+msgid ""
+"The next step is handling example phrases.\n"
+"The code in `make-augmented-dcg` turns examples into expressions of the form:"
+msgstr ""
+"Следующий шаг - работа с примерами фраз.\n"
+"Код в `make-augmented-dcg` превращает примеры в выражения вида:"
+
+#: in/chapter20.md:1294
+msgid ""
+"```lisp\n"
+"(:ex (S ?sem) \"John likes Mary\" \"He sleeps\")\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1296
+msgid "To make this work, :ex will have to be a macro:"
+msgstr "Чтобы это работало, :ex должен быть макросом:"
+
+#: in/chapter20.md:1302
+msgid ""
+"```lisp\n"
+"(defmacro :ex ((category . args) &body examples)\n"
+"  \"Add some example phrases, indexed under the category.\"\n"
+"  `(add-examples ',category ',args ',examples))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1308
+msgid ""
+"`:ex calls add-examples` to do all the work.\n"
+"Each example is stored in a hash table indexed under the the category.\n"
+"Each example is transformed into a two-element list: the example phrase "
+"string itself and a call to the proper predicate with all arguments "
+"supplied.\n"
+"The function `add-examples` does this transformation and indexing, and `run-"
+"examples` retrieves the examples stored under a category, prints each "
+"phrase, and calls each goal.\n"
+"The auxiliary functions `get-examples` and `clear-exampl` es are provided to "
+"manipulate the example table, and `remove-punction, punctuation-p` and "
+"`string->list` are used to map from a string to a list of words."
+msgstr ""
+"`:ex вызывает add-examples, чтобы выполнить всю работу.\n"
+"Каждый пример хранится в хэш-таблице, индексируемой по категории.\n"
+"Каждый пример преобразуется в список из двух элементов: сама строка фразы "
+"примера и вызов соответствующего предиката со всеми предоставленными "
+"аргументами.\n"
+"Функция `add-examples` выполняет это преобразование и индексацию, а `run-"
+"examples` извлекает примеры, хранящиеся в категории, печатает каждую фразу и "
+"вызывает каждую цель.\n"
+"Вспомогательные функции `get-examples` и `clear-examples` предназначены для "
+"управления таблицей примеров, а `remove-punction, punctuation-p` и `string-"
+">list` используются для отображения строки в список. слов."
+
+#: in/chapter20.md:1313
+msgid ""
+"```lisp\n"
+"(defvar *examples* (make-hash-table :test #'eq))\n"
+"(defun get-exampl es (category) (gethash category *examples*))\n"
+"(defun clear-examples () (clrhash *examples*))"
+msgstr ""
+
+#: in/chapter20.md:1327
+msgid ""
+"(defun add-examples (category args examples)\n"
+"  \"Add these example strings to this category,\n"
+"  and when it comes time to run them, use the args.\"\n"
+"  (dolist (example examples)\n"
+"    (when (stringp example)\n"
+"      (let ((ex `(,example\n"
+"                  (,category ,@args\n"
+"                   ,(string->list\n"
+"                      (remove-punctuation example)) ()))))\n"
+"        (unless (member ex (get-examples category)\n"
+"                        :test #'equal)\n"
+"          (setf (gethash category *examples*)\n"
+"                (nconc (get-examples category) (list ex))))))))"
+msgstr ""
+
+#: in/chapter20.md:1341
+msgid ""
+"(defun run-examples (&optional category)\n"
+"  \"Run all the example phrases stored under a category.\n"
+"  With no category, run ALL the examples.\"\n"
+"  (prolog-compile-symbols)\n"
+"  (if (null category)\n"
+"      (maphash #'(lambda (cat val)\n"
+"                   (declare (ignore val))\n"
+"                   (format t \"~2&Examples of ~a:~&\" cat)\n"
+"                   (run-examples cat))\n"
+"               *examples*)\n"
+"      (dolist (example (get-examples category))\n"
+"        (format t \"~2&EXAMPLE: ~{~a~&~9T~a~}\" example)\n"
+"        (top-level-prove (cdr example)))))"
+msgstr ""
+
+#: in/chapter20.md:1345
+msgid ""
+"(defun remove-punctuation (string)\n"
+"  \"Replace punctuation with spaces in string.\"\n"
+"  (substitute-if #\\space #'punctuation-p string))"
+msgstr ""
+
+#: in/chapter20.md:1349
+msgid ""
+"(defun string->list (string)\n"
+"  \"Convert a string to a list of words.\"\n"
+"  (read-from-string (concatenate 'string \"(\" string \")\")))"
+msgstr ""
+
+#: in/chapter20.md:1352
+msgid ""
+"(defun punctuation-p (char) (find char \"*_.,;:`!?#-()\\\\\\\"\"))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1356
+msgid ""
+"The final part of our augmented DCG formalism is handling conjunctive "
+"constituents automatically.\n"
+"We already arranged to translate category symbols on the left-hand side of "
+"rules into the corresponding conjunctive category, as specified by the "
+"function `handle-conj`.\n"
+"We also want to generate automatically (or as easily as possible) rules of "
+"the following form:"
+msgstr ""
+"Последняя часть нашего расширенного формализма DCG - это автоматическая "
+"обработка конъюнктивных составляющих.\n"
+"Мы уже организовали перевод символов категорий в левой части правил в "
+"соответствующую конъюнктивную категорию, как определено функцией `handle-"
+"conj`.\n"
+"Мы также хотим сгенерировать автоматически (или как можно проще) правила "
+"следующего вида:"
+
+#: in/chapter20.md:1360
+msgctxt "in/chapter20.md:1360"
+msgid ""
+"```lisp\n"
+"(rule (S (?conj ?sl ?s2)) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1362
+msgctxt "in/chapter20.md:1362"
+msgid "      `(S_ ?sl)`"
+msgstr ""
+
+#: in/chapter20.md:1364
+msgctxt "in/chapter20.md:1364"
+msgid "      `(Conj ?conj)`"
+msgstr ""
+
+#: in/chapter20.md:1366
+msgctxt "in/chapter20.md:1366"
+msgid "      `(S ?s2))`"
+msgstr ""
+
+#: in/chapter20.md:1370
+msgid ""
+"```lisp\n"
+"(rule (S ?sem) ==> (S_ ?sem))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1376
+msgid ""
+"But before we generate these rules, let's make sure they are exactly what we "
+"want.\n"
+"Consider parsing a nonconjoined sentence with these two rules in place.\n"
+"The first rule would parse the entire sentence as a `S_`, and would then "
+"fail to see a `Conj`, and thus fail.\n"
+"The second rule would then duplicate the entire parsing process, thus "
+"doubling the amount of time taken.\n"
+"If we changed the order of the two rules we would be able to parse "
+"nonconjoined sentences quickly, but would have to backtrack on conjoined "
+"sentences."
+msgstr ""
+"Но прежде чем создавать эти правила, давайте убедимся, что они именно то, "
+"что мы хотим.\n"
+"Рассмотрите возможность синтаксического анализа несоединенного утверждения с "
+"этими двумя правилами.\n"
+"Первое правило будет анализировать все утверждение как `S_`, а затем не "
+"сможет увидеть `Conj` и, следовательно, потерпит неудачу.\n"
+"Второе правило будет дублировать весь процесс синтаксического анализа, таким "
+"образом удваивая количество затрачиваемого времени.\n"
+"Если мы изменим порядок двух правил, мы сможем быстро анализировать "
+"несоединенные утверждения, но при этом нам придется возвращаться к "
+"соединенным утверждениям."
+
+#: in/chapter20.md:1380
+msgid ""
+"The following shows a better approach.\n"
+"A single rule for `S` parses a sentence with `S_`, and then calls `Conj_S`, "
+"which can be read as \"either a conjunction followed by a sentence, or "
+"nothing.\" If the first sentence is followed by nothing, then we just use "
+"the semantics of the first sentence; if there is a conjunction, we have to "
+"form a combined semantics.\n"
+"I have added ... to show where arguments to the predicate other than the "
+"semantic argument fit in."
+msgstr ""
+"Ниже показан лучший подход.\n"
+"Единственное правило для `S` анализирует утверждение с помощью `S_`, а затем "
+"вызывает `Conj_S`, который может быть прочитан как \"либо соединение, за "
+"которым следует утверждение, либо ничего\". Если за первым утверждением "
+"ничего не следует, тогда мы просто используем семантику первого утверждения; "
+"если есть конъюнкция, мы должны сформировать комбинированную семантику.\n"
+"Я добавил ..., чтобы показать, где подходят аргументы предикату, кроме "
+"семантического аргумента."
+
+#: in/chapter20.md:1384
+msgid ""
+"```lisp\n"
+"(rule (S ... ?s-combined) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1386
+msgid "      `(S_ ... ?seml)`"
+msgstr ""
+
+#: in/chapter20.md:1388
+msgid "      `(Conj_S ?seml ?s-combined))`"
+msgstr ""
+
+#: in/chapter20.md:1392
+msgid ""
+"```lisp\n"
+"(rule (Conj_S ?seml (?conj ?seml ?sem2)) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1394
+msgctxt "in/chapter20.md:1394"
+msgid "      `(Conj ?conj)`"
+msgstr ""
+
+#: in/chapter20.md:1396
+msgid "      `(S ... ?sem2))`"
+msgstr ""
+
+#: in/chapter20.md:1400
+msgid ""
+"```lisp\n"
+"(rule (Conj_S ?seml ?seml) ==>)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1405
+msgid ""
+"Now all we need is a way for the user to specify that these three rules are "
+"desired.\n"
+"Since the exact method of building up the combined semantics and perhaps "
+"even the call to `Conj` may vary depending on the specifics of the grammar "
+"being defined, the rules cannot be generated entirely automatically.\n"
+"We will settle for a macro, `conj-rule`, that looks very much like the "
+"second of the three rules above but expands into all three, plus code to "
+"relate `S_` to `S`.\n"
+"So the user will type:"
+msgstr ""
+"Теперь все, что нам нужно, это способ указать пользователю, что эти три "
+"правила желательны.\n"
+"Поскольку точный метод построения комбинированной семантики и, возможно, "
+"даже вызов `Conj` может варьироваться в зависимости от специфики "
+"определяемой грамматики, правила не могут быть сгенерированы полностью "
+"автоматически.\n"
+"Мы остановимся на макросе `conj-rule`, который очень похож на второе из трех "
+"приведенных выше правил, но расширяется во все три, плюс код, связывающий "
+"`S_` с `S`.\n"
+"Итак, пользователь наберет:"
+
+#: in/chapter20.md:1409
+msgid ""
+"```lisp\n"
+"(conj-rule (Conj_S ?seml (?conj ?seml ?sem2)) ==>\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1411
+msgctxt "in/chapter20.md:1411"
+msgid "      `(Conj ?conj)`"
+msgstr ""
+
+#: in/chapter20.md:1413
+msgid "      `(S ?a ?b ?c ?sem2))`"
+msgstr ""
+
+#: in/chapter20.md:1415
+msgid "Here is the macro definition:"
+msgstr "Вот определение макроса:"
+
+#: in/chapter20.md:1431
+msgid ""
+"```lisp\n"
+"(defmacro conj-rule ((conj-cat sem1 combined-sem) ==>\n"
+"                     conj (cat . args))\n"
+"  \"Define this category as an automatic conjunction.\"\n"
+"  (assert (eq ==> '==>))\n"
+"  `(progn\n"
+"     (setf (get ',cat 'conj-cat) ',(symbol cat '_))\n"
+"     (rule (,cat ,@(butlast args) ?combined-sem) ==>\n"
+"       (,(symbol cat '_) ,@(butlast args) ,sem1)\n"
+"       (,conj-cat ,sem1 ?combined-sem))\n"
+"     (rule (,conj-cat ,sem1 ,combined-sem) ==>\n"
+"       ,conj\n"
+"       (,cat ,@args))\n"
+"     (rule (,conj-cat ?sem1 ?sem1) ==>)))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1433
+msgid ""
+"and here we define `handle-conj` to substitute `S-` for `S` in the left-hand "
+"side of rules:"
+msgstr ""
+"и здесь мы определяем `handle-conj` для подстановки `S-` для `S` в левой "
+"части правил:"
+
+#: in/chapter20.md:1441
+msgid ""
+"```lisp\n"
+"(defun handle-conj (head)\n"
+"  \"Replace (Cat ...) with (Cat_ ...) if Cat is declared\n"
+"  as a conjunctive category.\"\n"
+"  (if (and (listp head) (conj-category (predicate head)))\n"
+"      (cons (conj-category (predicate head)) (args head))\n"
+"      head))"
+msgstr ""
+
+#: in/chapter20.md:1446
+msgid ""
+"(defun conj-category (predicate)\n"
+"  \"If this is a conjunctive predicate, return the Cat_ symbol.\"\n"
+"  (get predicate 'conj-category))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1448
+msgid "## 20.8 History and References"
+msgstr "## 20.8 История и ссылки"
+
+#: in/chapter20.md:1451
+msgid ""
+"As we have mentioned, Alain Colmerauer invented Prolog to use in his grammar "
+"of French (1973).\n"
+"His *metamorphosis grammar* formalism was more expressive but much less "
+"efficient than the standard DCG formalism."
+msgstr ""
+
+#: in/chapter20.md:1458
+msgid ""
+"The grammar in [section 20.4](#s0025) is essentially the same as the one "
+"presented in Fernando Pereira and David H.\n"
+"D.\n"
+"Warren's 1980 paper, which introduced the Definite Clause Grammar formalism "
+"as it is known today.\n"
+"The two developed a much more substantial grammar and used it in a very "
+"influential question-answering system called Chat-80 ([Warren and Pereira, "
+"1982](B9780080571157500285.xhtml#bb1340)).\n"
+"Pereira later teamed with Stuart Shieber on an excellent book covering logic "
+"grammars in more depth: *Prolog and Natural-Language Analysis* (1987).\n"
+"The book has many strong points, but unfortunately it does not present a "
+"grammar anywhere near as complete as the Chat-80 grammar."
+msgstr ""
+
+#: in/chapter20.md:1461
+msgid ""
+"The idea of a compositional semantics based on mathematical logic owes much "
+"to the work of the late linguist Richard Montague.\n"
+"The introduction by [Dowty, Wall, and Peters (1981)](B9780080571157500285."
+"xhtml#bb0335) and the collection by [Rich Thomason (1974)]"
+"(B9780080571157500285.xhtml#bb1235) cover Montague's approach."
+msgstr ""
+
+#: in/chapter20.md:1464
+msgid ""
+"The grammar in [section 20.5](#s0030) is based loosely on Michael McCord's "
+"modular logic grammar, as presented in [Walker et al.\n"
+"1990](B9780080571157500285.xhtml#bb1295)."
+msgstr ""
+
+#: in/chapter20.md:1472
+msgid ""
+"It should be noted that logic grammars are by no means the only approach to "
+"natural language processing.\n"
+"[Woods (1970)](B9780080571157500285.xhtml#bb1425) presents an approach based "
+"on the *augmented transition network*, or ATN.\n"
+"A transition network is like a context-free grammar.\n"
+"The *augmentation* is a way of manipulating features and semantic values.\n"
+"This is just like the extra arguments in DCGs, except that the basic "
+"operations are setting and testing variables rather than unification.\n"
+"So the choice between ATNs and DCGs is largely a matter of what programming "
+"approach you are most comfortable with: procedural for ATNs and declarative "
+"for DCGs.\n"
+"My feeling is that unification is a more suitable primitive than assignment, "
+"so I chose to present DCGs, even though this required bringing in Prolog's "
+"backtracking and unification mechanisms."
+msgstr ""
+
+#: in/chapter20.md:1476
+msgid ""
+"In either approach, the same linguistic problems must be addressed-"
+"agreement, long-distance dependencies, topicalization, quantifier-scope "
+"ambiguity, and so on.\n"
+"Comparing [Woods's (1970)](B9780080571157500285.xhtml#bb1425) ATN grammar to "
+"[Pereira and Warren's (1980)](B9780080571157500285.xhtml#bb0950) DCG "
+"grammar, the careful reader will see that the solutions have much in "
+"common.\n"
+"The analysis is more important than the notation, as it should be."
+msgstr ""
+
+#: in/chapter20.md:1478
+msgid "## 20.9 Exercises"
+msgstr "## 20.9 Упражнения"
+
+#: in/chapter20.md:1480
+msgid ""
+"**Exercise  20.2 [m]** Modify the grammar (from [section 20.4](#s0025), "
+"[20.5](#s0030), [or 20.6](#s0035)) to allow for adjectives before a noun."
+msgstr ""
+
+#: in/chapter20.md:1482
+msgid ""
+"**Exercise  20.3 [m]** Modify the grammar to allow for prepositional phrase "
+"modifiers on verb and noun phrases."
+msgstr ""
+
+#: in/chapter20.md:1484
+msgid ""
+"**Exercise  20.4 [m]** Modify the grammar to allow for ditransitive verbs-"
+"verbs that take two objects, as in \"give the dog a bone.\""
+msgstr ""
+
+#: in/chapter20.md:1487
+msgid ""
+"**Exercise  20.5** Suppose we wanted to adopt the Prolog convention of "
+"writing DCG tests and words in brackets and braces, respectively.\n"
+"Write a function that will alter the readtable to work this way."
+msgstr ""
+
+#: in/chapter20.md:1490
+msgid ""
+"**Exercise  20.6 [m]** Define a rule function for a new type of DCG rule "
+"that automatically builds up a syntactic parse of the input.\n"
+"For example, the two rules:"
+msgstr ""
+
+#: in/chapter20.md:1495
+msgid ""
+"```lisp\n"
+"(rule (s) => (np) (vp))\n"
+"(rule (np) => (:word he))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1497
+msgid "should be equivalent to:"
+msgstr ""
+
+#: in/chapter20.md:1502
+msgid ""
+"```lisp\n"
+"(rule (s (s ?1 ?2)) --> (np ?1) (vp ?2))\n"
+"(rule (np (np he)) --> (:word he))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1508
+msgid ""
+"**Exercise  20.7 [m]** There are advantages and disadvantages to the "
+"approach that Prolog takes in dividing predicates into clauses.\n"
+"The advantage is that it is easy to add a new clause.\n"
+"The disadvantage is that it is hard to alter an existing clause.\n"
+"If you edit a clause and then evaluate it, the new clause will be added to "
+"the end of the clause list, when what you really wanted was for the new "
+"clause to take the place of the old one.\n"
+"To achieve that effect, you have to call `clear-predicate`, and then reload "
+"all the clauses, not just the one that has been changed."
+msgstr ""
+
+#: in/chapter20.md:1511
+msgid ""
+"Write a macro `named-rule` that is just like `rule`, except that it attaches "
+"names to clauses.\n"
+"When a named rule is reloaded, it replaces the old clause rather than adding "
+"a new one."
+msgstr ""
+
+#: in/chapter20.md:1515
+msgid ""
+"**Exercise 20.8 [h]** Extend the DCG rule function to allow or goals in the "
+"right-hand side.\n"
+"To make this more useful, also allow `and` goals.\n"
+"For example:"
+msgstr ""
+
+#: in/chapter20.md:1519
+msgid ""
+"```lisp\n"
+"(rule (A) --> (B) (or (C) (and (D) (E))) (F))\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1521
+msgid "should compile into the equivalent of :"
+msgstr ""
+
+#: in/chapter20.md:1525
+msgid ""
+"```lisp\n"
+"(<- (A ?S0 ?S4)\n"
+"```"
+msgstr ""
+
+#: in/chapter20.md:1527
+msgid "      `(B ?S0 ?S1)`"
+msgstr ""
+
+#: in/chapter20.md:1529
+msgid "      `(OR (AND (C ?S1 ?S2) (= ?S2 ?S3))`"
+msgstr ""
+
+#: in/chapter20.md:1531
+msgid "    `(AND (D ?S1 ?S2) (E ?S2 ?S3)))`"
+msgstr ""
+
+#: in/chapter20.md:1533
+msgid "      `(F ?S3 ?S4))`"
+msgstr ""
+
+#: in/chapter20.md:1535
+msgid "## 20.10 Answers"
+msgstr "## 20.10 Ответы"
+
+#: in/chapter20.md:1539
+msgid ""
+"**Answer 20.1** It uses local variables `(?s0, ?sl ...)` that are not "
+"guaranteed to be unique.\n"
+"This is a problem if the grammar writer wants to use these symbols anywhere "
+"in his or her rules.\n"
+"The fix is to `gensym` symbols that are guaranteed to be unique."
+msgstr ""
+
+#: in/chapter20.md:1541
+msgid "### Answer 20.5"
+msgstr ""
+
+#: in/chapter20.md:1544
+msgid ""
+"`(defun setup-braces Uoptional (on?\n"
+"t) (readtable *readtable*))`"
+msgstr ""
+
+#: in/chapter20.md:1547
+msgid ""
+"      `\"Make [a b] read as (:word a b) and {a b} as (:test a b c) if ON?\n"
+"is true; otherwise revert {[]} to normal.\"`"
+msgstr ""
+
+#: in/chapter20.md:1550
+msgid ""
+"      `if ON?\n"
+"is true; otherwise revert {[]} to normal.\"`"
+msgstr ""
+
+#: in/chapter20.md:1552
+msgid "      `(if (not on?)`"
+msgstr ""
+
+#: in/chapter20.md:1554
+msgid "      `(map nil #'(lambda (c)`"
+msgstr ""
+
+#: in/chapter20.md:1556
+msgid "              `(set-macro-character c (get-macro-character #\\a)`"
+msgstr ""
+
+#: in/chapter20.md:1558
+msgid "                        `t readtable))`"
+msgstr ""
+
+#: in/chapter20.md:1560
+msgid "        `\"{[]}\")`"
+msgstr ""
+
+#: in/chapter20.md:1562
+msgid "      `(progn`"
+msgstr ""
+
+#: in/chapter20.md:1564
+msgctxt "in/chapter20.md:1564"
+msgid "        `(set-macro-character`"
+msgstr ""
+
+#: in/chapter20.md:1566
+msgid "          `#\\] (get-macro-character #\\)) nil readtable)`"
+msgstr ""
+
+#: in/chapter20.md:1568
+msgctxt "in/chapter20.md:1568"
+msgid "        `(set-macro-character`"
+msgstr ""
+
+#: in/chapter20.md:1570
+msgid "          `#\\} (get-macro-character #\\)) nil readtable)`"
+msgstr ""
+
+#: in/chapter20.md:1572
+msgctxt "in/chapter20.md:1572"
+msgid "        `(set-macro-character`"
+msgstr ""
+
+#: in/chapter20.md:1574
+msgid "          `#\\[ #'(lambda (s ignore)`"
+msgstr ""
+
+#: in/chapter20.md:1576
+msgid "                  `(cons :word (read-delimited-list #\\] s t)))`"
+msgstr ""
+
+#: in/chapter20.md:1578
+msgid "          `nil readtable)`"
+msgstr ""
+
+#: in/chapter20.md:1580
+msgctxt "in/chapter20.md:1580"
+msgid "        `(set-macro-character`"
+msgstr ""
+
+#: in/chapter20.md:1582
+msgid "          `#\\{ #'(lambda (s ignore)`"
+msgstr ""
+
+#: in/chapter20.md:1584
+msgid "                  `(cons :test (read-delimited-list #\\} s t)))`"
+msgstr ""
+
+#: in/chapter20.md:1586
+msgid "          `nil readtable))))`"
+msgstr ""
+
+#: in/chapter20.md:1588
+msgid "----------------------"
+msgstr ""
+
+#: in/chapter20.md:1591
+msgid ""
+"[1](#xfn0015) The asterisk at the start of a sentence is the standard "
+"linguistic notation for an utterance that is ungrammatical or otherwise ill-"
+"formed.\n"
+"!!!(p) {:.ftnote1}"
+msgstr ""

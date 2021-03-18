@@ -1,0 +1,4676 @@
+#
+# NuINu <don't@send.my>, 2020, 2021.
+#
+#. extracted from in/chapter24.md
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: 2021-03-17 11:29+0300\n"
+"Last-Translator: NuINu <don't@send.my>\n"
+"Language-Team: Russian <don't@send.my>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 2.91.7\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : "
+"4;\n"
+
+#: in/chapter24.md:3
+msgid ""
+"# Chapter 24\n"
+"## ANSI Common Lisp"
+msgstr ""
+"# Глава 24\n"
+"## ANSI Common Lisp"
+
+#: in/chapter24.md:9
+msgid ""
+"This chapter briefly covers some advanced features of Common Lisp that were "
+"not used in the rest of the book.\n"
+"The first topic, packages, is crucial in building large systems but was not "
+"covered in this book, since the programs are concise.\n"
+"The next four topics-error handling, pretty printing, series, and the loop "
+"macro-are covered in *Common Lisp the Language,* 2d edition, but not in the "
+"first edition of the book.\n"
+"Thus, they may not be applicable to your Lisp compiler.\n"
+"The final topic, sequence functions, shows how to write efficient functions "
+"that work for either lists or vectors."
+msgstr ""
+"В этой главе кратко рассматриваются некоторые расширенные возможности Common "
+"Lisp, которые не использовались в остальной части книги.\n"
+"Первая тема, пакеты, имеет решающее значение при построении больших систем, "
+"но не рассматривалась в этой книге, поскольку программы краткие.\n"
+"Следующие четыре темы - обработка ошибок, красивая печать(pretty printing), "
+"ряды(series) и макрос цикла(loop) - рассматриваются в *Common Lisp the "
+"Language,* 2d edition, но не в первом издании книги.\n"
+"Таким образом, они могут быть неприменимы к вашему компилятору Lisp.\n"
+"Последняя тема, функции работы с последовательностями, показывает, как "
+"писать эффективные функции, которые работают как со списками, так и с "
+"векторами."
+
+#: in/chapter24.md:11
+msgid "## 24.1 Packages"
+msgstr "## 24.1 Пакеты(Packages)"
+
+#: in/chapter24.md:17
+msgid ""
+"A *package* is a symbol table that maps from strings to symbols named by "
+"those strings.\n"
+"When read is confronted with a sequence of characters like `list`, it uses "
+"the symbol table to determine that this refers to the symbol `list`.\n"
+"The important point is that every use of the symbol name `list` refers to "
+"the same symbol.\n"
+"That makes it easy to refer to predefined symbols, but it also makes it easy "
+"to introduce unintended name conflicts.\n"
+"For example, if I wanted to hook up the `emycin` expert system from [chapter "
+"16](B9780080571157500169.xhtml) with the parser from [chapter 19]"
+"(B9780080571157500194.xhtml), there would be a conflict because both "
+"programs use the symbol `defrule` to mean different things."
+msgstr ""
+"*package*(пакет) - это таблица символов, которая отображает строки в "
+"символы, именуемые этими строками.\n"
+"Когда read сталкивается с последовательностью символьных знаков вроде "
+"`list`, она использует таблицу символьных знаков, чтобы определить, что они "
+"относится к символу `list`.\n"
+"Важным моментом является то, что каждое использование имени символа `list` "
+"относится к одному и тому же символу.\n"
+"Это упрощает обращение к предопределенным символам, но также упрощает "
+"внесение непреднамеренных конфликтов имен.\n"
+"Например, если бы я хотел подключить экспертную систему emycin из [главы 16]"
+"(B9780080571157500169.xhtml) с парсером из [главы 19](B9780080571157500194."
+"xhtml), возник бы конфликт, потому что обе программы использовали символ "
+"`defrule` означающий в них разные вещи."
+
+#: in/chapter24.md:24
+msgid ""
+"Common Lisp uses the package system to help resolve such conflicts.\n"
+"Instead of a single symbol table, Common Lisp allows any number of "
+"packages.\n"
+"The function `read` always uses the current package, which is defined to be "
+"the value of the special variable `*package*`.\n"
+"By default, Lisp starts out in the `common-lisp-user` package.[1](#fn0010) "
+"That means that if we type a new symbol, like `zxv!!!(char) Â®!?+qw`, it "
+"will be entered into that package.\n"
+"Converting a string to a symbol and placing it in a package is called "
+"*interning.* It is done automatically by `read`, and can be done by the "
+"function `intern` if necessary.\n"
+"Name conflicts arise when there is contention for names within the `common-"
+"lisp-user` package."
+msgstr ""
+"Common Lisp использует систему пакетов, чтобы помочь разрешить такие "
+"конфликты.\n"
+"Вместо единой таблицы символов Common Lisp допускает любое количество "
+"пакетов.\n"
+"Функция `read` всегда использует текущий пакет, который определяется как "
+"значение специальной переменной `*package*`.\n"
+"По умолчанию Lisp запускается в пакете `common-lisp-user`. [1](# fn0010) Это "
+"означает, что если мы введем новый символ, например, `zxv!!!(char) Â®!? + "
+"Qw` , он будет включен в этот пакет.\n"
+"Преобразование строки в символ и размещение ее в пакете называется "
+"*интернированием(interning)*. Это делается автоматически с помощью `read` и "
+"может быть выполнено с помощью функции `intern`, если необходимо.\n"
+"Конфликты имен возникают, когда существует конкуренция за имена внутри "
+"пакета `common-lisp-user`."
+
+#: in/chapter24.md:30
+msgid ""
+"To avoid name conflicts, simply create your new symbols in another package, "
+"one that is specific to your program.\n"
+"The easiest way to implement this is to split each system into at least two "
+"files-one to define the package that the system resides in, and the others "
+"for the system itself.\n"
+"For example, the `emycin` system should start with a file that defines the "
+"`emycin` package.\n"
+"The following form defines the `emycin` package to use the `lisp` package.\n"
+"That means that when the current package is `emycin`, you can still refer to "
+"ail the built-in Lisp symbols."
+msgstr ""
+"Чтобы избежать конфликтов имен, просто создайте новые символы в другом "
+"пакете, специфичном для вашей программы.\n"
+"Самый простой способ реализовать это - разделить каждую систему как минимум "
+"на два файла: один для определения пакета системы, а другие - для самой "
+"системы.\n"
+"Например, система `emycin` должна начинаться с файла, который определяет "
+"пакет `emycin`.\n"
+"Следующая форма определяет пакет `emycin` использующий пакет `lisp`.\n"
+"Это означает, что когда текущим будет пакет - `emycin`, вы все равно сможете "
+"ссылаться на все встроенные символы Лиспа."
+
+#: in/chapter24.md:34
+msgid ""
+"```lisp\n"
+"(make-package \"EMYCIN\" :use '(\"LISP\"))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:37
+msgid ""
+"The file containing the package definition should always be loaded before "
+"the rest of the system.\n"
+"Those files should start with the following call, which insures that all new "
+"symbols will be interned in the `emycin` package:"
+msgstr ""
+"Файл, содержащий определение пакета, всегда должен загружаться раньше, чем "
+"остальная часть системы.\n"
+"Такие файлы должны начинаться со следующего вызова, который гарантирует, что "
+"все новые символы будут интернированы в пакет `emycin`:"
+
+#: in/chapter24.md:41
+msgid ""
+"```lisp\n"
+"(in-package \"EMYCIN\")\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:48
+msgid ""
+"Packages are used for information-hiding purposes as well as for avoiding "
+"name clashes.\n"
+"A distinction is made between *internal* and *external* symbols.\n"
+"External symbols are those that a user of a system would want to refer to, "
+"while internal symbols are those that help implement the system but are not "
+"needed by a user of the system.\n"
+"The symbol `rule` would probably be internai to both the `emycin` and "
+"`parser` package, but `defrule` would be external, because a user of the "
+"`emycin` system uses `defrule` to define new rules.\n"
+"The designer of a system is responsible for advertising which symbols are "
+"external.\n"
+"The proper call is:"
+msgstr ""
+"Пакеты используются для сокрытия информации, а также для предотвращения "
+"конфликтов имен.\n"
+"Различают *внутренние(internal)* и *внешние(external)* символы.\n"
+"Внешние символы - это те, на которые пользователь системы мог бы ссылаться, "
+"а внутренние символы - это те, которые помогают реализовать систему, но не "
+"нужны пользователю системы.\n"
+"Символ `rule`, вероятно, будет внутренним как для пакета `emycin`, так и "
+"`parser`, но `defrule` будет внешним, потому что пользователь системы "
+"`emycin` использует `defrule` для определения новых правил.\n"
+"Разработчик системы отвечает за публикацию объявления, символов которые "
+"являются внешними.\n"
+"Правильный вызов:"
+
+#: in/chapter24.md:52
+msgid ""
+"```lisp\n"
+"(export '(emycin defrule defcontext defparm yes/no yes no is))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:62
+msgid ""
+"Now the user who wants to refer to symbols in the `emycin` package has four "
+"choices.\n"
+"First, he or she can use the *package prefix* notation.\n"
+"To refer to the symbol `defrule` in the emycin package, type `emycin:"
+"defrule`.\n"
+"Second, the user can make `emycin` be the current package with `(in-package "
+"\"EMYCIN\").` Then, of course, we need only type `defrule`.\n"
+"Third, if we only need part of the functionality of a system, we can import "
+"specific symbols into the current package.\n"
+"For example, we could call `(import ' emycin:defrule)`.\n"
+"From then on, typing `defrule` (in the current package) will refer to "
+"`emycin:defrule`.\n"
+"Fourth, if we want the full functionality of the system, wecall `(use-"
+"package \"EMYCIN\")`.\n"
+"This makes ail the external symbols ofthe `emycin` package accessible in the "
+"current package."
+msgstr ""
+"Во-вторых, пользователь может сделать `emycin` текущим пакетом с помощью "
+"`(in-package \"EMYCIN\").` Тогда, конечно, нам понадобится только набрать "
+"`defrule`.\n"
+"В-третьих, если нам нужна только часть функциональных возможностей системы, "
+"мы можем импортировать определенные символы в текущий пакет.\n"
+"Например, мы могли бы вызвать `(import 'emycin:defrule)`.\n"
+"С этого момента ввод `defrule` (в текущем пакете) будет ссылаться на `emycin:"
+"defrule`.\n"
+"В-четвертых, если мы хотим получить полную функциональность системы, мы "
+"вызываем `(use-package \"EMYCIN\")`.\n"
+"Это делает все внешние символы пакета emycin доступными в текущем пакете."
+
+#: in/chapter24.md:68
+msgid ""
+"While packages help eliminate name conflicts, `import` and `use-package` "
+"allow them to reappear.\n"
+"The advantage is that there will only be conflicts between external "
+"symbols.\n"
+"Since a carefully designed package should have far fewer external than "
+"internal symbols, the problem has at least been reduced.\n"
+"But if two packages both have an external `defrule` symbol, then we cannot "
+"`use-package` both these packages, nor `import` both symbols without "
+"producing a genuine name conflict.\n"
+"Such conflicts can be resolved by *shadowing* one symbol or the other; see "
+"*Common Lisp the Language* for details."
+msgstr ""
+"В то время как пакеты помогают устранить конфликты имен, `import` и `use-"
+"package` позволяют им снова появляться.\n"
+"Преимущество в том, что конфликты будут только между внешними символами.\n"
+"Поскольку в тщательно разработанном пакете должно быть гораздо меньше "
+"внешних символов, чем внутренних, проблема, по крайней мере, будет "
+"уменьшена.\n"
+"Но если у двух пакетов есть внешний символ `defrule`, то мы не сможем "
+"выполнить `use-package` для обоих этих пакетов или `import`(импортировать) "
+"оба символа, не создавая конфликта имен.\n"
+"Такие конфликты будут разрешены путем *затенения* одного или другого "
+"символа; подробнее см. *Common Lisp the Language*."
+
+#: in/chapter24.md:76
+msgid ""
+"The careful reader may be confused by the distinction between `\"EMYCIN\"` "
+"and `emycin`.\n"
+"In *Common Lisp the Language*, it was not made clear what the argument to "
+"package functions must be.\n"
+"Thus, some implementations signal an error when given a symbol whose print "
+"name is a package.\n"
+"In ANSI Common Lisp, all package functions are specified to take either a "
+"package, a package name (a string), or a symbol whose print name is a "
+"package name.\n"
+"In addition, ANSI Common Lisp adds the convenient `defpackage` macro.\n"
+"It can be used as a replacement for separate calls to `make-package, use-"
+"package, import`, and `export`.\n"
+"Also note that ANSI renames the `lisp package` as `common-lisp`."
+msgstr ""
+"Внимательного читателя может сбить с толку различие между `\"EMYCIN\"` и "
+"`emycin`.\n"
+"В *Common Lisp the Language* не было ясно, каким должен быть аргумент для "
+"функций пакета(package).\n"
+"Таким образом, некоторые реализации сигнализируют об ошибке, когда задается "
+"символ, печатаемое имя которого является пакетом.\n"
+"В ANSI Common Lisp все функции пакета определены как принимающие либо пакет, "
+"либо имя пакета (строка), либо символ, чье печатное имя является именем "
+"пакета.\n"
+"Кроме того, ANSI Common Lisp добавляет удобный макрос `defpackage`.\n"
+"Его можно использовать как замену отдельным вызовам `make-package`, `use-"
+"package`, `import` и `export`.\n"
+"Также обратите внимание, что ANSI переименовывает `lisp package` в `common-"
+"lisp`."
+
+#: in/chapter24.md:80
+msgid ""
+"```lisp\n"
+"(defpackage emycin\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:82
+msgid "  `(:use common-lisp)`"
+msgstr ""
+
+#: in/chapter24.md:84
+msgid "  `(:export emycin defrule defcontext defparm yes/no yes no is))`"
+msgstr ""
+
+#: in/chapter24.md:86
+msgid ""
+"For more on packages and building systems, see [section 25.16]"
+"(B978008057115750025X.xhtml#s0110) or *Common Lisp the Language.*"
+msgstr ""
+"Для получения дополнительных сведений о пакетах и системах сборки см. "
+"[Раздел 25.16](B978008057115750025X.xhtml#s0110) или *Common Lisp the "
+"Language.*"
+
+#: in/chapter24.md:88
+msgid "### The Seven Name Spaces"
+msgstr "### Семь пространств имен"
+
+#: in/chapter24.md:92
+msgid ""
+"One important fact to remember about packages is that they deal with "
+"symbols, and only indirectly deal with the uses those symbols might have.\n"
+"For example, you may think of `(export 'parse)` as exporting the function "
+"`parse`, but really it is exporting the symbol `parse`, which may happen to "
+"have a function definition associated with it.\n"
+"However, if the symbol is put to another use-perhaps as a variable or a data "
+"type-then those uses are made accessible by the `export` statement as well."
+msgstr ""
+"Один важный факт, который следует помнить о пакетах, заключается в том, что "
+"они имеют дело с символами и только косвенно имеют дело с использованием "
+"этих символов.\n"
+"Например, вы можете думать о `(export 'parse)` как об экспорте функции "
+"`parse`, но на самом деле это экспорт символа `parse`, с которым может быть "
+"связано определение функции.\n"
+"Однако, если символ используется для другого использования - например, в "
+"качестве переменной или типа данных - тогда это использование также "
+"становится доступным с помощью оператора `export`."
+
+#: in/chapter24.md:105
+msgid ""
+"Common Lisp has at least seven name spaces.\n"
+"The two we think of most often are (1) for functions and macros and (2) for "
+"variables.\n"
+"We have seen that Scheme confiates these two name spaces, but Common Lisp "
+"keeps them separate, so that in a function application like `(f)` the "
+"function/macro name space is consulted for the value of `f`, but in `(+ f)`, "
+"f is treated as a variable name.\n"
+"Those who understand the scope and extent rules of Common Lisp know that (3) "
+"special variables form a distinct name space from lexical variables.\n"
+"So the `f` in `(+ f)` is treated as either a special or lexical variable, "
+"depending on if there is an applicable `special` declaration.\n"
+"There is also a name space (4) for data types.\n"
+"Even if `f` is defined as a function and/or a variable, it can also be "
+"defined as a data type with `defstruct`, `deftype`, or `defclass`.\n"
+"It can also be defined as (5) a label for `go` statements within a `tagbody` "
+"or (6) a block name for `return-from` statements within a `block`.\n"
+"Finally, symbols inside a quoted expression are treated as constants, and "
+"thus form name space (7).\n"
+"These symbols are often used as keys in user-defined tables, and in a sense "
+"each such table defines a new name space.\n"
+"One example is the *tag* name space, used by catch and `throw`.\n"
+"Another is the package name space."
+msgstr ""
+"Common Lisp имеет как минимум семь пространств имен.\n"
+"Два, о которых мы думаем чаще всего, - это (1) для функций и макросов и (2) "
+"для переменных.\n"
+"Мы видели, что Scheme объединяет эти два пространства имен, но Common Lisp "
+"хранит их отдельно, так что в применении функции, таком как `(f)`, "
+"пространство имен функции/макроса запрашивается для значения `f`, но в `( + "
+"f)`, f рассматривается как имя переменной.\n"
+"Те, кто понимает правила области видимости(scope) и протяженности(extent) "
+"Common Lisp, знают, что (3) специальные переменные образуют отдельное "
+"пространство имен из лексических переменных.\n"
+"Таким образом, `f` в `(+ f)` обрабатывается либо как специальная, либо как "
+"лексическая переменная, в зависимости от того, есть ли применимое объявление "
+"`special`.\n"
+"Также существует пространство имен (4) для типов данных.\n"
+"Даже если `f` определен как функция и/или переменная, он также может быть "
+"определен как тип данных с помощью `defstruct`,  `deftype` или `defclass`.\n"
+"Его также можно определить как (5) метку для операторов `go` c `tagbody` или "
+"(6) имени блока для операторов `return-from` внутри `block`.\n"
+"Наконец, символы внутри выражения в кавычках рассматриваются как константы "
+"и, это пространство имен формы(7).\n"
+"Эти символы часто используются в качестве ключей в пользовательских "
+"таблицах, и в некотором смысле каждая такая таблица определяет новое "
+"пространство имен.\n"
+"Одним из примеров является пространство имен *tag*, используемое `catch` и "
+"`throw`.\n"
+"Другой - это пространство имен пакетов."
+
+#: in/chapter24.md:108
+msgid ""
+"It is a good idea to limit each symbol to only one name space.\n"
+"Common Lisp will not be confused if a symbol is used in multiple ways, but "
+"the poor human reader probably will be."
+msgstr ""
+"Рекомендуется ограничить каждый символ только одним пространством имен.\n"
+"Common Lisp не запутается, если символ используется по-разному, но человеку "
+"читать плохо, и вероятно он, запутается."
+
+#: in/chapter24.md:110
+msgid ""
+"In the following example `f`, can you identify which of the twelve uses of "
+"`f` refer to which name spaces?"
+msgstr ""
+"В следующем примере мы покажем использование символа `f`, сможете ли вы "
+"определить, какое из двенадцати использований `f` относится к каким "
+"пространствам имен?"
+
+#: in/chapter24.md:114
+msgid ""
+"```lisp\n"
+"(defun f (f)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:116
+msgid "  `(block f`"
+msgstr ""
+
+#: in/chapter24.md:118
+msgctxt "in/chapter24.md:118"
+msgid "    `(tagbody`"
+msgstr ""
+
+#: in/chapter24.md:120
+msgid "      `f (catch 'f`"
+msgstr ""
+
+#: in/chapter24.md:122
+msgid "        `(if (typep f 'f)`"
+msgstr ""
+
+#: in/chapter24.md:124
+msgid "          `(throw 'f (go f)))`"
+msgstr ""
+
+#: in/chapter24.md:126
+msgid "        `(funcall #'f (get (symbol-value 'f) 'f))))))`"
+msgstr ""
+
+#: in/chapter24.md:128
+msgid "## 24.2 Conditions and Error Handling"
+msgstr "## 24.2 Условия и обработка ошибок"
+
+#: in/chapter24.md:133
+msgid ""
+"An extraordinary feature of ANSI Common Lisp is the facility for handling "
+"errors.\n"
+"In most languages it is very difficult for the programmer to arrange to "
+"recover from an error.\n"
+"Although Ada and some implementations of C provide functions for error "
+"recovery, they are not generally part of the repertoire of most "
+"programmers.\n"
+"Thus, we find C programs that exit with the ungraceful message `Segmentation "
+"violation: core dumped`."
+msgstr ""
+"Необычной особенностью ANSI Common Lisp является возможность обработки "
+"ошибок.\n"
+"В большинстве языков программисту очень сложно исправить ошибку.\n"
+"Хотя Ada и некоторые реализации C предоставляют функции для исправления "
+"ошибок, они обычно не входят в репертуар большинства программистов.\n"
+"Таким образом, мы находим программы на C, которые завершаются с некорректным "
+"сообщением `Нарушение сегментации(Segmentation violation): core dumped`."
+
+#: in/chapter24.md:136
+msgid ""
+"Common Lisp provides one of the most comprehensive and easy-to-use error-"
+"handling mechanism of any programming language, which leads to more robust "
+"programs.\n"
+"The process of error handling is divided into two parts: signaling an error, "
+"and handling it."
+msgstr ""
+"Common Lisp предоставляет один из наиболее полных и простых в использовании "
+"механизмов обработки ошибок среди всех языков программирования, что "
+"позволяет создавать более надежные программы.\n"
+"Процесс обработки ошибок разделен на две части: сообщение об ошибке и ее "
+"обработка."
+
+#: in/chapter24.md:138
+msgid "### Signaling Errors"
+msgstr "### Сигнализация об ошибках"
+
+#: in/chapter24.md:144
+msgid ""
+"An *error* is a condition that the program does not know how to handle.\n"
+"Since the program does not know what to do, its only recourse is to announce "
+"the occurrence of the error, with the hope that some other program or user "
+"will know what to do.\n"
+"This announcement is called *signaling* an error.\n"
+"An error can be signaled by a Common Lisp built-in function, as when `( / 3 "
+"0 )` signals a divide-by-zero error.\n"
+"Errors can also be signaled explicitly by the programmer, as in a call to "
+"`(error \"Illegal value.\")`."
+msgstr ""
+"*Ошибка* - это состояние, с которым программа не умеет справиться(не знает "
+"как обрабатывать).\n"
+"Поскольку программа не знает, что делать, ее единственный выход - объявить о "
+"возникновении ошибки в надежде, что какая-то другая программа или "
+"пользователь будут знать, что делать.\n"
+"Это сообщение называется *сигнализацией* об ошибке.\n"
+"Об ошибке может сигнализировать встроенная функция Common Lisp, например, "
+"когда `(/ 3 0)` сигнализирует об ошибке деления на ноль.\n"
+"Программист также может явно сигнализировать об ошибках, например, при "
+"вызове `(error \"Illegal value.\")`."
+
+#: in/chapter24.md:147
+msgid ""
+"Actually, it is a bit of a simplification to talk only of *signaling errors."
+"* The precise term is *signaling a condition.* Some conditions, like end-of-"
+"file, are not considered errors, but nevertheless they are unusual "
+"conditions that must be dealt with.\n"
+"The condition system in Common Lisp allows for the definition of all kinds "
+"of conditions, but we will continue to talk about errors in this brief "
+"discussion, since most conditions are in fact error conditions."
+msgstr ""
+"На самом деле, это некоторое упрощение, говорить только о *сигнализации о "
+"ошибках*. Точный термин - *сигнализация об условиях*. Некоторые условия, "
+"такие как конец файла, не считаются ошибками, но, тем не менее, они являются "
+"необычными условиями, с которыми нужно иметь дело.\n"
+"Система условий в Common Lisp позволяет определять все виды условий, но мы "
+"продолжим говорить об ошибках в этом кратком обсуждении, поскольку "
+"большинство условий на самом деле являются ошибками."
+
+#: in/chapter24.md:149
+msgid "### Handling Errors"
+msgstr "### Обработка Ошибок"
+
+#: in/chapter24.md:152
+msgid ""
+"By default, signaling an error invokes the debugger.\n"
+"In the following example, the >> prompt means that the user is in the "
+"debugger rather than at the top level."
+msgstr ""
+"По умолчанию при сигнализации об ошибке запускается отладчик.\n"
+"В следующем примере приглашение >> означает, что пользователь находится в "
+"отладчике, а не на верхнем уровне."
+
+#: in/chapter24.md:158
+msgid ""
+"```lisp\n"
+"> (/ 3 0)\n"
+"Error: An attempt was made to divide by zero.\n"
+">>\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:164
+msgid ""
+"ANSI Common Lisp provides ways of changing this default behavior.\n"
+"Conceptually, this is done by setting up an *error handler* which handles "
+"the error in some way.\n"
+"Error handlers are bound dynamically and are used to process signaled "
+"errors.\n"
+"An error handler is much like a `catch`, and signaling an error is like a "
+"`throw`.\n"
+"In fact, in many systems `catch` and `throw` are implemented with the error-"
+"condition system."
+msgstr ""
+"ANSI Common Lisp предоставляет способы изменить это поведение по умолчанию.\n"
+"По идее, это делается путем настройки *обработчика ошибок*, который каким-то "
+"образом обрабатывает ошибку.\n"
+"Обработчики ошибок связываются динамически и используются для обработки "
+"сообщений об ошибках.\n"
+"Обработчик ошибок очень похож на `catch`, а сигнализация об ошибке похожа на "
+"`throw`.\n"
+"Фактически, во многих системах `catch` и` throw` реализованы с помощью "
+"системы условий обнаружения ошибок."
+
+#: in/chapter24.md:168
+msgid ""
+"The simplest way of handling an error is with the macro `ignore-errors`.\n"
+"If noerror occurs, `ignore-errors` is just like `progn`.\n"
+"But if an error does occur, `ignore-errors` will return `nil` as its first "
+"value and `t` as its second, to indicate that an error has occurred but "
+"without doing anything else:"
+msgstr ""
+"Самый простой способ справиться с ошибкой(обработать её) - использовать "
+"макрос `ignore-errors`.\n"
+"Если ошибки не возникает, `ignore-errors` аналогичен `progn`.\n"
+"Но если ошибка все-таки возникает, `ignore-errors` вернет `nil` в качестве "
+"первого значения и t в качестве второго, чтобы указать, что произошла "
+"ошибка, но без каких-либо дополнительных действий:"
+
+#: in/chapter24.md:170
+msgid "`> (ignore-errors (/ 3 1))`=> `3 NIL`"
+msgstr ""
+
+#: in/chapter24.md:172
+msgid "`> (ignore-errors (/ 3 0))`=> `NIL T`"
+msgstr ""
+
+#: in/chapter24.md:176
+msgid ""
+"`ignore-errors` is a very coarse-grain tool.\n"
+"In an interactive interpreter, `ignore-errors` can be used to recover from "
+"any and all errors in the response to one input and get back to the read-"
+"process-print loop for the next input.\n"
+"If the errors that are ignored are not serious ones, this can be a very "
+"effective way of transforming a buggy program into a useful one."
+msgstr ""
+"`ignore-errors` - это очень грубый инструмент.\n"
+"В интерактивном интерпретаторе `ignore-errors` может использоваться для "
+"исправления любых ошибок в ответе на один ввод и возврата к циклу чтение-"
+"процесс-печать для следующего ввода.\n"
+"Если ошибки, которые игнорируются, не являются серьезными, это может быть "
+"очень эффективным способом превратить программу с ошибками в нечто полезное."
+
+#: in/chapter24.md:180
+msgid ""
+"But some errors are too important to ignore.\n"
+"If the error is running out of memory, then ignoring it will not help.\n"
+"Instead, we need to find some way of freeing up memory and continuing."
+msgstr ""
+"Но некоторые ошибки слишком важны, чтобы их игнорировать.\n"
+"Если ошибка запущена нехваткой памяти, то ее игнорирование не поможет.\n"
+"Вместо этого нам нужно найти способ освободить память и продолжить."
+
+#: in/chapter24.md:187
+msgid ""
+"The condition-handling system can be used to handle only certain errors.\n"
+"The macro `handler-case`, is a convenient way to do this.\n"
+"Like `case`, its first argument is evaluated and used to determine what to "
+"do next.\n"
+"If no error is signaled, then the value of the expression is returned.\n"
+"But if an error does occur, the following clauses are searched for one that "
+"matches the type of the error.\n"
+"In the following example, `handler-case` is used to handle division by zero "
+"and other arithmetic errors (perhaps floating-point underflow), but it "
+"allows all other errors to pass unhandled."
+msgstr ""
+"Система обработки условий может использоваться для обработки только "
+"определенных ошибок.\n"
+"Макрос `handler-case` - удобный способ сделать это.\n"
+"Как и `case`, его первый аргумент вычисляется и используется для определения "
+"того, что делать дальше.\n"
+"Если об ошибке не сообщается, возвращается значение выражения.\n"
+"Но если ошибка все же возникает, в следующих предложениях выполняется поиск "
+"того, который соответствует типу ошибки.\n"
+"В следующем примере `handler-case` используется для обработки деления на "
+"ноль и других арифметических ошибок (возможно, потери значимости числа с "
+"плавающей запятой), но он позволяет всем другим ошибкам проходить без "
+"обработки."
+
+#: in/chapter24.md:191
+msgid ""
+"```lisp\n"
+"(defun div (x y)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:193
+msgid "  `(handler-case (/ x y)`"
+msgstr ""
+
+#: in/chapter24.md:195
+msgid "    `(division-by-zero () most-positive-fixnum)`"
+msgstr ""
+
+#: in/chapter24.md:197
+msgid "    `(arithmetic-error () 0)))`"
+msgstr ""
+
+#: in/chapter24.md:199
+msgid "`> (div 8 2)`=> `4`"
+msgstr ""
+
+#: in/chapter24.md:201
+msgid "`> (div 3 0)`=> `16777215`"
+msgstr ""
+
+#: in/chapter24.md:206
+msgid ""
+"```lisp\n"
+"> (div 'xyzzy 1)\n"
+"Error: The value of NUMBER, XYZZY, should be a number\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:209
+msgid ""
+"Through judicious use of `handler-case`, the programmer can create robust "
+"code that reacts well to unexpected situations.\n"
+"For more details, see chapter 29 of *Common Lisp the Language,* 2d edition."
+msgstr ""
+"За счет разумного использования `handler-case` программист может создать "
+"надежный код, который хорошо реагирует на неожиданные ситуации.\n"
+"Для получения дополнительных сведений см. Главу 29 книги *Common Lisp the "
+"Language,* 2d редакции"
+
+#: in/chapter24.md:211
+msgid "## 24.3 Pretty Printing"
+msgstr "## 24.3 Красивая Печать"
+
+#: in/chapter24.md:217
+msgid ""
+"ANSI Common Lisp adds a facility for user-controlled pretty printing.\n"
+"In general, *pretty printing* refers to the process of printing complex "
+"expressions in a format that uses indentation to improve readability.\n"
+"The function `pprint` was always available, but before ANSI Common Lisp it "
+"was left unspecified, and it could not be extended by the user.\n"
+"Chapter 27 of *Common Lisp the Language,* 2d edition presents a pretty-"
+"printing facility that gives the user fine-grained control over the printing "
+"of all types of objects.\n"
+"In addition, the facility is integrated with the `format` function."
+msgstr ""
+"ANSI Common Lisp добавляет средство для удобной печати, управляемой "
+"пользователем.\n"
+"В общем, *pretty printing*(красивая печать) относится к процессу печати "
+"сложных выражений в формате, использующем отступы для улучшения читаемости.\n"
+"Функция `pprint` была доступна всегда, но до ANSI Common Lisp она оставалась "
+"неопределенной и не могла быть расширена пользователем.\n"
+"В главе 27 *Common Lisp the Language* 2d edition представлена удобная "
+"возможность печати, которая дает пользователю детальный контроль над печатью "
+"всех типов объектов.\n"
+"Кроме того, эта функциональность интегрирована с функцией `format`."
+
+#: in/chapter24.md:219
+msgid "## 24.4 Series"
+msgstr "## 24.4 Ряды(серии)"
+
+#: in/chapter24.md:222
+msgid ""
+"The functional style of programming with higher-order functions is one of "
+"the attractions of Lisp.\n"
+"The following expression to sum the square roots of the positive numbers in "
+"the list `nums` is clear and concise:"
+msgstr ""
+"Функциональный стиль программирования с функциями высшего порядка - одна из "
+"привлекательных сторон Лиспа.\n"
+"Следующее выражение для суммирования квадратных корней положительных чисел в "
+"списке `nums` является ясным и кратким"
+
+#: in/chapter24.md:226
+msgid ""
+"```lisp\n"
+"(reduce #'+ (mapcar #'sqrt (find-all-if #'plusp nums)))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:229
+msgid ""
+"Unfortunately, it is inefficient: both `find-all-if` and `mapcar` cons up "
+"intermediate lists that are not needed in the final sum.\n"
+"The following two versions using `loop` and `dolist` are efficient but not "
+"as pretty:"
+msgstr ""
+"К сожалению, это неэффективно: и `find-all-if`, и `mapcar` составляют(cons) "
+"промежуточные списки, которые не нужны для окончательной суммы.\n"
+"Следующие две версии с использованием `loop` и `dolist` эффективны, но не "
+"так красивы:"
+
+#: in/chapter24.md:234
+msgid ""
+"```lisp\n"
+";; Using Loop                      ;; Using dolist\n"
+"(loop for num in nums      (let ((sum 0))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:236
+msgid "    `when (plusp num)                (dolist (num nums sum)`"
+msgstr ""
+
+#: in/chapter24.md:238
+msgid "    `sum (sqrt num))                        (when (plusp num)`"
+msgstr ""
+
+#: in/chapter24.md:240
+msgid ""
+"                                                                                                                        `(incf "
+"sum num))))`"
+msgstr ""
+
+#: in/chapter24.md:243
+msgid ""
+"A compromise between the two approaches is provided by the *series* "
+"facility, defined in appendix A of *Common Lisp the Language*, 2d edition.\n"
+"The example using series would look like:"
+msgstr ""
+"Компромисс между этими двумя подходами обеспечивается функциональностью "
+"*series*(рядов), определенной в приложении A к *Common Lisp the Language*, "
+"2d edition.\n"
+"Пример использования рядов будет выглядеть так:"
+
+#: in/chapter24.md:247
+msgid ""
+"```lisp\n"
+"(collect-sum (#Msqrt (choose-if #'plusp nums)))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:250
+msgid ""
+"This looks very much like the functional version: only the names have been "
+"changed.\n"
+"However, it compiles into efficient iterative code very much like the "
+"`dolist` version."
+msgstr ""
+"Это очень похоже на функциональную версию: изменены только названия.\n"
+"Однако он компилируется в эффективный итеративный код, очень похожий на "
+"версию `dolist`."
+
+#: in/chapter24.md:253
+msgid ""
+"Like pipes (see [section 9.3](B9780080571157500091.xhtml#s0015)), elements "
+"of a series are only evaluated when they are needed.\n"
+"So we can write `(scan-range :from 0)` to indicate the infinite series of "
+"integers starting from 0, but if we only use, say, the first five elements "
+"of this series, then only the first five elements will be generated."
+msgstr ""
+"Как и каналы(pipes) (см. [Раздел 9.3](B9780080571157500091.xhtml#s0015)), "
+"элементы ряда вычисляются только тогда, когда они необходимы.\n"
+"Таким образом, мы можем написать `(scan-range: from 0)`, чтобы указать "
+"бесконечный ряд целых чисел, начинающийся с 0, но если мы будем "
+"использовать, скажем, только первые пять элементов этого ряда, то будут "
+"сгенерированы только первые пять элементов."
+
+#: in/chapter24.md:256
+msgid ""
+"The series facility offers a convenient and efficient alternative to "
+"iterative loops and sequence functions.\n"
+"Although the series proposai has not yet been adopted as an official part of "
+"ANSI Common Lisp, its inclusion in the reference manual has made it "
+"increasingly popular."
+msgstr ""
+"Функциональность рядов предлагает удобную и эффективную альтернативу "
+"итерационным циклам и функциям работы с последовательностями.\n"
+"Хотя эти предложенные ряды еще не приняты в качестве официальной части ANSI "
+"Common Lisp, ее включение в справочное руководство сделало их все более "
+"популярными."
+
+#: in/chapter24.md:258
+msgid "## 24.5 The Loop Macro"
+msgstr "## 24.5 Макрос Цикла(Loop)"
+
+#: in/chapter24.md:263
+msgid ""
+"The original specification of Common Lisp included a simple `loop` macro.\n"
+"The body of the loop was executed repeatedly, until a `return` was "
+"encountered.\n"
+"ANSI Common Lisp officially introduces a far more complex `loop` macro, one "
+"that had been used in ZetaLisp and its predecessors for some time.\n"
+"This book has occasionally used the complex `loop` in place of alternatives "
+"such as `do, dotimes, dolist`, and the mapping functions."
+msgstr ""
+"Первоначальная спецификация Common Lisp включала простой макрос `loop`.\n"
+"Тело цикла выполнялось многократно, пока не встречался `return`.\n"
+"ANSI Common Lisp официально представляет гораздо более сложный макрос "
+"`loop`, который некоторое время использовался в ZetaLisp и его "
+"предшественниках.\n"
+"В этой книге иногда использовался сложный `loop` вместо таких альтернатив, "
+"как `do`, `dotimes`, `dolist` и функций отображения(mapping)."
+
+#: in/chapter24.md:268
+msgid ""
+"If your Lisp does not include the complex `loop` macro, this chapter gives a "
+"definition that will run all the examples in this book, although it does not "
+"support all the features of `loop`.\n"
+"This chapter also serves as an example of a complex macro.\n"
+"As with any macro, the first thing to do is to look at some macro calls and "
+"what they might expand into.\n"
+"Here are two examples:"
+msgstr ""
+"Если ваш Лисп не включает в себя сложный макрос `loop`, в этой главе дается "
+"определение, которое будет запускать все примеры из этой книги, хотя оно не "
+"поддерживает все возможности `loop`.\n"
+"Эта глава также служит примером сложного макроса.\n"
+"Как и в случае с любым макросом, первое, что нужно сделать, это посмотреть "
+"на некоторые вызовы макросов и на то, во что они могут разворачиваться.\n"
+"Вот два примера:"
+
+#: in/chapter24.md:273
+msgid ""
+"```lisp\n"
+"(loop for i from 1 to n do (print (sqrt i))) =\n"
+"(LET* ((I 1)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:275
+msgid "        `(TEMP N))`"
+msgstr ""
+
+#: in/chapter24.md:277
+msgid "  `(TAGBODY`"
+msgstr ""
+
+#: in/chapter24.md:279
+msgctxt "in/chapter24.md:279"
+msgid "      `LOOP`"
+msgstr ""
+
+#: in/chapter24.md:281
+msgid "        `(IF (> I TEMP)`"
+msgstr ""
+
+#: in/chapter24.md:283
+msgctxt "in/chapter24.md:283"
+msgid "              `(GO END))`"
+msgstr ""
+
+#: in/chapter24.md:285
+msgid "        `(PRINT (SQRT I))`"
+msgstr ""
+
+#: in/chapter24.md:287
+msgid "        `(SETF I (+ I 1))`"
+msgstr ""
+
+#: in/chapter24.md:289
+msgctxt "in/chapter24.md:289"
+msgid "        `(GO LOOP)`"
+msgstr ""
+
+#: in/chapter24.md:291
+msgctxt "in/chapter24.md:291"
+msgid "      `END))`"
+msgstr ""
+
+#: in/chapter24.md:296
+msgid ""
+"```lisp\n"
+"(loop for v in list do (print v)) =\n"
+"(LET* ((IN LIST)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:298
+msgid "        `(V (CAR IN)))`"
+msgstr ""
+
+#: in/chapter24.md:300
+msgid "      `(TAGBODY`"
+msgstr ""
+
+#: in/chapter24.md:302
+msgctxt "in/chapter24.md:302"
+msgid "      `LOOP`"
+msgstr ""
+
+#: in/chapter24.md:304
+msgid "        `(IF (NULL IN)`"
+msgstr ""
+
+#: in/chapter24.md:306
+msgctxt "in/chapter24.md:306"
+msgid "              `(GO END))`"
+msgstr ""
+
+#: in/chapter24.md:308
+msgid "        `(PRINT V)`"
+msgstr ""
+
+#: in/chapter24.md:310
+msgid "        `(SETF IN (CDR IN))`"
+msgstr ""
+
+#: in/chapter24.md:312
+msgid "        `(SETF V (CAR IN))`"
+msgstr ""
+
+#: in/chapter24.md:314
+msgctxt "in/chapter24.md:314"
+msgid "        `(GO LOOP)`"
+msgstr ""
+
+#: in/chapter24.md:316
+msgctxt "in/chapter24.md:316"
+msgid "      `END))`"
+msgstr ""
+
+#: in/chapter24.md:319
+msgid ""
+"Each loop initializes some variables, then enters a loop with some exit "
+"tests and a body.\n"
+"So the template is something like:"
+msgstr ""
+"Каждый цикл loop инициализирует некоторые переменные, затем входит в цикл с "
+"некоторыми проверками на выход и телом.\n"
+"Итак, шаблон выглядит примерно так:"
+
+#: in/chapter24.md:323
+msgctxt "in/chapter24.md:323"
+msgid ""
+"```lisp\n"
+"(let* (*variables...*)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:325
+msgid "  `(tagbody`"
+msgstr ""
+
+#: in/chapter24.md:327
+msgid "    `loop`"
+msgstr ""
+
+#: in/chapter24.md:329
+msgid "      `(if *exit-tests*`"
+msgstr ""
+
+#: in/chapter24.md:331
+msgid "        `(go end))`"
+msgstr ""
+
+#: in/chapter24.md:333
+msgid "      *`Body`*"
+msgstr ""
+
+#: in/chapter24.md:335
+msgid "      `(go loop)`"
+msgstr ""
+
+#: in/chapter24.md:337
+msgid "    `end))`"
+msgstr ""
+
+#: in/chapter24.md:342
+msgid ""
+"Actually, there's more we might need in the general case.\n"
+"There may be a prologue that appears before the loop but after the variable "
+"initialization, and similarly there may be an epilogue after the loop.\n"
+"This epilogue may involve returning a value, and since we want to be able to "
+"return from the loop in any case, we need to wrap a `block` around it.\n"
+"So the complete template is:"
+msgstr ""
+"Собственно, в общем случае нам может понадобиться больше.\n"
+"Здесь может быть пролог, который появляется перед циклом, но после "
+"инициализации переменной, и точно так же может быть эпилог после цикла.\n"
+"Этот эпилог может включать в себя возвращение значения, и поскольку мы хотим "
+"иметь возможность вернуться из цикла в любом случае, нам нужно обернуть его "
+"конструкцией `block`.\n"
+"Итак, полный шаблон:"
+
+#: in/chapter24.md:346
+msgctxt "in/chapter24.md:346"
+msgid ""
+"```lisp\n"
+"(let* (*variables...*)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:348
+msgid "  `(block *name*`"
+msgstr ""
+
+#: in/chapter24.md:350
+msgid "    *`Prologue`*"
+msgstr ""
+
+#: in/chapter24.md:352
+msgctxt "in/chapter24.md:352"
+msgid "    `(tagbody`"
+msgstr ""
+
+#: in/chapter24.md:354
+msgid "      `Loop`"
+msgstr ""
+
+#: in/chapter24.md:356
+msgid "        *`body`*"
+msgstr ""
+
+#: in/chapter24.md:358
+msgid "        `(go loop)`"
+msgstr ""
+
+#: in/chapter24.md:360
+msgid "      `end`"
+msgstr ""
+
+#: in/chapter24.md:362
+msgid "        *`epilogue`*"
+msgstr ""
+
+#: in/chapter24.md:364
+msgid "        `(return *result*))))`"
+msgstr ""
+
+#: in/chapter24.md:366
+msgid ""
+"To generate this template from the body of a `loop` form, we will employ a "
+"structure with fields for each of the parts of the template:"
+msgstr ""
+"Чтобы сгенерировать этот шаблон из тела формы цикла `loop`, мы будем "
+"использовать структуру с полями для каждой из частей шаблона:"
+
+#: in/chapter24.md:370
+msgid ""
+"```lisp\n"
+"(defstruct loop\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:372
+msgid "    `\"A structure to hold parts of a loop as it is built.\"`"
+msgstr ""
+"    `\"Конструкция для удержания частей цикла во время его построения.\"`"
+
+#: in/chapter24.md:374
+msgid "    `(vars nil) (prologue nil) (body nil) (steps nil)`"
+msgstr ""
+
+#: in/chapter24.md:376
+msgid "    `(epilogue nil) (result nil) (name nil))`"
+msgstr ""
+
+#: in/chapter24.md:380
+msgid ""
+"Now the `loop` macro needs to do four things: (1) decide if this is a use of "
+"the simple, non-keyword `loop` or the complex ANSI `loop`.\n"
+"If it is the latter, then (2) make an instance of the `loop` structure, (3) "
+"process the body of the loop, filling in apprpriate fields of the structure, "
+"and (4) place the filled fields into the template.\n"
+"Here is the `loop` macro:"
+msgstr ""
+"Теперь макросу `loop` нужно сделать четыре вещи: (1) решить, будет ли это "
+"использование простого цикла `loop` без ключевых слов или сложного ANSI "
+"`loop`.\n"
+"Если это последнее, то (2) создайте экземпляр структуры `loop`, (3) "
+"обработайте тело цикла, заполнив соответствующие поля структуры, и (4) "
+"поместите заполненные поля в шаблон.\n"
+"Вот макрос `loop`:"
+
+#: in/chapter24.md:384
+msgid ""
+"```lisp\n"
+"(defmacro loop (&rest exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:386
+msgid "    `\"Supports both ANSI and simple LOOP.`"
+msgstr ""
+
+#: in/chapter24.md:388
+msgid "    `Warning: Not every loop keyword is supported.\"`"
+msgstr ""
+
+#: in/chapter24.md:390
+msgid "    `(if (every #'listp exps)`"
+msgstr ""
+
+#: in/chapter24.md:392
+msgid "        `;; No keywords implies simple loop:`"
+msgstr ""
+
+#: in/chapter24.md:394
+msgid "        `'(block nil (tagbody loop ,@exps (go loop)))`"
+msgstr ""
+
+#: in/chapter24.md:396
+msgid "        `;; otherwise process loop keywords:`"
+msgstr ""
+
+#: in/chapter24.md:398
+msgid "        `(let ((l (make-loop)))`"
+msgstr ""
+
+#: in/chapter24.md:400
+msgid "            `(parse-loop-body l exps)`"
+msgstr ""
+
+#: in/chapter24.md:402
+msgid "            `(fill-loop-template l))))`"
+msgstr ""
+
+#: in/chapter24.md:406
+msgid ""
+"```lisp\n"
+"(defun fill-loop-template (l)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:408
+msgid "    `\"Use a loop-structure instance to fill the template.\"`"
+msgstr ""
+
+#: in/chapter24.md:410
+msgid "    `'(let* .(nreverse (loop-vars l))`"
+msgstr ""
+
+#: in/chapter24.md:412
+msgid "        `(block ,(loop-name l)`"
+msgstr ""
+
+#: in/chapter24.md:414
+msgid "          `,@(nreverse (loop-prologue l)`"
+msgstr ""
+
+#: in/chapter24.md:416
+msgid "          `(tagbody`"
+msgstr ""
+
+#: in/chapter24.md:418
+msgid "            `loop`"
+msgstr ""
+
+#: in/chapter24.md:420
+msgid "                `,@(nreverse (loop-body l))`"
+msgstr ""
+
+#: in/chapter24.md:422
+msgid "                `,@(nreverse (loop-steps l))`"
+msgstr ""
+
+#: in/chapter24.md:424
+msgid "                `(go loop)`"
+msgstr ""
+
+#: in/chapter24.md:426
+msgid "            `end`"
+msgstr ""
+
+#: in/chapter24.md:428
+msgid "                `,@(nreverse (loop-epilogue l))`"
+msgstr ""
+
+#: in/chapter24.md:430
+msgid "                `(return ,(loop-result l))))))`"
+msgstr ""
+
+#: in/chapter24.md:433
+msgid ""
+"Most of the work is in writing `parse-loop-body`, which takes a list of "
+"expressions and parses them into the proper fields of a loop structure.\n"
+"It will use the following auxiliary functions:"
+msgstr ""
+"Большая часть работы заключается в написании `parse-loop-body`, которое "
+"берет список выражений и разбирает их в соответствующие поля структуры "
+"цикла.\n"
+"Он будет использовать следующие вспомогательные функции:"
+
+#: in/chapter24.md:438
+msgid ""
+"```lisp\n"
+"(defun add-body (l exp) (push exp (loop-body l)))\n"
+"(defun add-test (l test)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:440
+msgid "    `\"Put in a test for loop termination.\"`"
+msgstr ""
+
+#: in/chapter24.md:442
+msgid "    `(push '(if .test (go end)) (loop-body l)))`"
+msgstr ""
+
+#: in/chapter24.md:446
+msgid ""
+"```lisp\n"
+"(defun add-var (l var init &optional (update nil update?))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:448
+msgid "    `\"Add a variable, maybe including an update step.\"`"
+msgstr ""
+
+#: in/chapter24.md:450
+msgid "    `(unless (assoc var (loop-vars l))`"
+msgstr ""
+
+#: in/chapter24.md:452
+msgid "        `(push (list var init) (loop-vars l)))`"
+msgstr ""
+
+#: in/chapter24.md:454
+msgid "    `(when update?`"
+msgstr ""
+
+#: in/chapter24.md:456
+msgid "        `(push '(setq ,var ,update) (loop-steps l))))`"
+msgstr ""
+
+#: in/chapter24.md:461
+msgid ""
+"There are a number of alternative ways of implementing this kind of "
+"processing.\n"
+"One would be to use special variables: `*prologue*, *body*, *epilogue*`, and "
+"so on.\n"
+"This would mean we wouldn't have to pass around the loop structure `l`, but "
+"there would be significant clutter in having seven new special variables.\n"
+"Another possibility is to use local variables and close the definitions of "
+"`loop`, along with the `add-` functions in that local environment:"
+msgstr ""
+"Есть несколько альтернативных способов реализации такого рода обработки.\n"
+"Можно было бы использовать специальные переменные: `*prologue*, *body*, "
+"*epilogue*` и так далее.\n"
+"Это означало бы, что нам не нужно было бы обходить структуру цикла `l`, но "
+"наличие семи новых специальных переменных создаст значительный беспорядок.\n"
+"Другая возможность - использовать локальные переменные и закрыть определения "
+"`loop` вместе с функциями `add-` в этой локальном окружении:"
+
+#: in/chapter24.md:465
+msgid ""
+"```lisp\n"
+"(let (body prologue epilogue steps vars name result)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:467
+msgid "    `(defmacro loop ...)`"
+msgstr ""
+
+#: in/chapter24.md:469
+msgid "    `(defun add-body ...)`"
+msgstr ""
+
+#: in/chapter24.md:471
+msgid "    `(defun add-test ...)`"
+msgstr ""
+
+#: in/chapter24.md:473
+msgid "    `(defun add-var ...))`"
+msgstr ""
+
+#: in/chapter24.md:477
+msgid ""
+"This is somewhat cleaner style, but some early Common Lisp compilers do not "
+"support embedded `defuns`, so I chose to write in a style that I knew would "
+"work in all implementations.\n"
+"Another design choice would be to return multiple values for each of the "
+"components and have `parse-loop-body` put them all together.\n"
+"This is in fact done in one of the Lisp Machine implementations of `loop`, "
+"but I think it is a poor decision: seven components are too many to keep "
+"track of by positional notation."
+msgstr ""
+"Это несколько более чистый стиль, но некоторые ранние компиляторы Common "
+"Lisp не поддерживают встраивание функций `defun`, поэтому я решил писать в "
+"стиле, который, как я знаю, будет работать во всех реализациях.\n"
+"Другой вариант разработки - вернуть несколько значений для каждого из "
+"компонентов и собрать их все вместе с помощью `parse-loop-body`.\n"
+"Фактически это сделано в одной из реализаций цикла `loop` на Лисп-машине, но "
+"я думаю, что это плохое решение: семь компонентов - это слишком много, чтобы "
+"отслеживать их с помощью позиционной записи."
+
+#: in/chapter24.md:479
+msgid "### Anatomy of a Loop"
+msgstr "### Анатомия Loop"
+
+#: in/chapter24.md:483
+msgid ""
+"All this has just been to set up for the real work: parsing the expressions "
+"that make up the loop with the function `parse-loop-body`.\n"
+"Every loop consists of a sequence of clauses, where the syntax of each "
+"clause is determined by the first expression of the clause, which should be "
+"a known symbol.\n"
+"These symbols are called *loop keywords,* although they are not in the "
+"keyword package."
+msgstr ""
+"Все это просто было настроено для реальной работы: синтаксического анализа "
+"выражений, составляющих цикл, с помощью функции `parse-loop-body`.\n"
+"Каждый цикл состоит из последовательности предложений, где синтаксис каждого "
+"предложения определяется первым выражением предложения, которое должно быть "
+"известным символом.\n"
+"Эти символы называются *ключевыми словами цикла*, хотя их нет в пакете "
+"ключевых слов."
+
+#: in/chapter24.md:491
+msgid ""
+"The loop keywords will be defined in a data-driven fashion.\n"
+"Every keyword has a function on its property list under the `loop-fn` "
+"indicator.\n"
+"The function takes three arguments: the `loop` structure being built, the "
+"very next expression in the loop body, and a list of the remaining "
+"expressions after that.\n"
+"The function is responsible for updating the `loop` structure (usually by "
+"making appropriate calls to the `add-` functions) and then returning the "
+"unparsed expressions.\n"
+"The three-argument calling convention is used because many of the keywords "
+"only look at one more expression.\n"
+"So those functions see that expression as their first argument, and they can "
+"conveniently return their second argument as the unparsed remainder.\n"
+"Other functions will want to look more carefully at the second argument, "
+"parsing some of it and returning the rest."
+msgstr ""
+"Ключевые слова цикла будут определяться в стиле программирования "
+"управляемого данными.\n"
+"У каждого ключевого слова есть функция в списке свойств под индикатором "
+"`loop-fn`.\n"
+"Функция принимает три аргумента: строящуюся структуру `loop`, ближайшее "
+"выражение в теле цикла и список оставшихся после него выражений.\n"
+"Функция отвечает за обновление структуры `loop` (обычно путем выполнения "
+"соответствующих вызовов функций `add-`), а затем за возврат неанализируемых "
+"выражений.\n"
+"Соглашение о вызове с тремя аргументами используется потому, что многие "
+"ключевые слова смотрят только на еще одно выражение.\n"
+"Таким образом, эти функции видят это выражение как свой первый аргумент, и "
+"они могут удобно возвращать свой второй аргумент как неанализируемый "
+"остаток.\n"
+"Другие функции захотят более внимательно изучить второй аргумент, "
+"проанализировать некоторые из них и вернуть остальные."
+
+#: in/chapter24.md:496
+msgid ""
+"The macro `defloop` is provided to add new loop keywords.\n"
+"This macro enforces the three-argument calling convention.\n"
+"If the user supplies only two arguments, then a third argument is "
+"automatically added and returned as the remainder.\n"
+"Also, if the user specifies another symbol rather than a list of arguments, "
+"this is taken as an alias, and a function is constructed that calls the "
+"function for that keyword:"
+msgstr ""
+"Макрос `defloop` предназначен для добавления новых ключевых слов цикла.\n"
+"Этот макрос обеспечивает соблюдение соглашения о вызовах с тремя "
+"аргументами.\n"
+"Если пользователь предоставляет только два аргумента, то третий аргумент "
+"автоматически добавляется и возвращается как остаток.\n"
+"Кроме того, если пользователь указывает другой символ, а не список "
+"аргументов, он воспринимается как псевдоним, и создается функция, которая "
+"вызывает функцию для этого ключевого слова:"
+
+#: in/chapter24.md:500
+msgid ""
+"```lisp\n"
+"(defun parse-loop-body (l exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:502
+msgid "    `\"Parse the exps based on the first exp being a keyword.`"
+msgstr ""
+
+#: in/chapter24.md:504
+msgid "    `Continue until all the exps are parsed.\"`"
+msgstr ""
+
+#: in/chapter24.md:506
+msgid "    `(unless (null exps)`"
+msgstr ""
+
+#: in/chapter24.md:508
+msgid "        `(parse-loop-body`"
+msgstr ""
+
+#: in/chapter24.md:510
+msgid "            `l (call-loop-fn l (first exps) (rest exps)))))`"
+msgstr ""
+
+#: in/chapter24.md:514
+msgid ""
+"```lisp\n"
+"(defun call-loop-fn (l key exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:516
+msgid "    `\"Return the loop parsing function for this keyword.\"`"
+msgstr ""
+
+#: in/chapter24.md:518
+msgid "    `(if (and (symbolp key) (get key 'loop-fn))`"
+msgstr ""
+
+#: in/chapter24.md:520
+msgid "        `(funcall (get key 'loop-fn) l (first exps) (rest exps))`"
+msgstr ""
+
+#: in/chapter24.md:522
+msgid "        `(error \"Unknown loop key: \"a\" key)))`"
+msgstr ""
+
+#: in/chapter24.md:526
+msgid ""
+"```lisp\n"
+"(defmacro defloop (key args &rest body)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:528
+msgid "    `\"Define a new LOOP keyword.\"`"
+msgstr ""
+
+#: in/chapter24.md:530
+msgid "    `;; If the args do not have a third arg, one is supplied.`"
+msgstr ""
+
+#: in/chapter24.md:532
+msgid "    `;; Also, we can define an alias with (defloop key other-key)`"
+msgstr ""
+
+#: in/chapter24.md:534
+msgid "    `'(setf (get ',key 'loop-fn)`"
+msgstr ""
+
+#: in/chapter24.md:536
+msgid "        `,(cond ((and (symbolp args) (null body))`"
+msgstr ""
+
+#: in/chapter24.md:538
+msgid "            `'#'(lambda (1 x y)`"
+msgstr ""
+
+#: in/chapter24.md:540
+msgid "                    `(call-loop-fn l '.args (cons x y))))`"
+msgstr ""
+
+#: in/chapter24.md:542
+msgid "              `((and (listp args) (= (length args) 2))`"
+msgstr ""
+
+#: in/chapter24.md:544
+msgid "                `'#'(lambda (.@args -exps-) ,@body -exps-))`"
+msgstr ""
+
+#: in/chapter24.md:546
+msgid "              `(t '#'(lambda .args ,@body)))))`"
+msgstr ""
+
+#: in/chapter24.md:549
+msgid ""
+"Now we are ready to define some `loop` keywords.\n"
+"Each of the following sections refers to (and implements the loop keywords "
+"in) a section of chapter 26 of *Common Lisp the Language*, 2d edition."
+msgstr ""
+"Теперь мы готовы определить некоторые ключевые слова `loop`.\n"
+"Каждый из следующих разделов относится (и реализует ключевые слова цикла) к "
+"разделу 26 главы *Common Lisp the Language*, 2d edition."
+
+#: in/chapter24.md:551
+msgid "### Iteration Control (26.6)"
+msgstr "### Контроль Итераций (26.6)"
+
+#: in/chapter24.md:554
+msgid ""
+"Here we define keywords for iterating over elements of a sequence and for "
+"stopping the iteration.\n"
+"The following cases are covered, where uppercase words represent loop "
+"keywords:"
+msgstr ""
+"Здесь мы определяем ключевые слова для итерации по элементам "
+"последовательности и для остановки итерации.\n"
+"Рассмотрены следующие случаи, когда слова в верхнем регистре представляют "
+"собой ключевые слова цикла:"
+
+#: in/chapter24.md:562
+msgid ""
+"```lisp\n"
+"(LOOP REPEAT n ...)\n"
+"(LOOP FOR i FROM s TO e BY inc ...)\n"
+"(LOOP FOR v IN l ...)\n"
+"(LOOP FOR v ON l ...)\n"
+"(LOOP FOR v = expr [THEN step] ...)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:569
+msgid ""
+"The implementation is straightforward, although somewhat tedious for complex "
+"keywords like `for`.\n"
+"Take the simpler keyword, `repeat`.\n"
+"To handle it, we generate a new variable that will count down the number of "
+"times to repeat.\n"
+"We call `add-var` to add that variable, with its initial value, to the loop "
+"structure.\n"
+"We also give this variable an update expression, which decrements the "
+"variable by one each time through the loop.\n"
+"Then ail we need to do is call `add-test` to insert code that will exit the "
+"loop when the variable reaches zero:"
+msgstr ""
+"Реализация проста, хотя и несколько утомительна для сложных ключевых слов, "
+"таких как `for`.\n"
+"Возьмем более простое ключевое слово - `repeat`.\n"
+"Чтобы справиться с этим, мы создаем новую переменную, которая будет "
+"отсчитывать количество повторений.\n"
+"Мы вызываем `add-var`, чтобы добавить эту переменную с ее начальным "
+"значением в структуру цикла.\n"
+"Мы также даем этой переменной выражение обновления, которое уменьшает "
+"значение переменной на единицу каждый раз в цикле.\n"
+"Затем все, что нам нужно сделать, это вызвать `add-test`, чтобы вставить "
+"код, который выйдет из цикла, когда переменная достигнет нуля:"
+
+#: in/chapter24.md:573
+msgid ""
+"```lisp\n"
+"(defloop repeat (l times)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:575
+msgid "    `\"(LOOP REPEAT n ...) does loop body n times.\"`"
+msgstr ""
+
+#: in/chapter24.md:577
+msgid "    `(let ((i (gensym \"REPEAT\")))`"
+msgstr ""
+
+#: in/chapter24.md:579
+msgid "        `(add-var l i times '(- ,i 1))`"
+msgstr ""
+
+#: in/chapter24.md:581
+msgid "        `(add-test l '(<= ,i 0))))`"
+msgstr ""
+
+#: in/chapter24.md:583
+msgid ""
+"The loop keyword `for` is more complicated, but each case can be analyzed in "
+"the same way as `repeat`:"
+msgstr ""
+"Ключевое слово цикла `for` более сложен, но каждый случай может быть "
+"проанализирован так же, как `repeat`:"
+
+#: in/chapter24.md:588
+msgid ""
+"```lisp\n"
+"(defloop as for) ;; AS is the same as FOR\n"
+"(defloop for (l var exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:590
+msgid "    `\"4 of the 7 cases for FOR are covered here:`"
+msgstr ""
+
+#: in/chapter24.md:592
+msgid "    `(LOOP FOR i FROM s TO e BY inc ...) does arithmetic iteration`"
+msgstr ""
+
+#: in/chapter24.md:594
+msgid "    `(LOOP FOR v IN l ...) iterates for each element of l`"
+msgstr ""
+
+#: in/chapter24.md:596
+msgid "    `(LOOP FOR v ON l ...) iterates for each tail of l`"
+msgstr ""
+
+#: in/chapter24.md:598
+msgid "    `(LOOP FOR v = expr [THEN step]) initializes and iterates v\"`"
+msgstr ""
+
+#: in/chapter24.md:600
+msgid "    `(let ((key (first exps))`"
+msgstr ""
+
+#: in/chapter24.md:602
+msgid "            `(source (second exps))`"
+msgstr ""
+
+#: in/chapter24.md:604
+msgid "            `(rest (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:606
+msgid "        `(ecase key`"
+msgstr ""
+
+#: in/chapter24.md:608
+msgid "            `((from downfrom upfrom to downto upto by)`"
+msgstr ""
+
+#: in/chapter24.md:610
+msgid "          `(loop-for-arithmetic l var exps))`"
+msgstr ""
+
+#: in/chapter24.md:612
+msgid "            `(in (let ((v (gensym \"IN\")))`"
+msgstr ""
+
+#: in/chapter24.md:614
+msgid "                      `(add-var l v source '(cdr ,v))`"
+msgstr ""
+
+#: in/chapter24.md:616
+msgid "                      `(add-var l var '(car ,v) '(car ,v))`"
+msgstr ""
+
+#: in/chapter24.md:618
+msgid "                      `(add-test l '(null ,v))`"
+msgstr ""
+
+#: in/chapter24.md:620
+msgid "                      `rest))`"
+msgstr ""
+
+#: in/chapter24.md:622
+msgid "            `(on (add-var l var source '(cdr ,var))`"
+msgstr ""
+
+#: in/chapter24.md:624
+msgid "                    `(add-test l '(null .var))`"
+msgstr ""
+
+#: in/chapter24.md:626
+msgctxt "in/chapter24.md:626"
+msgid "                    `rest)`"
+msgstr ""
+
+#: in/chapter24.md:628
+msgid "            `(= (if (eq (first rest) 'then)`"
+msgstr ""
+
+#: in/chapter24.md:630
+msgctxt "in/chapter24.md:630"
+msgid "                            `(progn`"
+msgstr ""
+
+#: in/chapter24.md:632
+msgid "                                `(pop rest)`"
+msgstr ""
+
+#: in/chapter24.md:634
+msgid "                                `(add-var l var source (pop rest)))`"
+msgstr ""
+
+#: in/chapter24.md:636
+msgctxt "in/chapter24.md:636"
+msgid "                            `(progn`"
+msgstr ""
+
+#: in/chapter24.md:638
+msgctxt "in/chapter24.md:638"
+msgid "                                `(add-var l var nil)`"
+msgstr ""
+
+#: in/chapter24.md:640
+msgid "                                `(add-body l '(setq ,var .source))))`"
+msgstr ""
+
+#: in/chapter24.md:642
+msgctxt "in/chapter24.md:642"
+msgid "                    `rest)`"
+msgstr ""
+
+#: in/chapter24.md:645
+msgid ""
+"            `;; ACROSS.\n"
+"BEING clauses omitted`"
+msgstr ""
+
+#: in/chapter24.md:647
+msgid "            `)))`"
+msgstr ""
+
+#: in/chapter24.md:651
+msgid ""
+"```lisp\n"
+"(defun loop-for-arithmetic (l var exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:653
+msgid "    `\"Parse loop expressions of the form:`"
+msgstr ""
+
+#: in/chapter24.md:655
+msgid ""
+"    `(LOOP FOR var [FROM | DOWNFROM | UPFROM exp1] [TO | DOWNTO | UPTO exp2]`"
+msgstr ""
+
+#: in/chapter24.md:657
+msgid "              `[BY exp3]\"`"
+msgstr ""
+
+#: in/chapter24.md:659
+msgid "    `;; The prepositions BELOW and ABOVE are omitted`"
+msgstr ""
+
+#: in/chapter24.md:661
+msgid "    `(let ((exp1 0)`"
+msgstr ""
+
+#: in/chapter24.md:663
+msgid "              `(exp2 nil)`"
+msgstr ""
+
+#: in/chapter24.md:665
+msgid "              `(exp3 1)`"
+msgstr ""
+
+#: in/chapter24.md:668
+msgid ""
+"              `(down?\n"
+"nil))`"
+msgstr ""
+
+#: in/chapter24.md:670
+msgid "        `;; Parse the keywords:`"
+msgstr ""
+
+#: in/chapter24.md:672
+msgid "        `(when (member (first exps) '(from downfrom upfrom))`"
+msgstr ""
+
+#: in/chapter24.md:674
+msgid "          `(setf exp1 (second exps)`"
+msgstr ""
+
+#: in/chapter24.md:677
+msgid ""
+"                  `down?\n"
+"(eq (first exps) 'downfrom)`"
+msgstr ""
+
+#: in/chapter24.md:679
+msgctxt "in/chapter24.md:679"
+msgid "                  `exps (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:681
+msgid "        `(when (member (first exps) '(to downto upto))`"
+msgstr ""
+
+#: in/chapter24.md:683
+msgid "          `(setf exp2 (second exps)`"
+msgstr ""
+
+#: in/chapter24.md:687
+msgid ""
+"                  `down?\n"
+"(or down?\n"
+"(eq (first exps) 'downto))`"
+msgstr ""
+
+#: in/chapter24.md:689
+msgctxt "in/chapter24.md:689"
+msgid "                  `exps (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:691
+msgid "        `(when (eq (first exps) 'by)`"
+msgstr ""
+
+#: in/chapter24.md:693
+msgid "          `(setf exp3 (second exps)`"
+msgstr ""
+
+#: in/chapter24.md:695
+msgctxt "in/chapter24.md:695"
+msgid "                  `exps (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:697
+msgid "        `;; Add variables and tests:`"
+msgstr ""
+
+#: in/chapter24.md:699
+msgid "        `(add-var l var exp1`"
+msgstr ""
+
+#: in/chapter24.md:702
+msgid ""
+"                  `'(,(if down?\n"
+"'- '+) ,var ,(maybe-temp l exp3)))`"
+msgstr ""
+
+#: in/chapter24.md:704
+msgid "        `(when exp2`"
+msgstr ""
+
+#: in/chapter24.md:707
+msgid ""
+"            `(add-test l '(,(if down?\n"
+"'< '>) ,var ,(maybe-temp l exp2))))`"
+msgstr ""
+
+#: in/chapter24.md:709
+msgid "        `;; and return the remaining expressions:`"
+msgstr ""
+
+#: in/chapter24.md:711
+msgid "                  `exps))`"
+msgstr ""
+
+#: in/chapter24.md:715
+msgid ""
+"```lisp\n"
+"(defun maybe-temp (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:717
+msgid "    `\"Generate a temporary variable, if needed.\"`"
+msgstr ""
+
+#: in/chapter24.md:719
+msgid "    `(if (constantp exp)`"
+msgstr ""
+
+#: in/chapter24.md:721
+msgid "        `exp`"
+msgstr ""
+
+#: in/chapter24.md:723
+msgid "        `(let ((temp (gensym \"TEMP\")))`"
+msgstr ""
+
+#: in/chapter24.md:725
+msgid "            `(add-var l temp exp)`"
+msgstr ""
+
+#: in/chapter24.md:727
+msgid "            `temp)))`"
+msgstr ""
+
+#: in/chapter24.md:729
+msgid "### End-Test Control (26.7)"
+msgstr ""
+
+#: in/chapter24.md:731
+msgid "In this section we cover the following clauses:"
+msgstr "В этом разделе мы рассмотрим следующие предложения:"
+
+#: in/chapter24.md:740
+msgid ""
+"```lisp\n"
+"(LOOP UNTIL test ...)\n"
+"(LOOP WHILE test ...)\n"
+"(LOOP ALWAYS condition ...)\n"
+"(LOOP NEVER condition ...)\n"
+"(LOOP THEREIS condition ...)\n"
+"(LOOP ... (LOOP-FINISH) ...)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:742
+msgid "Each keyword is quite simple:"
+msgstr "Каждое ключевое слово довольно простое:"
+
+#: in/chapter24.md:748
+msgid ""
+"```lisp\n"
+"(defloop until (l test) (add-test l test))\n"
+"(defloop while (l test) (add-test l '(not .test)))\n"
+"(defloop always (l test)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:750
+msgctxt "in/chapter24.md:750"
+msgid "    `(setf (loop-result l) t)`"
+msgstr ""
+
+#: in/chapter24.md:752
+msgid "    `(add-body l '(if (not ,test) (return nil))))`"
+msgstr ""
+
+#: in/chapter24.md:756
+msgid ""
+"```lisp\n"
+"(defloop never (l test)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:758
+msgctxt "in/chapter24.md:758"
+msgid "    `(setf (loop-result l) t)`"
+msgstr ""
+
+#: in/chapter24.md:760
+msgid "    `(add-body l '(if ,test (return nil))))`"
+msgstr ""
+
+#: in/chapter24.md:765
+msgid ""
+"```lisp\n"
+"(defloop thereis (l test) (add-body l '(return-if ,test)))\n"
+"(defmacro return-if (test)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:767
+msgid "    `\"Return TEST if it is non-nil.\"`"
+msgstr ""
+
+#: in/chapter24.md:769
+msgid "    `(once-only (test)`"
+msgstr ""
+
+#: in/chapter24.md:771
+msgid "        `'(if ,test (return ,test))))`"
+msgstr ""
+
+#: in/chapter24.md:775
+msgid ""
+"```lisp\n"
+"(defmacro loop-finish () '(go end))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:777
+msgid "### Value Accumulation (26.8)"
+msgstr "### Сбор(Накопление) значений (26.8)"
+
+#: in/chapter24.md:782
+msgid ""
+"The `collect` keyword poses another challenge.\n"
+"How do you collect a list of expressions presented one at a time?\n"
+"The answer is to view the expressions as a queue, one where we add items to "
+"the rear but never remove them from the front of the queue.\n"
+"Then we can use the queue functions defined in [section 10.5]"
+"(B9780080571157500108.xhtml#s0025)."
+msgstr ""
+"Ключевое слово `collect` представляет еще одну проблему.\n"
+"Как вам собирать список выражений, представленных по одному за раз?\n"
+"Ответ - рассматривать выражения как очередь, в которую мы добавляем элементы "
+"в конец, но никогда не удаляем их из начала очереди.\n"
+"Затем мы можем использовать функции очереди, определенные в [разделе 10.5]"
+"(B9780080571157500108.xhtml#s0025)."
+
+#: in/chapter24.md:789
+msgid ""
+"Unlike the other clauses, value accumulation clauses can communicate with "
+"each other.\n"
+"There can be, say, two `collect` and an append clause in the same loop, and "
+"they all build onto the same list.\n"
+"Because of this, I use the same variable name for the accumulator, rather "
+"than gensyming a new variable for each use.\n"
+"The name chosen is stored in the global variable `*acc*`.\n"
+"In the official `loop` standard it is possible for the user to specify the "
+"variable with an `into` modifier, but I have not implemented that option.\n"
+"The clauses covered are:"
+msgstr ""
+"В отличие от других предложений, предложения накопления значений могут "
+"взаимодействовать друг с другом.\n"
+"В одном цикле могут быть, скажем, два предложения `collect` и `append`, и "
+"все они строят один и тот же спискок.\n"
+"Из-за этого я использую одно и то же имя переменной для аккумулятора, а не "
+"создаю новую переменную для каждого использования.\n"
+"Выбранное имя сохраняется в глобальной переменной `*acc*`.\n"
+"В официальном стандарте `loop` пользователь может указывать переменную с "
+"помощью модификатора `into`, но я не реализовал эту опцию.\n"
+"Охватываемые предложения:"
+
+#: in/chapter24.md:799
+msgid ""
+"```lisp\n"
+"(LOOP COLLECT item ...)\n"
+"(LOOP NCONC item ...)\n"
+"(LOOP APPEND item ...)\n"
+"(LOOP COUNT item ...)\n"
+"(LOOP SUM item ...)\n"
+"(LOOP MAXIMIZE item ...)\n"
+"(LOOP MINIMIZE item ...)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:801
+msgid "The implementation is:"
+msgstr "Реализация:"
+
+#: in/chapter24.md:805
+msgid ""
+"```lisp\n"
+"(defconstant *acc* (gensym \"ACC\")\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:807
+msgid "    `\"Variable used for value accumulation in LOOP.\")`"
+msgstr ""
+
+#: in/chapter24.md:812
+msgid ""
+"```lisp\n"
+";;; INTO preposition is omitted\n"
+"(defloop collect (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:814
+msgctxt "in/chapter24.md:814"
+msgid "    `(add-var l *acc* '(make-queue))`"
+msgstr ""
+
+#: in/chapter24.md:816
+msgid "    `(add-body l '(enqueue ,exp .*acc*))`"
+msgstr ""
+
+#: in/chapter24.md:818
+msgid "    `(setf (loop-result l) '(queue-contents ,*acc*)))`"
+msgstr ""
+
+#: in/chapter24.md:822
+msgid ""
+"```lisp\n"
+"(defloop nconc (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:824
+msgctxt "in/chapter24.md:824"
+msgid "    `(add-var l *acc* '(make-queue))`"
+msgstr ""
+
+#: in/chapter24.md:826
+msgid "    `(add-body l '(queue-nconc ,*acc* .exp))`"
+msgstr ""
+
+#: in/chapter24.md:828
+msgid "    `(setf (loop-result l) '(queue-contents .*acc*)))`"
+msgstr ""
+
+#: in/chapter24.md:832
+msgid ""
+"```lisp\n"
+"(defloop append (l exp exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:834
+msgid "    `(call-loop-fn l 'nconc '((copy-list .exp) .,exps)))`"
+msgstr ""
+
+#: in/chapter24.md:838
+msgid ""
+"```lisp\n"
+"(defloop count (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:840
+msgctxt "in/chapter24.md:840"
+msgid "    `(add-var l *acc* 0)`"
+msgstr ""
+
+#: in/chapter24.md:842
+msgid "    `(add-body l '(when .exp (incf .*acc*)))`"
+msgstr ""
+
+#: in/chapter24.md:844
+msgctxt "in/chapter24.md:844"
+msgid "    `(setf (loop-result l) *acc*))`"
+msgstr ""
+
+#: in/chapter24.md:848
+msgid ""
+"```lisp\n"
+"(defloop sum (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:850
+msgctxt "in/chapter24.md:850"
+msgid "    `(add-var l *acc* 0)`"
+msgstr ""
+
+#: in/chapter24.md:852
+msgid "    `(add-body l '(incf ,*acc* .exp))`"
+msgstr ""
+
+#: in/chapter24.md:854
+msgctxt "in/chapter24.md:854"
+msgid "    `(setf (loop-result l) *acc*))`"
+msgstr ""
+
+#: in/chapter24.md:858
+msgid ""
+"```lisp\n"
+"(defloop maximize (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:860
+msgid "    `(add-var l *acc* nil)`"
+msgstr ""
+
+#: in/chapter24.md:862
+msgctxt "in/chapter24.md:862"
+msgid "    `(add-body l '(setf ,*acc*`"
+msgstr ""
+
+#: in/chapter24.md:864
+msgctxt "in/chapter24.md:864"
+msgid "                `(if ,*acc*`"
+msgstr ""
+
+#: in/chapter24.md:866
+msgid "                        `(max ,*acc* ,exp)`"
+msgstr ""
+
+#: in/chapter24.md:868
+msgctxt "in/chapter24.md:868"
+msgid "                        `,exp)))`"
+msgstr ""
+
+#: in/chapter24.md:870
+msgctxt "in/chapter24.md:870"
+msgid "    `(setf (loop-result l) *acc*))`"
+msgstr ""
+
+#: in/chapter24.md:874
+msgid ""
+"```lisp\n"
+"(defloop minimize (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:876
+msgid "    `(add-var 1 *acc* nil)`"
+msgstr ""
+
+#: in/chapter24.md:878
+msgctxt "in/chapter24.md:878"
+msgid "    `(add-body l '(setf ,*acc*`"
+msgstr ""
+
+#: in/chapter24.md:880
+msgctxt "in/chapter24.md:880"
+msgid "                `(if ,*acc*`"
+msgstr ""
+
+#: in/chapter24.md:882
+msgid "                        `(min ,*acc* ,exp)`"
+msgstr ""
+
+#: in/chapter24.md:884
+msgctxt "in/chapter24.md:884"
+msgid "                        `,exp)))`"
+msgstr ""
+
+#: in/chapter24.md:886
+msgctxt "in/chapter24.md:886"
+msgid "    `(setf (loop-result l) *acc*))`"
+msgstr ""
+
+#: in/chapter24.md:896
+msgid ""
+"```lisp\n"
+"(defloop collecting collect)\n"
+"(defloop nconcing nconc)\n"
+"(defloop appending append)\n"
+"(defloop counting count)\n"
+"(defloop summing sum)\n"
+"(defloop maximizing maximize)\n"
+"(defloop minimizing minimize)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:902
+msgid ""
+"**Exercise  24.1**`loop` lets us build aggregates (lists, maximums, sums, "
+"etc.) over the body of the loop.\n"
+"Sometimes it is inconvenient to be restricted to a single-loop body.\n"
+"For example, we might want a list of all the nonzero elements of a two-"
+"dimensional array.\n"
+"One way to implement this is with a macro, `with-collection`, that sets up "
+"and returns a queue structure that is built by calls to the function "
+"`collect`.\n"
+"For example:"
+msgstr ""
+"**Exercise  24.1**`loop` позволяет нам строить агрегаты (списки, максимумы, "
+"суммы и т.п.) выполняя тело цикла.\n"
+"Иногда не удобно быть ограниченным  одним телом цикла(single-loop).\n"
+"Например, нам может потребоваться список всех ненулевых элементов двумерного "
+"массива.\n"
+"Один из способов реализовать это использовать макрос `with-collection`, "
+"который устанавливает и возвращает структуру очереди, которая создается "
+"вызовами функции `collect`.\n"
+"Например:"
+
+#: in/chapter24.md:906
+msgid ""
+"```lisp\n"
+"> (let ((A '#2a((l 0 0) (0 2 4) (0 0 3))))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:908
+msgid "    `(with-collection`"
+msgstr ""
+
+#: in/chapter24.md:910
+msgid "        `(loop for i from 0 to 2 do`"
+msgstr ""
+
+#: in/chapter24.md:912
+msgid "            `(loop for j from 0 to 2 do`"
+msgstr ""
+
+#: in/chapter24.md:914
+msgid "                `(if (> (aref a i j) 0)`"
+msgstr ""
+
+#: in/chapter24.md:916
+msgid "                    `(collect (aref A i j)))))))`"
+msgstr ""
+
+#: in/chapter24.md:920
+msgid ""
+"```lisp\n"
+"(1 2 4 3)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:922
+msgid "Implement `with-collection` and `collect`."
+msgstr "Реализуйте `with-collection` и `collect`."
+
+#: in/chapter24.md:924
+msgid "### Variable Initialization (26.9)"
+msgstr "### Инициализация Переменных (26.9)"
+
+#: in/chapter24.md:927
+msgid ""
+"The `with` clause allows local variables-I have included it, but recommend "
+"using a `let` instead.\n"
+"I have not included the `and` preposition, which allows the variables to "
+"nest at different levels."
+msgstr ""
+"Предложение `with` позволяет использовать локальные переменные - я включил "
+"его, но сам вместо него рекомендую использвоать `let`.\n"
+"Я не включил предлог `and`, который позволяет переменным быть вложенными на "
+"различных уровни."
+
+#: in/chapter24.md:930
+msgid ""
+"`;;;; 26.9.\n"
+"Variable Initializations (\"and\" omitted)`"
+msgstr ""
+
+#: in/chapter24.md:934
+msgid ""
+"```lisp\n"
+"(defloop with (l var exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:936
+msgid "    `(let ((init nil))`"
+msgstr ""
+
+#: in/chapter24.md:938
+msgid "        `(when (eq (first exps) '=)`"
+msgstr ""
+
+#: in/chapter24.md:940
+msgid "            `(setf init (second exps)`"
+msgstr ""
+
+#: in/chapter24.md:942
+msgid "                `exps (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:944
+msgid "        `(add-var l var init)`"
+msgstr ""
+
+#: in/chapter24.md:946
+msgid "        `exps))`"
+msgstr ""
+
+#: in/chapter24.md:948
+msgid "### Conditional Execution (26.10)"
+msgstr "### Условное исполнение (26.10)"
+
+#: in/chapter24.md:954
+msgid ""
+"`loop` also provides forms for conditional execution.\n"
+"These should be avoided whenever possible, as Lisp already has a set of "
+"perfectly good conditional macros.\n"
+"However, sometimes you want to make, say, a `collect` conditional on some "
+"test.\n"
+"In that case, loop conditionals are acceptable.\n"
+"The clauses covered here are:"
+msgstr ""
+"`loop` также предоставляет формы для условного исполнения.\n"
+"По возможности их следует избегать, поскольку в Лиспе уже есть набор очень "
+"хороших условных макросов.\n"
+"Однако иногда вы хотите, чтобы скажем, чтобы `collect` был обусловлен каким-"
+"либо тестом.\n"
+"В этом случае, допустимы условные выражения цикла.\n"
+"Здесь рассматриваются следующие предложения:"
+
+#: in/chapter24.md:956
+msgid "(`LOOP WHEN test ... CELSE ...]) ; IF` is asynonym for `WHEN`"
+msgstr ""
+
+#: in/chapter24.md:960
+msgid ""
+"```lisp\n"
+"(LOOP UNLESS test ... [ELSE ...])\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:962
+msgid "Here is an example of `when`:"
+msgstr "Здесь показан пример `when`:"
+
+#: in/chapter24.md:964
+msgid "`> (loop for`x `from 1 to 10`"
+msgstr ""
+
+#: in/chapter24.md:966
+msgid "          `when (oddp x)`"
+msgstr ""
+
+#: in/chapter24.md:968
+msgid "                  `collect x`"
+msgstr ""
+
+#: in/chapter24.md:970
+msgid "          `else collect (- x))`"
+msgstr ""
+
+#: in/chapter24.md:974
+msgid ""
+"```lisp\n"
+"(1 -2 3 -4 5- 6 7 -8 9 -10)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:978
+msgid ""
+"Of course, we could have said `collect (if (oddp x ) x ( - x ) )` and done "
+"without the conditional.\n"
+"There is one extra feature in loop's conditionals: the value of the test is "
+"stored in the variable it for subsequent use in the THEN or ELSE parts.\n"
+"(This is just the kind of feature that makes some people love `loop` and "
+"others throw up their hands in despair.) Here is an example:"
+msgstr ""
+"Конечно, мы могли бы сказать `collect (if (oddp x ) x ( - x ) )` и выполнить "
+"его без условного выражения.\n"
+"В условных выражениях loop есть одна дополнительная функциональность: "
+"значение теста сохраняется в переменной it для последующего использования в "
+"частях THEN или ELSE.\n"
+"(Это как раз та особенность, которая заставляет некоторых людей любить "
+"`loop`, а других разводить руками в отчаянии.) Вот пример:"
+
+#: in/chapter24.md:982
+msgid ""
+"```lisp\n"
+"> (loop for x from 1 to 10\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:984
+msgid "        `when (second (assoc x '((l one) (3 three) (5 five))))`"
+msgstr ""
+
+#: in/chapter24.md:986
+msgid "        `collect it)`"
+msgstr ""
+
+#: in/chapter24.md:990
+msgid ""
+"```lisp\n"
+"(ONE THREE FIVE)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:996
+msgid ""
+"The conditional clauses are a little tricky to implement, since they involve "
+"parsing other clauses.\n"
+"The idea is that `call-loop-fn` parses the THEN and ELSE parts, adding "
+"whatever is necessary to the body and to other parts of the loop structure.\n"
+"Then `add-body` is used to add labels and go statements that branch to the "
+"labels as needed.\n"
+"This is the same technique that is used to compile conditionals in [chapter "
+"23](B9780080571157500236.xhtml); see the function `comp-if` on [page 787]"
+"(B9780080571157500236.xhtml#p787).\n"
+"Here is the code:"
+msgstr ""
+"Условные предложения реализовать немного сложнее, поскольку они включают "
+"синтаксический анализ других предложений.\n"
+"Идея состоит в том, что `call-loop-fn` анализирует части THEN и ELSE, "
+"добавляя все необходимое в тело и другие части структуры цикла.\n"
+"Затем `add-body` используется для добавления меток и опереторов go, которые "
+"при необходимости выполняют переход к указанным меткам.\n"
+"Это тот же метод, который используется для компиляции условных выражений в "
+"[главе 23](B9780080571157500236.xhtml); см. функцию `comp-if` на [стр. 787]"
+"(B9780080571157500236.xhtml#p787).\n"
+"Вот код:"
+
+#: in/chapter24.md:1000
+msgid ""
+"```lisp\n"
+"(defloop when (l test exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1002
+msgid "    `(loop-unless l '(not ,(maybe-set-it test exps)) exps))`"
+msgstr ""
+
+#: in/chapter24.md:1006
+msgid ""
+"```lisp\n"
+"(defloop unless (l test exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1008
+msgid "    `(loop-unless l (maybe-set-it test exps) exps))`"
+msgstr ""
+
+#: in/chapter24.md:1012
+msgid ""
+"```lisp\n"
+"(defun maybe-set-it (test exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1014
+msgid "    `\"Return value, but if the variable IT appears in exps,`"
+msgstr ""
+
+#: in/chapter24.md:1016
+msgid "    `then return code that sets IT to value.\"`"
+msgstr ""
+
+#: in/chapter24.md:1018
+msgid "    `(if (find-anywhere 'it exps)`"
+msgstr ""
+
+#: in/chapter24.md:1020
+msgid "        `'(setq it .test)`"
+msgstr ""
+
+#: in/chapter24.md:1022
+msgid "        `test))`"
+msgstr ""
+
+#: in/chapter24.md:1027
+msgid ""
+"```lisp\n"
+"(defloop if when)\n"
+"(defun loop-unless (l test exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1029
+msgid "    `(let ((label (gensym \"L\")))`"
+msgstr ""
+
+#: in/chapter24.md:1031
+msgid "        `(add-var l 'it nil )`"
+msgstr ""
+
+#: in/chapter24.md:1033
+msgid "        `;; Emit code for the test and the THEN part`"
+msgstr ""
+
+#: in/chapter24.md:1035
+msgid "        `(add-body l '(if .test (go ,label)))`"
+msgstr ""
+
+#: in/chapter24.md:1037
+msgid "        `(setf exps (call-loop-fn l (first exps) (rest exps)))`"
+msgstr ""
+
+#: in/chapter24.md:1039
+msgid "        `;; Optionally emit code for the ELSE part`"
+msgstr ""
+
+#: in/chapter24.md:1041
+msgid "        `(if (eq (first exps) 'else)`"
+msgstr ""
+
+#: in/chapter24.md:1043
+msgid "            `(progn`"
+msgstr ""
+
+#: in/chapter24.md:1045
+msgid "                `(let ((label2 (gensym \"L\")))`"
+msgstr ""
+
+#: in/chapter24.md:1047
+msgid "                    `(add-body l '(go ,label2))`"
+msgstr ""
+
+#: in/chapter24.md:1049
+msgid "                    `(add-body l label)`"
+msgstr ""
+
+#: in/chapter24.md:1051
+msgid ""
+"                    `(setf exps (call-loop-fn l (second exps) (rest2 exps)))`"
+msgstr ""
+
+#: in/chapter24.md:1053
+msgid "                    `(add-body l label2)))`"
+msgstr ""
+
+#: in/chapter24.md:1055
+msgid "                `(add-body l label)))`"
+msgstr ""
+
+#: in/chapter24.md:1057
+msgid "    `exps)`"
+msgstr ""
+
+#: in/chapter24.md:1059
+msgid "### Unconditional Execution (26.11)"
+msgstr "### Безусловное Выполнение (26.11)"
+
+#: in/chapter24.md:1061
+msgid "The unconditional execution keywords are do and return:"
+msgstr "Ключевые слова безусловного выполнения, это do и return:"
+
+#: in/chapter24.md:1065
+msgid ""
+"```lisp\n"
+"(defloop do (l exp exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1067
+msgid "    `(add-body l exp)`"
+msgstr ""
+
+#: in/chapter24.md:1069
+msgctxt "in/chapter24.md:1069"
+msgid "    `(loop (if (symbolp (first exps)) (RETURN exps))`"
+msgstr ""
+
+#: in/chapter24.md:1071
+msgid "        `(add-body l (pop exps))))`"
+msgstr ""
+
+#: in/chapter24.md:1075
+msgid ""
+"```lisp\n"
+"(defloop return (l exp) (add-body l '(return ,exp)))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1077
+msgid "### Miscellaneous Features (26.12)"
+msgstr "### Различная функциональность (26.12)"
+
+#: in/chapter24.md:1080
+msgid ""
+"Finally, the miscellaneous features include the keywords `initially` and "
+"`finally`, which define the loop prologue and epilogue, and the keyword "
+"named, which gives a name to the loop for use by a `return-from` form.\n"
+"I have omitted the data-type declarations and destructuring capabilities."
+msgstr ""
+"Наконец, к различной функциональности относятся ключевые слова `initially` и "
+"`finally`, которые определяют пролог и эпилог цикла, а также ключевое слово "
+"named, дающее имя циклу для использования в форме `return-from`.\n"
+"Я пропустил объявления типов данных и возможность деструктуризации."
+
+#: in/chapter24.md:1084
+msgid ""
+"```lisp\n"
+"(defloop initially (l exp exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1086
+msgid "    `(push exp (loop-prologue l))`"
+msgstr ""
+
+#: in/chapter24.md:1088
+msgctxt "in/chapter24.md:1088"
+msgid "    `(loop (if (symbolp (first exps)) (RETURN exps))`"
+msgstr ""
+
+#: in/chapter24.md:1090
+msgid "        `(push (pop exps) (loop-prologue l))))`"
+msgstr ""
+
+#: in/chapter24.md:1094
+msgid ""
+"```lisp\n"
+"(defloop finally (l exp exps)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1096
+msgid "    `(push exp (loop-epilogue l))`"
+msgstr ""
+
+#: in/chapter24.md:1098
+msgctxt "in/chapter24.md:1098"
+msgid "    `(loop (if (symbolp (first exps)) (RETURN exps))`"
+msgstr ""
+
+#: in/chapter24.md:1100
+msgid "        `(push (pop exps) (loop-epilogue l))))`"
+msgstr ""
+
+#: in/chapter24.md:1104
+msgid ""
+"```lisp\n"
+"(defloop named (l exp) (setf (loop-name l) exp))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1106
+msgid "## 24.6 Sequence Functions"
+msgstr "## 24.6 Функции работы с Последовательностями"
+
+#: in/chapter24.md:1112
+msgid ""
+"Common Lisp provides sequence functions to make the programmer's life "
+"easier: the same function can be used for lists, vectors, and strings.\n"
+"However, this ease of use comes at a cost.\n"
+"Sequence functions must be written very carefully to make sure they are "
+"efficient.\n"
+"There are three main sources of indeterminacy that can lead to inefficiency: "
+"(1) the sequences can be of different types; (2) some functions have keyword "
+"arguments; (3) some functions have a `&rest` argument.\n"
+"Careful coding can limit or eliminate these sources of inefficiency, by "
+"making as many choices as possible at compile time and making the remaining "
+"choices outside of the main loop."
+msgstr ""
+"Common Lisp предоставляет функции для работы с последовательностями, чтобы "
+"облегчить жизнь программисту: одну и туже функцию можно использовать для "
+"списков, векторов и строк.\n"
+"Однако такая простота использования имеет свою цену.\n"
+"Функции работы с последовательностями должны быть написаны очень тщательно, "
+"чтобы гарантировать их эффективность.\n"
+"Есть три основных источника неопределенности, которые могут привести к "
+"неэффективности: (1) последовательности могут быть разных типов; (2) у "
+"некоторых функций есть аруменыты ключевые слова; (3) у некоторых функций "
+"есть аргумент `&rest`.\n"
+"Тщательное кодирование может ограничить или устранить эти источники "
+"неэффективности, сделав как можно больше вариантов во время компиляции и "
+"сделав оставшиеся варианты вне основного цикла."
+
+#: in/chapter24.md:1116
+msgid ""
+"In this section we see how to implement the new ANSI sequence function `map-"
+"into` and the updated function reduce efficiently.\n"
+"This is essential for those without an ANSI compiler.\n"
+"Even those who do have access to an ANSI compiler will benefit from seeing "
+"the efficiency techniques used here."
+msgstr ""
+"В этом разделе мы увидим, как эффективно реализовать новые ANSI функции "
+"работы с последовательностями `map-into` и обновленную функцию reduce.\n"
+"Это важно для тех у кого нет компилятора ANSI.\n"
+"Даже у кого есть доступ к компилятору ANSI, извлекут выгоду из используемых "
+"здесь методов повышения эффективности."
+
+#: in/chapter24.md:1118
+msgid ""
+"Before defining the sequence functions, the macro `once-only` is introduced."
+msgstr ""
+"Перед определением функций работы с последовательностями, вводиться макрос "
+"`once-only`."
+
+#: in/chapter24.md:1120
+msgid "### Once-only: A Lesson in Macrology"
+msgstr "### Once-only: Урок по науке о макросах."
+
+#: in/chapter24.md:1123
+msgid ""
+"The macro `once-only` has been around for a long time on various systems, "
+"although it didn't make it into the Common Lisp standard.\n"
+"I include it here for two reasons: first, it is used in the following "
+"`funcall-if` macro, and second, if you can understand how to write and when "
+"to use `once-only`, then you truly understand macro."
+msgstr ""
+"Макрос `once-only` уже давно используется в различных системах, хотя не "
+"вошел в стандарт Common Lisp.\n"
+"Я включаю его сюда по двум причинам:: во-первых, он используется в следующем "
+"макросе `funcall-if`, и во-вторых, если вы понимаете, как писать и когда "
+"использовать `once-only`, то вы действительно понимаете макрос."
+
+#: in/chapter24.md:1126
+msgid ""
+"First, you have to understand the problem that `once-only` addresses.\n"
+"Suppose we wanted to have a macro that multiplies its input by itself:[2]"
+"(#fn0015)"
+msgstr ""
+"Во-первых, вы должны понять проблему, которую решает `once-only`.\n"
+"Предположим, мы хотели иметь макрос, который умножает свой ввод на самого "
+"себя:[2](#fn0015)"
+
+#: in/chapter24.md:1130
+msgid ""
+"```lisp\n"
+"(defmacro square (x) '(* ,x ,x))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1132
+msgid "This definition works fine in the following case:"
+msgstr "Это определение отлично работает в следующем случае:"
+
+#: in/chapter24.md:1136
+msgid ""
+"```lisp\n"
+"> (macroexpand '(square z)) => (* Z Z)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1138
+msgid "But it doesn't work as well here:"
+msgstr "Но здесь оно не работает(правильно):"
+
+#: in/chapter24.md:1143
+msgid ""
+"```lisp\n"
+"> (macroexpand '(square (print (incf i))))\n"
+"(* (PRINT (INCF I)) (PRINT (INCF I)))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1149
+msgid ""
+"The problem is that `i` will get incremented twice, not once, and two "
+"different values will get printed, not one.\n"
+"We need to bind `(print (incf i))` to a local variable before doing the "
+"multiplication.\n"
+"On the other hand, it would be superfluous to bind z to a local variable in "
+"the previous example.\n"
+"This is where `once-only` comes in.\n"
+"It allows us to write macro definitions like this:"
+msgstr ""
+"Проблема в том, что `i` будет увеличиваться дважды, а не один раз, и будут "
+"напечатаны два различных значения, а не одно.\n"
+"Нам нужно привязать `(print (incf i))` к локальной переменной, прежде чем "
+"выполнять умножение.\n"
+"С другой стороны, было бы излишним привязывать z к локальной переменной в "
+"предыдущем примере.\n"
+"Вот тут и пригодится `once-only`.\n"
+"Он позволит нам написать определения макросов следующим образом:"
+
+#: in/chapter24.md:1153
+msgid ""
+"```lisp\n"
+"(defmacro square (x) (once-only (x) '(* ,x ,x)))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1155
+msgid "and have the generated code be just what we want:"
+msgstr ""
+"и сгенерированный код должен быть именно, тем какой мы хотели бы получить:"
+
+#: in/chapter24.md:1162
+msgctxt "in/chapter24.md:1162"
+msgid ""
+"```lisp\n"
+"> (macroexpand '(square z))\n"
+"(* Z Z)\n"
+"> (macroexpand '(square (print (incf i))))\n"
+"(LET ((G3811 (PRINT (INCF I))))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1164
+msgctxt "in/chapter24.md:1164"
+msgid "    `(* G3811 G3811))`"
+msgstr ""
+
+#: in/chapter24.md:1170
+msgid ""
+"You have now learned lesson number one of `once-only` : you know how macros "
+"differ from functions when it comes to arguments with side effects, and you "
+"now know how to handle this.\n"
+"Lesson number two comes when you try to write (or even understand) a "
+"definition of `once-only`-only when you truly understand the nature of "
+"macros will you be able to write a correct version.\n"
+"As always, the first thing to determine is what a call to `once-only` should "
+"expand into.\n"
+"The generated code should test the variable to see if it is free of side "
+"effects, and if so, generate the body as is; otherwise it should generate "
+"code to bind a new variable, and use that variable in the body of the code.\n"
+"Here's roughly what we want:"
+msgstr ""
+"Теперь вы усвоили первый урок `once-only` : вы знаете чем макросы отличаются "
+"от функций, когда дело касается аргументов с побочными эффектами, и теперь "
+"вы знаете, как с этим справиться.\n"
+"Урок номер два приходит, когда вы пытаетесь написать(или даже понять) "
+"определение `once-only`- только когда вы действительно поймете природу "
+"макросов, вы сможете написать правильную версию.\n"
+"Как всегда, первое, что нужно определить, это то, во что должен расширяться "
+"вызов `once-only`.\n"
+"Сгенерированный код должен проверить переменную, чтобы убедиться, что она не "
+"имеет побочных эффектов, и если да, сгенерировать тело как есть; в противном "
+"случае он должен сгенерировать код для привязки новой переменной и "
+"использовать эту переменную в теле кода.\n"
+"Вот примерно то, что мы хотим:"
+
+#: in/chapter24.md:1175
+msgid ""
+"```lisp\n"
+"> (macroexpand '(once-only (x) '(* ,x ,x)))\n"
+"(if (side-effect-free-p x)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1177
+msgctxt "in/chapter24.md:1177"
+msgid "    `'(* ,x ,x)`"
+msgstr ""
+
+#: in/chapter24.md:1179
+msgid "    `'(let ((g001 ,x))`"
+msgstr ""
+
+#: in/chapter24.md:1181
+msgid "        `, (let ((x 'g001))`"
+msgstr ""
+
+#: in/chapter24.md:1183
+msgid "            `'(* x ,x))))`"
+msgstr ""
+
+#: in/chapter24.md:1188
+msgid ""
+"where `g001` is a new symbol, to avoid conflicts with the `x` or with "
+"symbols in the body.\n"
+"Normally, we generate macro bodies using backquotes, but if the macro body "
+"itself has a backquote, then what?\n"
+"It is possible to nest backquotes (and [appendix C](B9780080571157500273."
+"xhtml) of *Common Lisp the Language*, 2d edition has a nice discussion of "
+"doubly and triply nested backquotes), but it certainly is not trivial to "
+"understand.\n"
+"I recommend replacing the inner backquote with its equivalent using `list` "
+"and `quote`:"
+msgstr ""
+"где `g001` - новый символ, чтобы избежать конфликтов с символом `x` или "
+"символами в теле.\n"
+"Обычно мы генерируем тела макросов с использованием обратных кавычек, но "
+"если в самом деле макроса есть обратные кавычки, что делать?\n"
+"Можно вкладывать backquotes(обратные кавычки) (и в  [приложении C]"
+"(B9780080571157500273.xhtml) к *Common Lisp the Language*, 2d edition есть "
+"хорошее обсуждение двойных и тройных вложенных обратных кавычекhas), но это "
+"конечно не тривиально для понимания.\n"
+"Я рекомендую заменить внутреннюю обратную кавычку на ее эквивалент, "
+"используя `list` и `quote`:"
+
+#: in/chapter24.md:1192
+msgid ""
+"```lisp\n"
+"(if (side-effect-free-p x)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1194
+msgctxt "in/chapter24.md:1194"
+msgid "    `'(* ,x ,x)`"
+msgstr ""
+
+#: in/chapter24.md:1196
+msgid "    `(list 'let (list (list 'g001 x))`"
+msgstr ""
+
+#: in/chapter24.md:1198
+msgid "        `(let ((x 'g001))`"
+msgstr ""
+
+#: in/chapter24.md:1200
+msgid "            `'(* ,x ,x))))`"
+msgstr ""
+
+#: in/chapter24.md:1203
+msgid ""
+"Now we can write `once-only`.\n"
+"Note that we have to account for the case where there is more than one "
+"variable and where there is more than one expression in the body."
+msgstr ""
+"Теперь мы можем написать `once-only`.\n"
+"Обратите внимание, что мы должны учитывать случай, когда существует более "
+"одной переменной и когда в теле содержится более одного выражения."
+
+#: in/chapter24.md:1207
+msgid ""
+"```lisp\n"
+"(defmacro once-only (variables &rest body)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1210
+msgid ""
+"    `\"Returns the code built by BODY.\n"
+"If any of VARIABLES`"
+msgstr ""
+
+#: in/chapter24.md:1213
+msgid ""
+"    `might have side effects.\n"
+"they are evaluated once and stored`"
+msgstr ""
+
+#: in/chapter24.md:1215
+msgid "    `in temporary variables that are then passed to BODY.\"`"
+msgstr ""
+
+#: in/chapter24.md:1217
+msgid "    `(assert (every #'symbolp variables))`"
+msgstr ""
+
+#: in/chapter24.md:1219
+msgid "    `(let ((temps (loop repeat (length variables) collect (gensym))))`"
+msgstr ""
+
+#: in/chapter24.md:1221
+msgid "        `'(if (every #'side-effect-free-p (list .,variables))`"
+msgstr ""
+
+#: in/chapter24.md:1223
+msgid "            `(progn .,body)`"
+msgstr ""
+
+#: in/chapter24.md:1225
+msgid "            `(list 'let`"
+msgstr ""
+
+#: in/chapter24.md:1227
+msgid "                `,'(list .@(mapcar #'(lambda (tmp var)`"
+msgstr ""
+
+#: in/chapter24.md:1229
+msgid "                    `'(list '.tmp .var))`"
+msgstr ""
+
+#: in/chapter24.md:1231
+msgid "                `temps variables))`"
+msgstr ""
+
+#: in/chapter24.md:1233
+msgid "                  `(let .(mapcar #'(lambda (var tmp) '(.var ',tmp))`"
+msgstr ""
+
+#: in/chapter24.md:1235
+msgid "            `variables temps)`"
+msgstr ""
+
+#: in/chapter24.md:1237
+msgid "          `.,body)))))`"
+msgstr ""
+
+#: in/chapter24.md:1241
+msgid ""
+"```lisp\n"
+"(defun side-effect-free-p (exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1243
+msgid "    `\"Is exp a constant, variable, or function,`"
+msgstr ""
+
+#: in/chapter24.md:1245
+msgid "    `or of the form (THE type x) where x is side-effect-free?\"`"
+msgstr ""
+
+#: in/chapter24.md:1247
+msgid "    `(or (constantp exp) (atom exp) (starts-with exp 'function)`"
+msgstr ""
+
+#: in/chapter24.md:1249
+msgid "        `(and (starts-with exp 'the)`"
+msgstr ""
+
+#: in/chapter24.md:1251
+msgid "            `(side-effect-free-p (third exp)))))`"
+msgstr ""
+
+#: in/chapter24.md:1253
+msgid ""
+"Here we see the expansion of the call to `once-only` and a repeat of the "
+"expansions of two calls to `square`:"
+msgstr ""
+"Здесь мы видим расширение вызова `once-only` и поторение расширений двух "
+"вызовов `square`:"
+
+#: in/chapter24.md:1258
+msgid ""
+"```lisp\n"
+"> (macroexpand '(once-only (x) '(* ,x ,x)))\n"
+"(IF (EVERY #'SIDE-EFFECT-FREE-P (LIST X))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1260
+msgid "        `(PROGN`"
+msgstr ""
+
+#: in/chapter24.md:1262
+msgid "            `'(* ,X ,X))`"
+msgstr ""
+
+#: in/chapter24.md:1264
+msgid "        `(LIST 'LET (LIST (LIST 'G3763 X))`"
+msgstr ""
+
+#: in/chapter24.md:1266
+msgid "                    `(LET ((X 'G3763))`"
+msgstr ""
+
+#: in/chapter24.md:1268
+msgid "                        `'(* ,X ,X))))`"
+msgstr ""
+
+#: in/chapter24.md:1275
+msgctxt "in/chapter24.md:1275"
+msgid ""
+"```lisp\n"
+"> (macroexpand '(square z))\n"
+"(* Z Z)\n"
+"> (macroexpand '(square (print (incf i))))\n"
+"(LET ((G3811 (PRINT (INCF I))))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1277
+msgctxt "in/chapter24.md:1277"
+msgid "    `(* G3811 G3811))`"
+msgstr ""
+
+#: in/chapter24.md:1281
+msgid ""
+"This output was produced with `*print-gensym*` setto `nil`.\n"
+"When this variable is non-nil, uninterned symbols are printed with a prefix "
+"`#`:,as in `#:G3811`.\n"
+"This insures that the symbol will not be interned by a subsequent read."
+msgstr ""
+"Этот вывод был произведен с параметром `*print-gensym*` установленным в "
+"`nil`.\n"
+"Если эта переменная не равна нулю, не интернированные символы печатаются с "
+"префиксом `#`:,как в `#:G3811`.\n"
+"Это гарантирует, что символ не будет интернирован при последующем прочтении "
+"процедурой read."
+
+#: in/chapter24.md:1284
+msgid ""
+"It is worth noting that Common Lisp automatically handles problems related "
+"to multiple evaluation of subforms in setf methods.\n"
+"See [page 884](B978008057115750025X.xhtml#p884) for an example."
+msgstr ""
+"Стоит отметить, что Common Lisp автоматически обрабатывает проблемы, "
+"связанные с многократным вычислением подчиненных форм в методах setf.\n"
+"См. [стр. 884](B978008057115750025X.xhtml#p884), например."
+
+#: in/chapter24.md:1286
+msgid "### Avoid Overusing Macros"
+msgstr "### Избегайте черезмерного использования макросов"
+
+#: in/chapter24.md:1290
+msgid ""
+"A word to the wise: don't get carried away with macros.\n"
+"Use macros freely to represent your *problem*, but shy away from new macros "
+"in the implementation of your *solution,* unless absolutely necessary.\n"
+"So, it is good style to introduce a macro, say, `defrule`, which defines "
+"rules for your application, but adding macros to the code itself may just "
+"make things harder for others to use."
+msgstr ""
+"Мудрое слово: не увлекайтесь макросами.\n"
+"Используйте макросы для представления вашей проблемы, но избегайте новых "
+"макросов при реализации вашего *решения,* за исключением случаев крайней "
+"необходимости.\n"
+"Итак, это хороший стиль - вводить макрос, скажем `defrule`, который "
+"определяет правила для вашего приложения, но добавление макросов в сам код "
+"может только усложнить его использование другими."
+
+#: in/chapter24.md:1295
+msgid ""
+"Here is a story.\n"
+"Before `if` was a standard part of Lisp, I defined my own version of `if`.\n"
+"Unlike the simple `if`, my version took any number of test/result pairs, "
+"followed by an optional else result.\n"
+"In general, the expansion was:"
+msgstr ""
+"Вот такая история.\n"
+"До того, как `if` стал стандартной частью Lisp, я определил свою собственную "
+"версию `if`.\n"
+"В отличии от простого `if`, моя версия принимала любое количество пар тест/"
+"результат, за которыми следовало не обязательный результат else.\n"
+"В целом, расширение было:"
+
+#: in/chapter24.md:1299
+msgid ""
+"```lisp\n"
+"(if *a b c d...x)* => (cond *(a b)* (*c d*) ... (T *x*))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1302
+msgid ""
+"My `if` also had one more feature: the symbol `'that'` could be used to "
+"refer to the value of the most recent test.\n"
+"For example, I could write:"
+msgstr ""
+"У моего `if` была еще одна особенность: символ `'that'` можно было "
+"использовать для значения самого последнего теста.\n"
+"Например, я мог бы написать:"
+
+#: in/chapter24.md:1306
+msgid ""
+"```lisp\n"
+"(if (assoc item a-list)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1308
+msgid "    `(process (cdr that)))`"
+msgstr ""
+
+#: in/chapter24.md:1310
+msgid "which would expand into:"
+msgstr "который расширялся бы до:"
+
+#: in/chapter24.md:1314
+msgid ""
+"```lisp\n"
+"(LET (THAT)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1316
+msgid "    `(COND`"
+msgstr ""
+
+#: in/chapter24.md:1318
+msgid "        `((SETQ THAT (ASSOC ITEM A-LIST)) (PROCESS (CDR THAT)))))`"
+msgstr ""
+
+#: in/chapter24.md:1322
+msgid ""
+"This was a convenient feature (compare it to the => feature of Scheme's "
+"cond, as discussed on [page 778](B9780080571157500224.xhtml#p778)), but it "
+"backfired often enough that I eventually gave up on my version of `if`.\n"
+"Here's why.\n"
+"I would write code like this:"
+msgstr ""
+"Это была удобная функциональность (сравните её с  => функциональностью в "
+"Scheme cond, которая обсуждалась на [стр. 778](B9780080571157500224."
+"xhtml#p778)), но она давала обратный эффект достаточно часто, и я в конце "
+"концов отказался от своей версии `if`.\n"
+"И вот почему.\n"
+"Я бы написал такой код:"
+
+#: in/chapter24.md:1326
+msgctxt "in/chapter24.md:1326"
+msgid ""
+"```lisp\n"
+"(if (total-score x)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1328
+msgid "    `(print (/ that number-of-trials))`"
+msgstr ""
+
+#: in/chapter24.md:1330
+msgctxt "in/chapter24.md:1330"
+msgid "    `(error \"No scores\"))`"
+msgstr ""
+
+#: in/chapter24.md:1332
+msgid "and then make a small change:"
+msgstr "а затем внес небольшое изменение:"
+
+#: in/chapter24.md:1336
+msgctxt "in/chapter24.md:1336"
+msgid ""
+"```lisp\n"
+"(if (total-score x)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1338
+msgid "    `(if *print-scores* (print (/ that number-of-trials)))`"
+msgstr ""
+
+#: in/chapter24.md:1340
+msgctxt "in/chapter24.md:1340"
+msgid "    `(error \"No scores\"))`"
+msgstr ""
+
+#: in/chapter24.md:1345
+msgid ""
+"The problem is that the variable `that` now refers to `*print-scores*`, not "
+"`(total-score x),` as it did before.\n"
+"My macro violates referential transparency.\n"
+"In general, that's the whole point of macros, and it is why macros are "
+"sometimes convenient.\n"
+"But in this case, violating referential transparency can lead to confusion."
+msgstr ""
+"Проблема в том, что переменная `that` теперь относится к `*print-scores*`, а "
+"не к `(total-score x),` как это было раньше.\n"
+"Мой макрос нарушает ссылочную прозрачность.\n"
+"В общем, в этом весь смысл макросов, и поэтому макросы удобны.\n"
+"Но в этом случае нарушение ссылочной прозрачности может привести к путанице."
+
+#: in/chapter24.md:1347
+msgid "### MAP-INTO"
+msgstr "### Функция MAP-INTO"
+
+#: in/chapter24.md:1352
+msgid ""
+"The function `map-into` is used on [page 632](B9780080571157500182."
+"xhtml#p632).\n"
+"This function, added for the ANSI version of Common Lisp, is like `map`, "
+"except that instead of building a new sequence, the first argument is "
+"changed to hold the results.\n"
+"This section describes how to write a fairly efficient version of `map-"
+"into`, using techniques that are applicable to any sequence function.\n"
+"We'll start with a simple version:"
+msgstr ""
+"Функция `map-into` используется на [стр. 632](B9780080571157500182."
+"xhtml#p632).\n"
+"Эта функция, добавленная в ANSI версии Common Lisp, похожа на `map`, за "
+"исключением того, что вместо построения новой последовательности изменяется "
+"первый аргумент, хранящий результаты.\n"
+"В этом разделе описывается, как написать эффективную версию `map-into`, "
+"используя методы, применимые к любой функции для работы с "
+"последовательностями.\n"
+"Начнем с простой версии:"
+
+#: in/chapter24.md:1356
+msgctxt "in/chapter24.md:1356"
+msgid ""
+"```lisp\n"
+"(defun map-into (result-sequence function &rest sequences)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1358
+msgctxt "in/chapter24.md:1358"
+msgid "    `\"Destructively set elements of RESULT-SEQUENCE to the results`"
+msgstr ""
+
+#: in/chapter24.md:1360
+msgctxt "in/chapter24.md:1360"
+msgid "    `of applying FUNCTION to respective elements of SEQUENCES.\"`"
+msgstr ""
+
+#: in/chapter24.md:1362
+msgid "    `(replace result-sequence (apply #'map 'list function sequences)))`"
+msgstr ""
+
+#: in/chapter24.md:1365
+msgid ""
+"This does the job, but it defeats the purpose of `map-into`, which is to "
+"avoid generating garbage.\n"
+"Here's a version that generates less garbage:"
+msgstr ""
+"Она выполняет свою работу, но сводит на нет цель `map-into`, которая состоит "
+"в том, чтобы избежать генерации мурсора(garbage).\n"
+"Вот версия, которая генерирует меньше мусора:"
+
+#: in/chapter24.md:1369
+msgctxt "in/chapter24.md:1369"
+msgid ""
+"```lisp\n"
+"(defun map-into (result-sequence function &rest sequences)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1371
+msgctxt "in/chapter24.md:1371"
+msgid "    `\"Destructively set elements of RESULT-SEQUENCE to the results`"
+msgstr ""
+
+#: in/chapter24.md:1373
+msgctxt "in/chapter24.md:1373"
+msgid "    `of applying FUNCTION to respective elements of SEQUENCES.\"`"
+msgstr ""
+
+#: in/chapter24.md:1375
+msgid "    `(let ((n (loop for seq in (cons result-sequence sequences)`"
+msgstr ""
+
+#: in/chapter24.md:1377
+msgid "                            `minimize (length seq))))`"
+msgstr ""
+
+#: in/chapter24.md:1379
+msgid "        `(dotimes (i n)`"
+msgstr ""
+
+#: in/chapter24.md:1381
+msgid "            `(setf (elt result-sequence i)`"
+msgstr ""
+
+#: in/chapter24.md:1383
+msgid "                `(apply function`"
+msgstr ""
+
+#: in/chapter24.md:1385
+msgid "                    `(mapcar #'(lambda (seq) (elt seq i))`"
+msgstr ""
+
+#: in/chapter24.md:1387
+msgid "                        `sequences))))))`"
+msgstr ""
+
+#: in/chapter24.md:1393
+msgid ""
+"There are three problems with this definition.\n"
+"First, it wastes space: mapcar creates a new argument list each time, only "
+"to have the list be discarded.\n"
+"Second, it wastes time: doing a `setf` of the ith element of a list makes "
+"the algorithm *O*(*n2*) instead of *O*(*n*), where *n* is the length of the "
+"list.\n"
+"Third, it is subtly wrong: if `result-sequence` is a vector with a fill "
+"pointer, then `map-into` is supposed to ignore `result-sequence's` current "
+"length and extend the fill pointer as needed.\n"
+"The following version fixes those problems:"
+msgstr ""
+"У этого определения есть три проблемы.\n"
+"Во-первых, оно тратит в пустую пространство: mapcar каждый раз создает новый "
+"список аргументов только для того, чтобы этот список был отброшен.\n"
+"Во-вторых, оно напрасная тратит время: выполнение `setf` для `i`-го элемента "
+"списка делает алгоритм *O*(*n2*) вместо *O*(*n*), где *n* это длина списка.\n"
+"В-третьих, оно слегка неверно: если `result-sequence` является вектором с "
+"указателем заполнения, то `map-into` игнорирует теущую длину `result-"
+"sequence's` и при необходимости расширяет указатель заполнения.\n"
+"Следующая версия устраняет эти проблемы:"
+
+#: in/chapter24.md:1397
+msgctxt "in/chapter24.md:1397"
+msgid ""
+"```lisp\n"
+"(defun map-into (result-sequence function &rest sequences)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1399
+msgctxt "in/chapter24.md:1399"
+msgid "    `\"Destructively set elements of RESULT-SEQUENCE to the results`"
+msgstr ""
+
+#: in/chapter24.md:1401
+msgctxt "in/chapter24.md:1401"
+msgid "    `of applying FUNCTION to respective elements of SEQUENCES.\"`"
+msgstr ""
+
+#: in/chapter24.md:1403
+msgid "    `(let ((arglist (make-list (length sequences)))`"
+msgstr ""
+
+#: in/chapter24.md:1405
+msgid "        `(n (if (listp result-sequence)`"
+msgstr ""
+
+#: in/chapter24.md:1407
+msgid "            `most-positive-fixnum`"
+msgstr ""
+
+#: in/chapter24.md:1409
+msgid "            `(array-dimension result-sequence 0))))`"
+msgstr ""
+
+#: in/chapter24.md:1411
+msgid "      `;; arglist is made into a list of args for each call`"
+msgstr ""
+
+#: in/chapter24.md:1413
+msgid "      `;; n is the length of the longest vector`"
+msgstr ""
+
+#: in/chapter24.md:1415
+msgid "      `(when sequences`"
+msgstr ""
+
+#: in/chapter24.md:1417
+msgid "          `(setf n (min n (loop for seq in sequences`"
+msgstr ""
+
+#: in/chapter24.md:1419
+msgid "              `minimize (length seq)))))`"
+msgstr ""
+
+#: in/chapter24.md:1421
+msgid "      `;; Define some shared functions:`"
+msgstr ""
+
+#: in/chapter24.md:1423
+msgid "      `(flet`"
+msgstr ""
+
+#: in/chapter24.md:1425
+msgid "        `((do-one-call (i)`"
+msgstr ""
+
+#: in/chapter24.md:1427
+msgid "            `(loop for seq on sequences`"
+msgstr ""
+
+#: in/chapter24.md:1429
+msgid "                `for arg on arglist`"
+msgstr ""
+
+#: in/chapter24.md:1431
+msgid "                `do (if (listp (first seq))`"
+msgstr ""
+
+#: in/chapter24.md:1433
+msgctxt "in/chapter24.md:1433"
+msgid "                    `(setf (first arg)`"
+msgstr ""
+
+#: in/chapter24.md:1435
+msgid "                        `(pop (first seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1437
+msgctxt "in/chapter24.md:1437"
+msgid "                    `(setf (first arg)`"
+msgstr ""
+
+#: in/chapter24.md:1439
+msgid "                        `(aref (first seq) i))))`"
+msgstr ""
+
+#: in/chapter24.md:1441
+msgid "            `(apply function arglist))`"
+msgstr ""
+
+#: in/chapter24.md:1443
+msgid "        `(do-result (i)`"
+msgstr ""
+
+#: in/chapter24.md:1445
+msgid "            `(if (and (vectorp result-sequence)`"
+msgstr ""
+
+#: in/chapter24.md:1447
+msgid "                `(array-has-fill-pointer-p result-sequence))`"
+msgstr ""
+
+#: in/chapter24.md:1449
+msgid "            `(setf (fill-pointer result-sequence)`"
+msgstr ""
+
+#: in/chapter24.md:1451
+msgid "    `(max i (fill-pointer result-sequence))))))`"
+msgstr ""
+
+#: in/chapter24.md:1453
+msgid "      `(declare (inline do-one-call))`"
+msgstr ""
+
+#: in/chapter24.md:1455
+msgid "      `;; Decide if the result is a list or vector,`"
+msgstr ""
+
+#: in/chapter24.md:1457
+msgid "      `;; and loop through each element`"
+msgstr ""
+
+#: in/chapter24.md:1459
+msgid "      `(if (listp result-sequence)`"
+msgstr ""
+
+#: in/chapter24.md:1461
+msgctxt "in/chapter24.md:1461"
+msgid "        `(loop for i from 0 to (- n 1)`"
+msgstr ""
+
+#: in/chapter24.md:1463
+msgid "          `for r on result-sequence`"
+msgstr ""
+
+#: in/chapter24.md:1465
+msgid "          `do (setf (first r)`"
+msgstr ""
+
+#: in/chapter24.md:1467
+msgid "                `(do-one-call i)))`"
+msgstr ""
+
+#: in/chapter24.md:1469
+msgctxt "in/chapter24.md:1469"
+msgid "        `(loop for i from 0 to (- n 1)`"
+msgstr ""
+
+#: in/chapter24.md:1471
+msgid "          `do (setf (aref result-sequence i)`"
+msgstr ""
+
+#: in/chapter24.md:1473
+msgid "                `(do-one-call i))`"
+msgstr ""
+
+#: in/chapter24.md:1475
+msgid "          `finally (do-result n))))`"
+msgstr ""
+
+#: in/chapter24.md:1477
+msgid "      `result-sequence))`"
+msgstr ""
+
+#: in/chapter24.md:1485
+msgid ""
+"There are several things worth noticing here.\n"
+"First, I split the main loop into two versions, one where the result is a "
+"list, and the other where it is a vector.\n"
+"Rather than duplicate code, the local functions `do-one-call` and `do-"
+"result` are defined.\n"
+"The former is declared inline because it it called often, while the latter "
+"is not.\n"
+"The arguments are computed by looking at each sequence in turn, taking the "
+"ith element if it is a vector, and popping the sequence if it is a list.\n"
+"The arguments are stored into the list `arglist`, which has been "
+"preallocated to the correct size.\n"
+"All in all, we compute the answer fairly efficiently, without generating "
+"unnecessary garbage."
+msgstr ""
+"Здесь стоит отметить несколько моментов.\n"
+"Сначала я разделил основной цикл на две версии, в одной из которых "
+"результатом является список, а в другой вектор.\n"
+"Вместо дублирования кода определены локальные функции `do-one-call` и `do-"
+"result`.\n"
+"Первая объявлена встроенной(inline) поскольку она часто вызывается, а вторая "
+"нет.\n"
+"Аргументы вычисляются путем просмотра каждой последовательности за раз, "
+"взятием i-го элемента, если это вектор, и извлечением(popping), если "
+"последовательность это список.\n"
+"Аргументы сохраняются в списке `arglist`, который предварительно выделен "
+"правильного размера.\n"
+"В общем, мы вычисляем ответ достаточно эффективно, не создавая ненужного "
+"мусора."
+
+#: in/chapter24.md:1491
+msgid ""
+"The application could be done more efficiently, however.\n"
+"Think what apply must do: scan down the argument list, and put each argument "
+"into the location expected by the function-calling conventions, and then "
+"branch to the function.\n"
+"Some implementations provide a better way of doing this.\n"
+"For example, the TI Lisp Machine provides two low-level primitive functions, "
+"`%push` and `%call`, that compile into single instructions to put the "
+"arguments into the right locations and branch to the function.\n"
+"With these primitives, the body of `do-one-call` would be:"
+msgstr ""
+"Однако приложение могло быть выполнено более эффективно.\n"
+"Подумайте, что должен сделать apply: просмотреть список аргументов и "
+"поместить каждый аргумент в место, ожидаемое соглашениями о вызове функций, "
+"а затем перейти к функции.\n"
+"Некоторые реализации пердоставляют лучший способ сделать это.\n"
+"Например, TI Lisp Machine предоставляет две низкоуровневые примитивные "
+"функции, `%push` и `%call`, которые компилируются в отдельные инструкции, "
+"чтобы поместить аргументы в нужные места и перейти к функции.\n"
+"С этими примитивами тело `do-one-call` будет выглядеть так:"
+
+#: in/chapter24.md:1495
+msgid ""
+"```lisp\n"
+"(loop for seq on sequences\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1497
+msgid "    `do (if (listp (first seq))`"
+msgstr ""
+
+#: in/chapter24.md:1499
+msgid "        `(%push (pop (first seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1501
+msgid "        `(%push (aref (first seq) i))))`"
+msgstr ""
+
+#: in/chapter24.md:1505
+msgid ""
+"```lisp\n"
+"(%call function length-sequences)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1510
+msgid ""
+"There is a remaining inefficiency, though.\n"
+"Each sequence is type-checked each time through the loop, even though the "
+"type remains constant once it is determined the first time.\n"
+"Theoretically, we could code separate loops for each combination of types, "
+"just as we coded two loops depending on the type of the result sequence.\n"
+"But that would mean 2*n* loops for *n* sequences, and there is no limit on "
+"how large *n* can be."
+msgstr ""
+"Однко остается неэффективность.\n"
+"Каждая последовательность проверяется на тип каждый раз в цикле, даже если "
+"тип остается постоянным после определения в первый раз.\n"
+"Теоретически, мы огли бы закодировать отдельные циклы для каждой комбинации "
+"типов, точно так же, как мы кодировали два цикла в зависимости от типа "
+"результирующей последовательности.\n"
+"Но это будет означать 2*n* циклов для *n* последовательностей, и нет никаких "
+"ограничений на то, насколько большим может быть *n*."
+
+#: in/chapter24.md:1513
+msgid ""
+"It might be worth it to provide specialized functions for small values of "
+"*n*, and dispatch to the appropriate function.\n"
+"Here's a start at that approach:"
+msgstr ""
+"Возможно, стоит предоставить специализированные функции для малых значений "
+"*n*, и распределять их соответствующей функции.\n"
+"Вот начало такого подхода:"
+
+#: in/chapter24.md:1517
+msgid ""
+"```lisp\n"
+"(defun map-into (result function &rest sequences)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1519
+msgid "    `(apply`"
+msgstr ""
+
+#: in/chapter24.md:1521
+msgid "      `(case (length sequences)`"
+msgstr ""
+
+#: in/chapter24.md:1523
+msgid "        `(0 (if (listp result) #'map-into-list-0 #'map-into-vect-0))`"
+msgstr ""
+
+#: in/chapter24.md:1525
+msgid "        `(1 (if (listp result)`"
+msgstr ""
+
+#: in/chapter24.md:1527
+msgctxt "in/chapter24.md:1527"
+msgid "          `(if (listp (first sequences))`"
+msgstr ""
+
+#: in/chapter24.md:1529
+msgid "              `#'map-into-list-l-list #'map-into-list-1-vect)`"
+msgstr ""
+
+#: in/chapter24.md:1531
+msgctxt "in/chapter24.md:1531"
+msgid "          `(if (listp (first sequences))`"
+msgstr ""
+
+#: in/chapter24.md:1533
+msgid "              `#'map-into-vect-l-list #'map-into-vect-l-vect)) )`"
+msgstr ""
+
+#: in/chapter24.md:1535
+msgid "        `(2 (if (listp result)`"
+msgstr ""
+
+#: in/chapter24.md:1537
+msgctxt "in/chapter24.md:1537"
+msgid "          `(if (listp (first sequences))`"
+msgstr ""
+
+#: in/chapter24.md:1539
+msgid "            `(if (listp (second sequences))`"
+msgstr ""
+
+#: in/chapter24.md:1541
+msgid "              `#'map-into-list-2-list-list`"
+msgstr ""
+
+#: in/chapter24.md:1543
+msgid "              `#'map-into-list-2-list-vect)`"
+msgstr ""
+
+#: in/chapter24.md:1545
+msgid "            `...)))`"
+msgstr ""
+
+#: in/chapter24.md:1547
+msgid "        `(t (if (listp result) #'map-into-list-n #'map-into-vect-n)))`"
+msgstr ""
+
+#: in/chapter24.md:1549
+msgid "      `result function sequences))`"
+msgstr ""
+
+#: in/chapter24.md:1553
+msgid ""
+"The individual functions are not shown.\n"
+"This approach is efficient in execution time, but it takes up a lot of "
+"space, considering that `map-into` is a relatively obscure function.\n"
+"If `map-into` is declared `inline` and the compiler is reasonably good, then "
+"it will produce code that just calls the appropriate function."
+msgstr ""
+"Индивидуальные функции не показаны.\n"
+"Этот подход эффективен с точки зрения времени выполнения, но занимает много "
+"места, учитывая, что `map-into` относительно не понятная функция.\n"
+"Если `map-into` объявлен встроенной(`inline`) и компилятор достаточно хорош, "
+"он создаст код, который просто вызывает соответствующую функцию."
+
+#: in/chapter24.md:1555
+msgid "### REDUCE with :key"
+msgstr "### REDUCE с :key"
+
+#: in/chapter24.md:1559
+msgid ""
+"Another change in the ANSI proposal is to add a : key keyword to `reduce`.\n"
+"This is a useful addition-in fact, for years I had been using a `reduce-by` "
+"function that provided just this functionality.\n"
+"In this section we see how to add the : key keyword."
+msgstr ""
+"Еще одно изменение в предложении ANSI добавление ключевого слова :key в "
+"`reduce`.\n"
+"Это полезное дополнение - на самом деле, в течении многих лет я использовал "
+"функцию `reduce-by`, которая обеспечивала именно эту функциональность.\n"
+"В этом разделе мы увидим, как добавить ключевое слово :key."
+
+#: in/chapter24.md:1562
+msgid ""
+"At the top level, I define reduce as an interface to the keywordless "
+"function `reduce*`.\n"
+"They are both proclaimed inline, so there will be no overhead for the "
+"keywords in normal uses of reduce."
+msgstr ""
+"На верхнем уровне я определяю reduce как интерфейс к функции без ключевых "
+"слов - `reduce*`.\n"
+"Обе они объявлены встроенными(proclaimed inline), поэтому при обычном "
+"использовании reduce не будет накладных расходов на ключевые слова."
+
+#: in/chapter24.md:1566
+msgid ""
+"```lisp\n"
+"(proclaim '(inline reduce reduce*))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1568
+msgid "  `(defun reduce* (fn seq from-end start end key init init-p)`"
+msgstr ""
+
+#: in/chapter24.md:1570
+msgid "          `(funcall (if (listp seq) #'reduce-list #'reduce-vect)`"
+msgstr ""
+
+#: in/chapter24.md:1572
+msgid ""
+"                    `fn seq from-end (or start 0) end key init init-p))`"
+msgstr ""
+
+#: in/chapter24.md:1576
+msgid ""
+"```lisp\n"
+"(defun reduce (function sequence &key from-end start end key\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1578
+msgid "                              `(initial-value nil initial-value-p))`"
+msgstr ""
+
+#: in/chapter24.md:1582
+msgid ""
+"```lisp\n"
+"        (reduce* function sequence from-end start end\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1584
+msgid ""
+"                                    `key initial-value initial-value-p))`"
+msgstr ""
+
+#: in/chapter24.md:1586
+msgid "The easier case is when the sequence is a vector:"
+msgstr "Более простой случай - когда последовательность являлется вектором:"
+
+#: in/chapter24.md:1590
+msgid ""
+"```lisp\n"
+"(defun reduce-vect (fn seq from-end start end key init init-p)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1592
+msgid "        `(when (null end) (setf end (length seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1594
+msgid "        `(assert (<= 0 start end (length seq)) (start end)`"
+msgstr ""
+
+#: in/chapter24.md:1596
+msgid ""
+"                            `\"Illegal subsequence of ~  a --- :start ~  d :"
+"end ~  d\"`"
+msgstr ""
+
+#: in/chapter24.md:1598
+msgid "                                  `seq start end)`"
+msgstr ""
+
+#: in/chapter24.md:1600
+msgid "      `(case (- end start)`"
+msgstr ""
+
+#: in/chapter24.md:1602
+msgid "                  `(0 (if init-p init (funcall fn)))`"
+msgstr ""
+
+#: in/chapter24.md:1604
+msgid "                  `(1 (if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1606
+msgid ""
+"                          `(funcall fn init (funcall-if key (aref seq "
+"start)))`"
+msgstr ""
+
+#: in/chapter24.md:1608
+msgid "                          `(funcall-if key (aref seq start))))`"
+msgstr ""
+
+#: in/chapter24.md:1610
+msgid "                  `(t (if (not from-end)`"
+msgstr ""
+
+#: in/chapter24.md:1612
+msgctxt "in/chapter24.md:1612"
+msgid "                          `(let ((result`"
+msgstr ""
+
+#: in/chapter24.md:1614
+msgctxt "in/chapter24.md:1614"
+msgid "                                  `(if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1616
+msgid "                                    `(funcall fn init`"
+msgstr ""
+
+#: in/chapter24.md:1618
+msgid ""
+"                                      `(funcall-if key (aref seq start)))`"
+msgstr ""
+
+#: in/chapter24.md:1620
+msgctxt "in/chapter24.md:1620"
+msgid "                                  `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1622
+msgid "                                            `fn`"
+msgstr ""
+
+#: in/chapter24.md:1624
+msgid ""
+"                                                    `(funcall-if key (aref "
+"seq start))`"
+msgstr ""
+
+#: in/chapter24.md:1626
+msgid ""
+"                                                    `(funcall-if key (aref "
+"seq (+ start 1)))))))`"
+msgstr ""
+
+#: in/chapter24.md:1628
+msgid "                          `(loop for i from (+ start (if init-p 1 2))`"
+msgstr ""
+
+#: in/chapter24.md:1630
+msgid "                                          `to (- end 1)`"
+msgstr ""
+
+#: in/chapter24.md:1632
+msgid "                                          `do (setf result`"
+msgstr ""
+
+#: in/chapter24.md:1634
+msgid "                                              `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1636
+msgctxt "in/chapter24.md:1636"
+msgid "                                                `fn result`"
+msgstr ""
+
+#: in/chapter24.md:1638
+msgid ""
+"                                                `(funcall-if key (aref seq "
+"i)))))`"
+msgstr ""
+
+#: in/chapter24.md:1640
+msgid "                                  `result)`"
+msgstr ""
+
+#: in/chapter24.md:1642
+msgctxt "in/chapter24.md:1642"
+msgid "                          `(let ((result`"
+msgstr ""
+
+#: in/chapter24.md:1644
+msgctxt "in/chapter24.md:1644"
+msgid "                                  `(if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1646
+msgctxt "in/chapter24.md:1646"
+msgid "                              `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1648
+msgid "              `fn`"
+msgstr ""
+
+#: in/chapter24.md:1650
+msgid "              `(funcall-if key (aref seq (- end 1)))`"
+msgstr ""
+
+#: in/chapter24.md:1652
+msgid "                              `init)`"
+msgstr ""
+
+#: in/chapter24.md:1654
+msgid "                    `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1656
+msgid "                            `fn`"
+msgstr ""
+
+#: in/chapter24.md:1658
+msgid "                              `(funcall-if key (aref seq (- end 2)))`"
+msgstr ""
+
+#: in/chapter24.md:1660
+msgid ""
+"                              `(funcall-if key (aref seq (- end 1)))))))`"
+msgstr ""
+
+#: in/chapter24.md:1662
+msgid "  `(loop for i from (- end (if init-p 2 3)) downto start`"
+msgstr ""
+
+#: in/chapter24.md:1664
+msgid "                  `do (setf result`"
+msgstr ""
+
+#: in/chapter24.md:1666
+msgid "                                `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1668
+msgid "                                                                `fn`"
+msgstr ""
+
+#: in/chapter24.md:1670
+msgid ""
+"                                                                `(funcall-if "
+"key (aref seq i))`"
+msgstr ""
+
+#: in/chapter24.md:1672
+msgid "                                                                `result)))`"
+msgstr ""
+
+#: in/chapter24.md:1676
+msgid ""
+"```lisp\n"
+"result)))))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1680
+msgid ""
+"When the sequence is a list, we go to some trouble to avoid computing the "
+"length, since that is an *O(n)* operation on lists.\n"
+"The hardest decision is what to do when the list is to be traversed from the "
+"end.\n"
+"There are four choices:"
+msgstr ""
+"Когда последовательность представляет собой список, мы идем на некоторые "
+"трудности, чтобы избежать вычисления длины, так как это операция *O(n)* над "
+"списками.\n"
+"Самое трудное решение - это то, что делать когда список должен быть пройден "
+"с конца.\n"
+"Есть четыре варианта:"
+
+#: in/chapter24.md:1684
+msgid ""
+"*   **recurse.** We could recursively walk the list until we hit the end, "
+"and then compute the results on the way back up from the recursions.\n"
+"However, some implementations may have fairly small bounds on the depths of "
+"recursive calls, and a system function like reduce should never run afoul of "
+"such limitations.\n"
+"In any event, the amount of stack space consumed by this approach would "
+"normally be more than the amount of heap space consumed in the next approach."
+msgstr ""
+"*   **recurse(рекурсивный).** Мы могли бы рекурсивно пройтись по списку, "
+"пока не дойдем до конца, а затем вычислить результаты на обратном пути от "
+"рекурсии.\n"
+"Однако, некоторые реализации могут иметь довольно маленькие границы глубины "
+"рекурсивных вызовов, и системная функция, такая как reduce, никогда не "
+"должна нарушать такие ограничения.\n"
+"В любом случае объем пространства стека, потребляемого этим подоходом, "
+"обычно будет больше, чем объем пространства кучи, потребляемого при "
+"следующем подходе."
+
+#: in/chapter24.md:1687
+msgid ""
+"*   **reverse.** We could reverse the list and then consider `from-end` "
+"true.\n"
+"The only drawback is the time and space needed to construct the reversed "
+"list."
+msgstr ""
+"*   **reverse(обратный).** Мы могли бы перевернуть список и затем считать, "
+"что `from-end` истинным.\n"
+"Единственный недостаток - это время и пространство, необходимые для "
+"построения перевернутого списка."
+
+#: in/chapter24.md:1692
+msgid ""
+"*   **nreverse.** We could destructively reverse the list in place, do the "
+"reduce computation, and then destructively reverse the list back to its "
+"original state (perhaps with an unwind-protect added).\n"
+"Unfortunately, this is just incorrect.\n"
+"The list may be bound to some variable that is accessible to the function "
+"used in the reduction.\n"
+"If that is so, the function will see the reversed list, not the original "
+"list."
+msgstr ""
+"*   **nreverse(перевернуть исходный список).** Мы могли бы разрушающе "
+"перевернуть список на месте, выполнить reduce, и затем деструктивно "
+"перевернуть список обратно в исходное состояние (возможно, с добавлением  "
+"unwind-protect).\n"
+"К сожалению это неправильно.\n"
+"Список может быть привязан к некоторой переменной, доступной в функции "
+"используемой при вычислении редукуии. Если это так, функция увидит "
+"перевернутый список, а не исходный список."
+
+#: in/chapter24.md:1696
+msgid ""
+"*   **coerce.** We could convert the list to a vector, and then use `reduce-"
+"vect`.\n"
+"This has an advantage over the reverse approach in that vectors generally "
+"take only half as much storage as lists.\n"
+"Therefore, this is the approach I adopt."
+msgstr ""
+"*   **coerce(принуждение).** Мы могли бы преобразовать список в вектор, а "
+"затем использовать `reduce-vect`.\n"
+"Этот подход имеет преимущество перед подходом реверсирования(reverse) в том, "
+"что векторы обычно занимают в двое меньше памяти, чем списки. Поэтому я "
+"придерживаюсь этого подхода."
+
+#: in/chapter24.md:1700
+msgid ""
+"```lisp\n"
+"(defmacro funcall-if (fn arg)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1702
+msgid "      `(once-only (fn)`"
+msgstr ""
+
+#: in/chapter24.md:1704
+msgid "              `'(if .fn (funcall .fn .arg) .arg)))`"
+msgstr ""
+
+#: in/chapter24.md:1708
+msgid ""
+"```lisp\n"
+"(defun reduce-list (fn seq from-end start end key init init-p)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1710
+msgid "        `(when (null end) (setf end most-positive-fixnum))`"
+msgstr ""
+
+#: in/chapter24.md:1712
+msgid "        `(cond ((> start 0)`"
+msgstr ""
+
+#: in/chapter24.md:1714
+msgid ""
+"                          `(reduce-list fn (nthcdr start seq) from-end 0`"
+msgstr ""
+
+#: in/chapter24.md:1716
+msgid "                                      `(- end start) key init init-p))`"
+msgstr ""
+
+#: in/chapter24.md:1718
+msgid "                          `((or (null seq) (eql start end))`"
+msgstr ""
+
+#: in/chapter24.md:1720
+msgid "                          `(if init-p init (funcall fn)))`"
+msgstr ""
+
+#: in/chapter24.md:1722
+msgid "                          `((= (- end start) 1)`"
+msgstr ""
+
+#: in/chapter24.md:1724
+msgctxt "in/chapter24.md:1724"
+msgid "                          `(if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1726
+msgctxt "in/chapter24.md:1726"
+msgid ""
+"                                `(funcall fn init (funcall-if key (first "
+"seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1728
+msgctxt "in/chapter24.md:1728"
+msgid "                                `(funcall-if key (first seq))))`"
+msgstr ""
+
+#: in/chapter24.md:1730
+msgid "                    `(from-end`"
+msgstr ""
+
+#: in/chapter24.md:1732
+msgid ""
+"                          `(reduce-vect fn (coerce seq 'vector) t start end`"
+msgstr ""
+
+#: in/chapter24.md:1734
+msgid "                                      `key init init-p))`"
+msgstr ""
+
+#: in/chapter24.md:1736
+msgid "                                `((null (rest seq))`"
+msgstr ""
+
+#: in/chapter24.md:1738
+msgctxt "in/chapter24.md:1738"
+msgid "                          `(if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1740
+msgctxt "in/chapter24.md:1740"
+msgid ""
+"                                `(funcall fn init (funcall-if key (first "
+"seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1742
+msgctxt "in/chapter24.md:1742"
+msgid "                                `(funcall-if key (first seq))))`"
+msgstr ""
+
+#: in/chapter24.md:1744
+msgid "                    `(t (let ((result`"
+msgstr ""
+
+#: in/chapter24.md:1746
+msgid "                    `(if init-p`"
+msgstr ""
+
+#: in/chapter24.md:1748
+msgctxt "in/chapter24.md:1748"
+msgid "                                  `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1750
+msgid "                                                `fn init`"
+msgstr ""
+
+#: in/chapter24.md:1752
+msgid ""
+"                                                `(funcall-if key (pop seq)))`"
+msgstr ""
+
+#: in/chapter24.md:1754
+msgctxt "in/chapter24.md:1754"
+msgid "                                  `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1756
+msgid "                                                `fn`"
+msgstr ""
+
+#: in/chapter24.md:1758
+msgid ""
+"                                                `(funcall-if key (pop seq))`"
+msgstr ""
+
+#: in/chapter24.md:1760
+msgid ""
+"                                                `(funcall-if key (pop "
+"seq))))))`"
+msgstr ""
+
+#: in/chapter24.md:1762
+msgid "                    `(if end`"
+msgstr ""
+
+#: in/chapter24.md:1764
+msgid ""
+"                                `(loop repeat (- end (if init-p 1 2)) while "
+"seq`"
+msgstr ""
+
+#: in/chapter24.md:1766
+msgctxt "in/chapter24.md:1766"
+msgid "                                  `do (setf result`"
+msgstr ""
+
+#: in/chapter24.md:1768
+msgid "                                                `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1770
+msgctxt "in/chapter24.md:1770"
+msgid "                                                `fn result`"
+msgstr ""
+
+#: in/chapter24.md:1772
+msgid ""
+"                                          `(funcall-if key (pop seq)))))`"
+msgstr ""
+
+#: in/chapter24.md:1774
+msgid "                          `(loop while seq`"
+msgstr ""
+
+#: in/chapter24.md:1776
+msgctxt "in/chapter24.md:1776"
+msgid "                                  `do (setf result`"
+msgstr ""
+
+#: in/chapter24.md:1778
+msgctxt "in/chapter24.md:1778"
+msgid "                              `(funcall`"
+msgstr ""
+
+#: in/chapter24.md:1780
+msgid "                                    `fn result`"
+msgstr ""
+
+#: in/chapter24.md:1782
+msgid "                                    `(funcall-if key (pop seq)))))`"
+msgstr ""
+
+#: in/chapter24.md:1784
+msgid "                          `result)))))`"
+msgstr ""
+
+#: in/chapter24.md:1786
+msgid "## 24.7 Exercises"
+msgstr "## 24.7 Упражнения"
+
+#: in/chapter24.md:1790
+msgid ""
+"**Exercise  24.2 [m]** The function reduce is a very useful one, especially "
+"with the key keyword.\n"
+"Write nonrecursive definitions for append and 1 ength using reduce.\n"
+"What other common functions can be written with reduce?"
+msgstr ""
+"**Exercise  24.2 [m]** Функция reduce очень полезна, особенно с ключевым "
+"словом key.\n"
+"Напишите нерекурсивные определения для append и 1ength используя reduce.\n"
+"Какие еще функции можно написать с помощью reduce?"
+
+#: in/chapter24.md:1794
+msgid ""
+"**Exercise  24.3** The so-called loop keywords are not symbols in the "
+"keyword package.\n"
+"The preceding code assumes they are all in the current package, but this is "
+"not quite right.\n"
+"Change the definition of `loop` so that any symbol with the same name as a "
+"loop keyword acts as a keyword, regardless of the symbol's package."
+msgstr ""
+
+#: in/chapter24.md:1797
+msgid ""
+"**Exercise  24.4** Can there be a value for *exp* for which the following "
+"expressions are not equivalent?\n"
+"Either demonstrate such an *exp* or argue why none can exist."
+msgstr ""
+
+#: in/chapter24.md:1802
+msgid ""
+"```lisp\n"
+"(loop for x in list collect *exp*)\n"
+"(mapcar #'(lambda (x) *exp)* list))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1808
+msgid ""
+"**Exercise  24.5** The object-oriented language Eiffel provides two "
+"interesting `loop` keywords: `invariant` and `variant`.\n"
+"The former takes a Boolean-valued expression that must remain true on every "
+"iteration of the loop, and the latter takes a integervalued expression that "
+"must decrease on every iteration, but never becomes negative.\n"
+"Errors are signaled if these conditions are violated.\n"
+"Use def `loop` to implement these two keywords.\n"
+"Make them generate code conditionally, based on a global flag."
+msgstr ""
+
+#: in/chapter24.md:1810
+msgid "## 24.8 Answers"
+msgstr "## 24.8 Ответы"
+
+#: in/chapter24.md:1812
+msgid "**Answer 24.1**"
+msgstr ""
+
+#: in/chapter24.md:1818
+msgid ""
+"```lisp\n"
+"(defvar *queue*)\n"
+"(defun collect (item) (enqueue item *queue*))\n"
+"(defmacro with-collection (&body body)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1820
+msgid "          `'(let ((*queue* (make-queue)))`"
+msgstr ""
+
+#: in/chapter24.md:1822
+msgid "                                  `,@body`"
+msgstr ""
+
+#: in/chapter24.md:1824
+msgid "                      `(queue-contents *queue*)))`"
+msgstr ""
+
+#: in/chapter24.md:1827
+msgid ""
+"Here's another version that allows the collection variable to be named.\n"
+"That way, more than one collection can be going on at the same time."
+msgstr ""
+
+#: in/chapter24.md:1831
+msgid ""
+"```lisp\n"
+"(defun collect (item &optional (queue *queue*))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1833
+msgid "            `(enqueue item queue))`"
+msgstr ""
+
+#: in/chapter24.md:1837
+msgid ""
+"```lisp\n"
+"(defmacro with-collection ((&optional (queue '*queue*))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1839
+msgid ""
+"                                                              `&body body)`"
+msgstr ""
+
+#: in/chapter24.md:1841
+msgid "            `'(let ((,queue (make-queue)))`"
+msgstr ""
+
+#: in/chapter24.md:1843
+msgid "              `,@body`"
+msgstr ""
+
+#: in/chapter24.md:1845
+msgid "            `(queue-contents .queue)))`"
+msgstr ""
+
+#: in/chapter24.md:1847
+msgid "**Answer 24.2**"
+msgstr ""
+
+#: in/chapter24.md:1851
+msgid ""
+"```lisp\n"
+"(defun append-r (x y)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1853
+msgid "            `(reduce #'cons x :initial-value y :from-end t))`"
+msgstr ""
+
+#: in/chapter24.md:1857
+msgid ""
+"```lisp\n"
+"(defun length-r (list)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1859
+msgid "            `(reduce #'+ list :key #'(lambda (x) 1)))`"
+msgstr ""
+
+#: in/chapter24.md:1864
+msgid ""
+"**Answer 24.4** The difference between `loop` and `mapcar` is that the "
+"former uses only one variable `x`, while the latter uses a different `x` "
+"each time.\n"
+"If `x`'s extent is no bigger than its scope (as it is in most expressions) "
+"then this makes no difference.\n"
+"But if any `x` is captured, giving it a longer extent, then a difference "
+"shows up.\n"
+"Consider *exp =*`#'(lambda () x).`"
+msgstr ""
+
+#: in/chapter24.md:1868
+msgid ""
+"```lisp\n"
+"> (mapcar #'funcall (loop for x in '(1 2 3) collect\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1870
+msgid "                                          `#'(lambda O x)))`"
+msgstr ""
+
+#: in/chapter24.md:1875
+msgid ""
+"```lisp\n"
+"(3 3 3)\n"
+">(mapcar #'funcall (mapcar #'(lambda (x) #'(lambda () x))\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1877
+msgid "                                                    `'(1 2 3)))`"
+msgstr ""
+
+#: in/chapter24.md:1881
+msgid ""
+"```lisp\n"
+"(1 2 3)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1883
+msgid "**Answer 24.5**"
+msgstr ""
+
+#: in/chapter24.md:1887
+msgid ""
+"```lisp\n"
+"(defvar *check-invariants* t\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1889
+msgid ""
+"            `\"Should VARIANT and INVARIANT clauses in LOOP be checked?\")`"
+msgstr ""
+
+#: in/chapter24.md:1893
+msgid ""
+"```lisp\n"
+"(defloop invariant (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1895
+msgid "            `(when *check-invariants*`"
+msgstr ""
+
+#: in/chapter24.md:1897
+msgid ""
+"                                `(add-body l '(assert .exp () \"Invariant "
+"violated.\"))))`"
+msgstr ""
+
+#: in/chapter24.md:1901
+msgid ""
+"```lisp\n"
+"(defloop variant (l exp)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1903
+msgid "  `(when *check-invariants*`"
+msgstr ""
+
+#: in/chapter24.md:1905
+msgid "                      `(let ((var (gensym \"INV\")))`"
+msgstr ""
+
+#: in/chapter24.md:1907
+msgctxt "in/chapter24.md:1907"
+msgid "                                `(add-var l var nil)`"
+msgstr ""
+
+#: in/chapter24.md:1909
+msgid ""
+"                                `(add-body l '(setf ,var (update-variant ."
+"var .exp))))))`"
+msgstr ""
+
+#: in/chapter24.md:1911
+msgid "          `(defun update-variant (old new)`"
+msgstr ""
+
+#: in/chapter24.md:1913
+msgid "            `(assert (or (null old) (< new old)) ()`"
+msgstr ""
+
+#: in/chapter24.md:1915
+msgid ""
+"                                `\"Variant is not monotonically decreasing"
+"\")`"
+msgstr ""
+
+#: in/chapter24.md:1917
+msgid "            `(assert (> new 0) () \"Variant is no longer positive\")`"
+msgstr ""
+
+#: in/chapter24.md:1919
+msgid "          `new)`"
+msgstr ""
+
+#: in/chapter24.md:1921
+msgid "Here's an example:"
+msgstr ""
+
+#: in/chapter24.md:1925
+msgid ""
+"```lisp\n"
+"(defun gcd2 (a b)\n"
+"```"
+msgstr ""
+
+#: in/chapter24.md:1928
+msgid ""
+"            `\"Greatest common divisor.\n"
+"For two positive integer arguments.\"`"
+msgstr ""
+
+#: in/chapter24.md:1930
+msgid "            `(check-type a (integer 1))`"
+msgstr ""
+
+#: in/chapter24.md:1932
+msgid "            `(check-type b (integer 1))`"
+msgstr ""
+
+#: in/chapter24.md:1934
+msgid "            `(loop with x = a with y = b`"
+msgstr ""
+
+#: in/chapter24.md:1936
+msgid ""
+"                                `invariant (and (> x 0) (> y 0)) ;; (= (gcd "
+"x y) (gcd a b))`"
+msgstr ""
+
+#: in/chapter24.md:1938
+msgid "                                `variant (max x y)`"
+msgstr ""
+
+#: in/chapter24.md:1940
+msgid "                                `until (= x y)`"
+msgstr ""
+
+#: in/chapter24.md:1942
+msgid "                                `do (if (> x y) (decf x y) (decf y x))`"
+msgstr ""
+
+#: in/chapter24.md:1944
+msgid "                                `finally (return x)))`"
+msgstr ""
+
+#: in/chapter24.md:1948
+msgid ""
+"Here the invariant is written semi-informally.\n"
+"We could include the calls to `gcd`, but that seems to be defeating the "
+"purpose of `gcd2`, so that part is left as a comment.\n"
+"The idea is that the comment should help the reader prove the correctness of "
+"the code, and the executable part serves to notify the lazy reader when "
+"something is demonstrably wrong at run time."
+msgstr ""
+
+#: in/chapter24.md:1950
+msgid "----------------------"
+msgstr ""
+
+#: in/chapter24.md:1953
+msgid ""
+"[1](#xfn0010) Or in the user package in non-ANSI systems.\n"
+"!!!(p) {:.ftnote1}"
+msgstr ""
+
+#: in/chapter24.md:1956
+msgid ""
+"[2](#xfn0015) As was noted before, the proper way to do this is to proclaim "
+"squa re as an inline function, not a macro, but please bear with the "
+"example.\n"
+"!!!(p) {:.ftnote1}"
+msgstr ""

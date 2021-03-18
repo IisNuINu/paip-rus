@@ -1,0 +1,433 @@
+#. extracted from in/appendix.md
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:08+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 2.2.5\n"
+
+#: in/appendix.md:4
+msgid ""
+"# Appendix\n"
+"## Obtaining the Code in this Book\n"
+"### FTP: The File Transfer Protocol"
+msgstr ""
+
+#: in/appendix.md:9
+msgid ""
+"FTP is a file transfer protocol that is widely accepted by computers around "
+"the world.\n"
+"FTP makes it easy to transfer files between two computers on which you have "
+"accounts.\n"
+"But more importantly, it also allows a user on one computer to access files "
+"on a computer on which he or she does not have an account, as long as both "
+"computers are connected to the Internet.\n"
+"This is known as *anonymous FTP.*"
+msgstr ""
+
+#: in/appendix.md:12
+msgid ""
+"All the code in this book is available for anonymous FTP from the computer "
+"`mkp.com` in files in the directory `pub/norvig`.\n"
+"The file `README` in that directory gives further instructions on using the "
+"files."
+msgstr ""
+
+#: in/appendix.md:19
+msgid ""
+"In the session below, the user `smith` retrieves the files from `mkp.com`.\n"
+"Smith's input is in *slanted font.* The login name must be *anonymous*, and "
+"Smith's own mail address is used as the password.\n"
+"The command *cd pub/norvig* changes to that directory, and the command *ls* "
+"lists all the files.\n"
+"The command *mget* * retrieves ail files (the *m* stands for \"multiple\").\n"
+"Normally, there would be a prompt before each file asking if you do indeed "
+"want to copy it, but the *prompt* command disabled this.\n"
+"The command *bye* ends the FTP session."
+msgstr ""
+
+#: in/appendix.md:22
+msgid ""
+"[ ](#){:#l0010}`% *ftp mkp.com* (or *ftp 199.182.55.2*)`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:25
+msgid ""
+"`Name (mkp.com:smith): *anonymous*`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:28
+msgid ""
+"`331 Guest login ok, send ident as password`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:31
+msgid ""
+"`Password: *smith@cs.stateu.edu*`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:34
+msgid ""
+"`230 Guest login ok, access restrictions apply`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:37
+msgid ""
+"`ftp>*cd pub/norvig*`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:40
+msgid ""
+"`250 CWD command successful.`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:43
+msgid ""
+"`ftp>*ls*`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:46
+msgctxt "in/appendix.md:46"
+msgid ""
+"`...`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:49
+msgid ""
+"`ftp>*prompt*`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:52
+msgid ""
+"`Interactive mode off.`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:55
+msgid ""
+"`ftp>*mget**`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:58
+msgctxt "in/appendix.md:58"
+msgid ""
+"`...`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:61
+msgid ""
+"`ftp> bye`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:64
+msgid ""
+"`%`\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:73
+msgid ""
+"Anonymous FTP is a privilege, not a right.\n"
+"The site administrators at `mkp.com` and at other sites below have made "
+"their systems available out of a spirit of sharing, but there are real costs "
+"that must be paid for the connections, storage, and processing that makes "
+"this sharing possible.\n"
+"To avoid overloading these systems, do not FTP from 7:00 a.m.\n"
+"to 6:00 p.m.\n"
+"local time.\n"
+"This is especially true for sites not in your country.\n"
+"If you are using this book in a class, ask your professor for a particular "
+"piece of software before you try to FTP it; it would be wasteful if "
+"everybody in the class transferred the same thing.\n"
+"Use common sense and be considerate: none of us want to see sites start to "
+"close down because a few are abusing their privileges."
+msgstr ""
+
+#: in/appendix.md:75
+msgid ""
+"If you do not have FTP access to the Internet, you can still obtain the "
+"files from this book by contacting Morgan Kaufmann at the following:"
+msgstr ""
+
+#: in/appendix.md:78
+msgid ""
+"[ ](#){:#l0015}Morgan Kaufmann Publishers, Inc.\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:81
+msgid ""
+"340 Pine Street, Sixth Floor\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:84
+msgid ""
+"San Francisco, CA 94104-3205\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:87
+msgid ""
+"USA\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:90
+msgid ""
+"Telephone  415/392-2665\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:93
+msgid ""
+"Facsimile  415/982-2665\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:96
+msgid ""
+"Internet  mkp@mkp.com\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:99
+msgid ""
+"(800) 745-7323\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:101
+msgid "Make sure to specify which format you want:"
+msgstr ""
+
+#: in/appendix.md:104
+msgid ""
+"[ ](#){:#l0020}Macintosh diskette ISBN 1-55860-227-5\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:107
+msgid ""
+"DOS 5.25 diskette ISBN 1-55860-228-3\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:110
+msgid ""
+"DOS 3.5 diskette ISBN 1-55860-229-1\n"
+"!!!(p) {:.unnumlist}"
+msgstr ""
+
+#: in/appendix.md:112
+msgid "### Available Software"
+msgstr ""
+
+#: in/appendix.md:124
+msgid ""
+"In addition to the program from this book, a good deal of other software is "
+"available.\n"
+"The tables below list some of the relevant AI/Lisp programs.\n"
+"Each entry lists the name of the system, an address, and some comments.\n"
+"The address is either a computer from which you can FTP, or a mail address "
+"of a contact.\n"
+"Unless it is stated that distribution is by *email* or *Floppy* or requires "
+"a *license,* then you can FTP from the contact's home computer.\n"
+"In some cases the host computer and/or directory have been provided in "
+"italics in the comments field.\n"
+"However, in most cases it should be obvious what files to transfer.\n"
+"First do an `ls` command to see what files and directories are available.\n"
+"If there is a file called `README`, follow its advice: do a get `README` and "
+"then look at the file.\n"
+"If you still haven't found what you are looking for, be aware that most "
+"hosts keep their public software in the directory pub.\n"
+"Do a `cd pub` and then another `ls`, and you should find the desired files."
+msgstr ""
+
+#: in/appendix.md:128
+msgid ""
+"If a file ends in the suffix `.Z`, then you should give the FTP command "
+"`binary` before transferring it, and then give the UNIX command `uncompress` "
+"to recover the original file.\n"
+"Files with the suffix `.tar` contain several files that can be unpacked with "
+"the `tar` command.\n"
+"If you have problems, consult your local documentation or system "
+"administrator."
+msgstr ""
+
+#: in/appendix.md:130
+msgid "**Knowledge Representation**"
+msgstr ""
+
+#: in/appendix.md:133
+msgid ""
+"[ ](#){:#t0010}\n"
+"!!!(table)"
+msgstr ""
+
+#: in/appendix.md:155
+msgid ""
+"| []() | | | | | | | | | |\n"
+"|---|---|---|---|---|---|---|---|---|---|\n"
+"| System | Address | Comments |\n"
+"| Babbler | [rsfl@ra.msstate.edu](mailto:rsfl@ra.msstate.edu) | *email;*"
+"Markov chains/NLP |\n"
+"| BACK | [peltason@tubvm.cs.tu-berlin.de](mailto:peltason@tubvm.cs.tu-"
+"berlin.de) | *3.5\" floppy;* KL-ONE family |\n"
+"| Belief | [almond@stat.washington.edu](mailto:almond@stat.washington.edu) | "
+"belief networks |\n"
+"| Classic | [dlm@research.att.com](mailto:dlm@research.att.com) | *license;* "
+"KL-ONE family |\n"
+"| Fol Getfol | [fausto@irst.it](mailto:fausto@irst.it) | *tape;* Weyrauch's "
+"FOL system |\n"
+"| Framekit | [ehn+@cs.cmu.edu](mailto:ehn+@cs.cmu.edu) | *floppy;* frames |\n"
+"| Framework | [mkant+@cs.cmu.edu](mailto:mkant+@cs.cmu.edu) | "
+"*a.gp.cs.cmu.edu:/usr/mkant/Public;* frames |\n"
+"| Frobs | [kessler@cs.utah.edu](mailto:kessler@cs.utah.edu) | frames |\n"
+"| Knowbel | [kramer@ai.toronto.edu](mailto:kramer@ai.toronto.edu) | sorted/"
+"temporal logic |\n"
+"| MVL | [ginsberg@t.stanford.edu](mailto:ginsberg@t.stanford.edu) | "
+"multivalued logics |\n"
+"| OPS | [slisp-group@b.gp.cs.cmu.edu](mailto:slisp-group@b.gp.cs.cmu.edu) | "
+"Forgy's OPS-5 language |\n"
+"| PARKA | [spector@cs.umd.edu](mailto:spector@cs.umd.edu) | frames (designed "
+"for connection machine) |\n"
+"| Parmenides | [pshell@cs.cmu.edu](mailto:pshell@cs.cmu.edu) | frames |\n"
+"| Rhetorical | [miller@cs.rochester.edu](mailto:miller@cs.rochester.edu) | "
+"planning, time logic |\n"
+"| SB-ONE | [kobsa@cs.uni-sb.de](mailto:kobsa@cs.uni-sb.de) | *license;* in "
+"German; KL-ONE family |\n"
+"| SNePS | [shapiro@cs.buffalo.edu](mailto:shapiro@cs.buffalo.edu) | "
+"*license;* semantic net/NLP |\n"
+"| SPI | [cs.orst.edu](mailto:cs.orst.edu) | Probabilistic inference |\n"
+"| YAK | [franconi@irst.it](mailto:franconi@irst.it) | KL-ONE family |"
+msgstr ""
+
+#: in/appendix.md:157
+msgid "**Planning and Learning**"
+msgstr ""
+
+#: in/appendix.md:160
+msgid ""
+"[ ](#){:#t0015}\n"
+"!!!(table)"
+msgstr ""
+
+#: in/appendix.md:175
+msgid ""
+"| []() | | | | | | | | | |\n"
+"|---|---|---|---|---|---|---|---|---|---|\n"
+"| System | Address | Comments |\n"
+"| COBWEB/3 | "
+"[cobweb@ptolemy.arc.nasa.gov](mailto:cobweb@ptolemy.arc.nasa.gov) | *email;* "
+"concept formation |\n"
+"| MATS | [kautz@research.att.com](mailto:kautz@research.att.com) | *license;*"
+" temporal constraints |\n"
+"| MICRO-xxx | [waander@cs.ume.edu](mailto:waander@cs.ume.edu) | case-based "
+"reasoning |\n"
+"| Nonlin | [nonlin-users-request@cs.umd.edu](mailto:nonlin-users-"
+"request@cs.umd.edu) | Tate's planner in Common Lisp |\n"
+"| Prodigy | [prodigy@cs.cmu.edu](mailto:prodigy@cs.cmu.edu) | *license;* "
+"planning and learning |\n"
+"| PROTOS | [porter@cs.utexas.edu](mailto:porter@cs.utexas.edu) | knowledge "
+"acquisition |\n"
+"| SNLP | [weld@cs.washington.edu](mailto:weld@cs.washington.edu) | nonlinear "
+"planner |\n"
+"| SOAR | [soar-requests/@cs.cmu.edu](mailto:soar-requests/@cs.cmu.edu) | "
+"*license*; integrated architecture |\n"
+"| THEO | [tom.mitchell@cs.cmu.edu](mailto:tom.mitchell@cs.cmu.edu) | frames, "
+"learning |\n"
+"| Tileworld | [pollack@ai.sri.com](mailto:pollack@ai.sri.com) | planning "
+"testbed |\n"
+"| TileWorld | "
+"[tileworld@ptolemy.arc.nasa.gov](mailto:tileworld@ptolemy.arc.nasa.gov) | "
+"planning testbed |"
+msgstr ""
+
+#: in/appendix.md:177
+msgid "**Mathematics**"
+msgstr ""
+
+#: in/appendix.md:180
+msgid ""
+"[ ](#){:#t0020}\n"
+"!!!(table)"
+msgstr ""
+
+#: in/appendix.md:188
+msgid ""
+"| []() | | | | | | | | | |\n"
+"|---|---|---|---|---|---|---|---|---|---|\n"
+"| System | Address | Comments |\n"
+"| JACAL | [jaffer@altdorf.ai.mit.edu](mailto:jaffer@altdorf.ai.mit.edu) | "
+"algebraic manipulation |\n"
+"| Maxima | [rascal.ics.utexas.edu](mailto:rascal.ics.utexas.edu) | version "
+"of Macsyma; also proof-checker, nqthm |\n"
+"| MMA | [fateman@cs.berkeley.edu](mailto:fateman@cs.berkeley.edu) | "
+"*peoplesparc.berkeley.edu:pub/mma.* *; algebra |\n"
+"| XLispStat | [umnstat.stat.umn.edu](mailto:umnstat.stat.umn.edu) | "
+"Statistics; also S Bayes |"
+msgstr ""
+
+#: in/appendix.md:190
+msgid "**Compilers and Utilities**"
+msgstr ""
+
+#: in/appendix.md:193
+msgid ""
+"[ ](#){:#t0025}\n"
+"!!!(table)"
+msgstr ""
+
+#: in/appendix.md:211
+msgid ""
+"| []() | | | | | | | | | |\n"
+"|---|---|---|---|---|---|---|---|---|---|\n"
+"| System | Address | Comments |\n"
+"| AKCL | [rascal.ics.utexas.edu](mailto:rascal.ics.utexas.edu) | Austin "
+"Koyoto Common Lisp |\n"
+"| CLX, CLUE | [export.lcs.mit.edu](mailto:export.lcs.mit.edu) | Common Lisp "
+"interface to X Windows |\n"
+"| Gambit | [gambit@cs.brandeis.edu](mailto:gambit@cs.brandeis.edu) | "
+"*acorn.cs.brandeis.edu:dist/gambit**; Scheme compiler |\n"
+"| ISI Grapher | [isi.edu](mailto:isi.edu) | Graph displayer; also NLP word "
+"lists |\n"
+"| PCL | [arisia.xerox.com](mailto:arisia.xerox.com) | Implementation of CLOS "
+"|\n"
+"| Prolog | [aisun1.ai.uga.edu](mailto:aisun1.ai.uga.edu) | Prolog-based "
+"utilities and NLP programs |\n"
+"| PYTHON | [ram+@cs.cmu.edu](mailto:ram+@cs.cmu.edu) | *a.gp.cs.cmu.edu:* "
+"Common Lisp Compiler and tools |\n"
+"| SBProlog | [arizona.edu](mailto:arizona.edu) | Stony Brook Prolog, Icon, "
+"Snobol |\n"
+"| Scheme | [altdorf.ai.mit.edu](mailto:altdorf.ai.mit.edu) | Scheme "
+"utilities and compilers |\n"
+"| Scheme | [scheme@nexus.yorku.ca](mailto:scheme@nexus.yorku.ca) | Scheme "
+"utilities and programs |\n"
+"| SIOD | [bu.edu](mailto:bu.edu) | *users/gjc;* small scheme interpreter |\n"
+"| Utilities | [a.gp.cs.cmu.edu](mailto:a.gp.cs.cmu.edu) | "
+"*/usr/mkant/Public*; profiling, def system, etc. |\n"
+"| XLisp | [cs.orst.edu](mailto:cs.orst.edu) | Lisp interpreter |\n"
+"| XScheme | [tut.cis.ohio-state.edu](mailto:tut.cis.ohio-state.edu) | Also "
+"mitscheme compiler; sbprolog |"
+msgstr ""

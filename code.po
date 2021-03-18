@@ -1,0 +1,430 @@
+#. extracted from in/code.md
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-10 12:09+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 2.2.5\n"
+
+#: in/code.md:2
+msgid "## Code highlighting"
+msgstr ""
+
+#: in/code.md:5
+msgid "Here I'm testing the code highlighing functionality"
+msgstr ""
+
+#: in/code.md:10
+msgid ""
+"```lisp\n"
+";;; -*- Mode: Lisp; Syntax: Common-Lisp; -*-\n"
+";;; Code from Paradigms of Artificial Intelligence Programming\n"
+";;; Copyright (c) 1991 Peter Norvig"
+msgstr ""
+
+#: in/code.md:12
+msgid ";;;; File gps.lisp: Final version of GPS"
+msgstr ""
+
+#: in/code.md:14
+msgid "(requires \"gps1\")"
+msgstr ""
+
+#: in/code.md:16
+msgctxt "in/code.md:16"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:20
+msgid ""
+"(defun executing-p (x)\n"
+"  \"Is x of the form: (executing ...) ?\"\n"
+"  (starts-with x 'executing))"
+msgstr ""
+
+#: in/code.md:24
+msgid ""
+"(defun starts-with (list x)\n"
+"  \"Is this a list whose first element is x?\"\n"
+"  (and (consp list) (eql (first list) x)))"
+msgstr ""
+
+#: in/code.md:30
+msgid ""
+"(defun convert-op (op)\n"
+"  \"Make op conform to the (EXECUTING op) convention.\"\n"
+"  (unless (some #'executing-p (op-add-list op))\n"
+"    (push (list 'executing (op-action op)) (op-add-list op)))\n"
+"  op)"
+msgstr ""
+
+#: in/code.md:36
+msgid ""
+"(defun op (action &key preconds add-list del-list)\n"
+"  \"Make a new operator that obeys the (EXECUTING op) convention.\"\n"
+"  (convert-op\n"
+"    (make-op :action action :preconds preconds\n"
+"             :add-list add-list :del-list del-list)))"
+msgstr ""
+
+#: in/code.md:38
+msgctxt "in/code.md:38"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:40
+msgid "(mapc #'convert-op *school-ops*)"
+msgstr ""
+
+#: in/code.md:42
+msgctxt "in/code.md:42"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:44
+msgid "(defvar *ops* nil \"A list of available operators.\")"
+msgstr ""
+
+#: in/code.md:47
+msgid ""
+"(defstruct op \"An operation\"\n"
+"  (action nil) (preconds nil) (add-list nil) (del-list nil))"
+msgstr ""
+
+#: in/code.md:51
+msgid ""
+"(defun GPS (state goals &optional (*ops* *ops*))\n"
+"  \"General Problem Solver: from state, achieve goals using *ops*.\"\n"
+"  (remove-if #'atom (achieve-all (cons '(start) state) goals nil)))"
+msgstr ""
+
+#: in/code.md:53
+msgctxt "in/code.md:53"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:63
+msgid ""
+"(defun achieve-all (state goals goal-stack)\n"
+"  \"Achieve each goal, and make sure they still hold at the end.\"\n"
+"  (let ((current-state state))\n"
+"    (if (and (every #'(lambda (g)\n"
+"                        (setf current-state\n"
+"                              (achieve current-state g goal-stack)))\n"
+"                    goals)\n"
+"             (subsetp goals current-state :test #'equal))\n"
+"        current-state)))"
+msgstr ""
+
+#: in/code.md:72
+msgid ""
+"(defun achieve (state goal goal-stack)\n"
+"  \"A goal is achieved if it already holds,\n"
+"  or if there is an appropriate op for it that is applicable.\"\n"
+"  (dbg-indent :gps (length goal-stack) \"Goal: ~a\" goal)\n"
+"  (cond ((member-equal goal state) state)\n"
+"        ((member-equal goal goal-stack) nil)\n"
+"        (t (some #'(lambda (op) (apply-op state goal op goal-stack))\n"
+"                 (find-all goal *ops* :test #'appropriate-p)))))"
+msgstr ""
+
+#: in/code.md:74
+msgctxt "in/code.md:74"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:77
+msgid ""
+"(defun member-equal (item list)\n"
+"  (member item list :test #'equal))"
+msgstr ""
+
+#: in/code.md:79
+msgctxt "in/code.md:79"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:92
+msgid ""
+"(defun apply-op (state goal op goal-stack)\n"
+"  \"Return a new, transformed state if op is applicable.\"\n"
+"  (dbg-indent :gps (length goal-stack) \"Consider: ~a\" (op-action op))\n"
+"  (let ((state2 (achieve-all state (op-preconds op) \n"
+"                             (cons goal goal-stack))))\n"
+"    (unless (null state2)\n"
+"      ;; Return an updated state\n"
+"      (dbg-indent :gps (length goal-stack) \"Action: ~a\" (op-action op))\n"
+"      (append (remove-if #'(lambda (x) \n"
+"                             (member-equal x (op-del-list op)))\n"
+"                         state2)\n"
+"              (op-add-list op)))))"
+msgstr ""
+
+#: in/code.md:96
+msgid ""
+"(defun appropriate-p (goal op)\n"
+"  \"An op is appropriate to a goal if it is in its add list.\"\n"
+"  (member-equal goal (op-add-list op)))"
+msgstr ""
+
+#: in/code.md:98
+msgctxt "in/code.md:98"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:104
+msgid ""
+"(defun use (oplist)\n"
+"  \"Use oplist as the default list of operators.\"\n"
+"  ;; Return something useful, but not too verbose: \n"
+"  ;; the number of operators.\n"
+"  (length (setf *ops* oplist)))"
+msgstr ""
+
+#: in/code.md:106
+msgctxt "in/code.md:106"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:133
+msgid ""
+"(defparameter *banana-ops*\n"
+"  (list\n"
+"    (op 'climb-on-chair\n"
+"        :preconds '(chair-at-middle-room at-middle-room on-floor)\n"
+"        :add-list '(at-bananas on-chair)\n"
+"        :del-list '(at-middle-room on-floor))\n"
+"    (op 'push-chair-from-door-to-middle-room\n"
+"        :preconds '(chair-at-door at-door)\n"
+"        :add-list '(chair-at-middle-room at-middle-room)\n"
+"        :del-list '(chair-at-door at-door))\n"
+"    (op 'walk-from-door-to-middle-room\n"
+"        :preconds '(at-door on-floor)\n"
+"        :add-list '(at-middle-room)\n"
+"        :del-list '(at-door))\n"
+"    (op 'grasp-bananas\n"
+"        :preconds '(at-bananas empty-handed)\n"
+"        :add-list '(has-bananas)\n"
+"        :del-list '(empty-handed))\n"
+"    (op 'drop-ball\n"
+"        :preconds '(has-ball)\n"
+"        :add-list '(empty-handed)\n"
+"        :del-list '(has-ball))\n"
+"    (op 'eat-bananas\n"
+"        :preconds '(has-bananas)\n"
+"        :add-list '(empty-handed not-hungry)\n"
+"        :del-list '(has-bananas hungry))))"
+msgstr ""
+
+#: in/code.md:135
+msgctxt "in/code.md:135"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:140
+msgid ""
+"(defun make-maze-ops (pair)\n"
+"  \"Make maze ops in both directions\"\n"
+"  (list (make-maze-op (first pair) (second pair))\n"
+"        (make-maze-op (second pair) (first pair))))"
+msgstr ""
+
+#: in/code.md:147
+msgid ""
+"(defun make-maze-op (here there)\n"
+"  \"Make an operator to move between two places\"\n"
+"  (op `(move from ,here to ,there)\n"
+"      :preconds `((at ,here))\n"
+"      :add-list `((at ,there))\n"
+"      :del-list `((at ,here))))"
+msgstr ""
+
+#: in/code.md:153
+msgid ""
+"(defparameter *maze-ops*\n"
+"  (mappend #'make-maze-ops\n"
+"     '((1 2) (2 3) (3 4) (4 9) (9 14) (9 8) (8 7) (7 12) (12 13)\n"
+"       (12 11) (11 6) (11 16) (16 17) (17 22) (21 22) (22 23)\n"
+"       (23 18) (23 24) (24 19) (19 20) (20 15) (15 10) (10 5) (20 25))))"
+msgstr ""
+
+#: in/code.md:155
+msgctxt "in/code.md:155"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:160
+msgid ""
+"(defun GPS (state goals &optional (*ops* *ops*))\n"
+"  \"General Problem Solver: from state, achieve goals using *ops*.\"\n"
+"  (find-all-if #'action-p\n"
+"               (achieve-all (cons '(start) state) goals nil)))"
+msgstr ""
+
+#: in/code.md:164
+msgid ""
+"(defun action-p (x)\n"
+"  \"Is x something that is (start) or (executing ...)?\"\n"
+"  (or (equal x '(start)) (executing-p x)))"
+msgstr ""
+
+#: in/code.md:166
+msgctxt "in/code.md:166"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:174
+msgid ""
+"(defun find-path (start end)\n"
+"  \"Search a maze for a path from start to end.\"\n"
+"  (let ((results (GPS `((at ,start)) `((at ,end)))))\n"
+"    (unless (null results)\n"
+"      (cons start (mapcar #'destination\n"
+"                          (remove '(start) results\n"
+"                                  :test #'equal))))))"
+msgstr ""
+
+#: in/code.md:178
+msgid ""
+"(defun destination (action)\n"
+"  \"Find the Y in (executing (move from X to Y))\"\n"
+"  (fifth (second action)))"
+msgstr ""
+
+#: in/code.md:180
+msgctxt "in/code.md:180"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:192
+msgid ""
+"(defun make-block-ops (blocks)\n"
+"  (let ((ops nil))\n"
+"    (dolist (a blocks)\n"
+"      (dolist (b blocks)\n"
+"        (unless (equal a b)\n"
+"          (dolist (c blocks)\n"
+"            (unless (or (equal c a) (equal c b))\n"
+"              (push (move-op a b c) ops)))\n"
+"          (push (move-op a 'table b) ops)\n"
+"          (push (move-op a b 'table) ops))))\n"
+"    ops))"
+msgstr ""
+
+#: in/code.md:199
+msgid ""
+"(defun move-op (a b c)\n"
+"  \"Make an operator to move A from B to C.\"\n"
+"  (op `(move ,a from ,b to ,c)\n"
+"      :preconds `((space on ,a) (space on ,c) (,a on ,b))\n"
+"      :add-list (move-ons a b c)\n"
+"      :del-list (move-ons a c b)))"
+msgstr ""
+
+#: in/code.md:204
+msgid ""
+"(defun move-ons (a b c)\n"
+"  (if (eq b 'table)\n"
+"      `((,a on ,c))\n"
+"      `((,a on ,c) (space on ,b))))"
+msgstr ""
+
+#: in/code.md:207
+msgctxt "in/code.md:207"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:212
+msgid ""
+"(defun achieve-all (state goals goal-stack)\n"
+"  \"Achieve each goal, trying several orderings.\"\n"
+"  (some #'(lambda (goals) (achieve-each state goals goal-stack))\n"
+"        (orderings goals)))"
+msgstr ""
+
+#: in/code.md:222
+msgid ""
+"(defun achieve-each (state goals goal-stack)\n"
+"  \"Achieve each goal, and make sure they still hold at the end.\"\n"
+"  (let ((current-state state))\n"
+"    (if (and (every #'(lambda (g)\n"
+"                        (setf current-state\n"
+"                              (achieve current-state g goal-stack)))\n"
+"                    goals)\n"
+"             (subsetp goals current-state :test #'equal))\n"
+"        current-state)))"
+msgstr ""
+
+#: in/code.md:227
+msgid ""
+"(defun orderings (l) \n"
+"  (if (> (length l) 1)\n"
+"      (list l (reverse l))\n"
+"      (list l)))"
+msgstr ""
+
+#: in/code.md:229
+msgctxt "in/code.md:229"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:238
+msgid ""
+"(defun achieve (state goal goal-stack)\n"
+"  \"A goal is achieved if it already holds,\n"
+"  or if there is an appropriate op for it that is applicable.\"\n"
+"  (dbg-indent :gps (length goal-stack) \"Goal: ~a\" goal)\n"
+"  (cond ((member-equal goal state) state)\n"
+"        ((member-equal goal goal-stack) nil)\n"
+"        (t (some #'(lambda (op) (apply-op state goal op goal-stack))\n"
+"                 (appropriate-ops goal state))))) ;***"
+msgstr ""
+
+#: in/code.md:247
+msgid ""
+"(defun appropriate-ops (goal state)\n"
+"  \"Return a list of appropriate operators, \n"
+"  sorted by the number of unfulfilled preconditions.\"\n"
+"  (sort (copy-list (find-all goal *ops* :test #'appropriate-p)) #'<\n"
+"        :key #'(lambda (op) \n"
+"                 (count-if #'(lambda (precond)\n"
+"                               (not (member-equal precond state)))\n"
+"                           (op-preconds op)))))"
+msgstr ""
+
+#: in/code.md:249
+msgctxt "in/code.md:249"
+msgid ";;; =============================="
+msgstr ""
+
+#: in/code.md:265
+msgid ""
+"(defun permutations (bag)\n"
+"  \"Return a list of all the permutations of the input.\"\n"
+"  ;; If the input is nil, there is only one permutation:\n"
+"  ;; nil itself\n"
+"  (if (null bag)\n"
+"      '(())\n"
+"      ;; Otherwise, take an element, e, out of the bag.\n"
+"      ;; Generate all permutations of the remaining elements,\n"
+"      ;; And add e to the front of each of these.\n"
+"      ;; Do this for all possible e to generate all permutations.\n"
+"      (mapcan #'(lambda (e)\n"
+"                  (mapcar #'(lambda (p) (cons e p))\n"
+"                          (permutations\n"
+"                            (remove e bag :count 1 :test #'eq))))\n"
+"              bag)))"
+msgstr ""
+
+#: in/code.md:267
+msgid ""
+";;; ==============================\n"
+"```"
+msgstr ""
